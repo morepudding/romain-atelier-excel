@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1788864072065,
+      "tag": "0000_shiny_next_avengers",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1788887103671,
+      "tag": "0001_flawless_warbound",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1788887137361,
+      "tag": "0002_plain_wrecking_crew",
+      "breakpoints": true
+    }
+  ]
+}

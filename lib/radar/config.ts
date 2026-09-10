@@ -22,7 +22,7 @@ export const radarConfig = {
     timeoutMs: 20_000,
     maxRetries: 2,
     userAgent:
-      'Radar-local/1.0 (application ChatGPT personnelle; données publiques françaises)',
+      'Radar-local/1.0 (outil de prospection local; données publiques françaises)',
   },
 } as const;
 

@@ -2,12 +2,12 @@
 
 ## En cours
 
-Le cockpit contient la démonstration visuelle de traitement des réclamations et Radar local. Radar local interroge l’API publique Recherche d’entreprises, applique les exclusions configurées et expose cinq candidates dans le Site ainsi que par l’endpoint MCP `/mcp`. Une adaptation Nitro publie la démonstration de réclamation sur Vercel sans modifier le fonctionnement du Site ChatGPT.
+Radar natif pour Vercel et carnet de pistes codés dans la PR #1. Projet Supabase `radar-local` créé dans `morepudding’s Org`, région Paris, coût confirmé 0 €/mois. Référence : `tsgxdokkqzgglenjsaxr`. Migration `radar_private_leads` appliquée ; RLS active sur les deux tables et contrôle de sécurité sans anomalie. Aucun compte propriétaire encore créé ou autorisé.
 
 ## Étape suivante
 
-Récupérer l’URL MCP produite par Sites, puis tester sa connexion réelle dans ChatGPT en mode développeur.
+Configurer les variables publiques Supabase dans Vercel, créer et autoriser le compte propriétaire puis vérifier connexion et sauvegarde réelles avant de publier la nouvelle version. La configuration Vercel nécessite actuellement une connexion au tableau de bord.
 
 ## Priorité
 
-Vérifier l’appel réel, les cartes dans ChatGPT et la séparation stricte entre faits publics et hypothèses avant d’ajouter des contacts, messages ou actions CRM.
+Finaliser Radar et sauvegarde privée. La PR n’est pas encore fusionnée et la nouvelle version n’est pas en production. Aucun envoi de message ni migration des anciennes données D1.

@@ -27,15 +27,33 @@ function retryDelay(response: Response) {
 
 export async function fetchRadarPage(
   url: string,
-  dependencies: { fetchImpl?: FetchLike; sleepImpl?: Sleep } = {},
+  dependencies: {
+    fetchImpl?: FetchLike;
+    sleepImpl?: Sleep;
+    deadline?: number;
+  } = {},
 ) {
   const fetchImpl = dependencies.fetchImpl || fetch;
   const sleepImpl = dependencies.sleepImpl || sleep;
+  const remaining = () =>
+    (dependencies.deadline ?? Date.now() + radarConfig.source.timeoutMs) -
+    Date.now();
+  async function pause(ms: number) {
+    if (ms >= remaining())
+      throw new RadarApiError(
+        'La source publique demande un délai trop long. Réessayez plus tard.',
+      );
+    await sleepImpl(ms);
+  }
   for (
     let attempt = 0;
     attempt <= radarConfig.source.maxRetries;
     attempt += 1
   ) {
+    if (remaining() <= 0)
+      throw new RadarApiError(
+        'La recherche a dépassé le délai prévu. Réessayez plus tard.',
+      );
     let response: Response;
     try {
       response = await fetchImpl(url, {
@@ -43,11 +61,13 @@ export async function fetchRadarPage(
           Accept: 'application/json',
           'User-Agent': radarConfig.source.userAgent,
         },
-        signal: AbortSignal.timeout(radarConfig.source.timeoutMs),
+        signal: AbortSignal.timeout(
+          Math.max(1, Math.min(radarConfig.source.timeoutMs, remaining())),
+        ),
       });
     } catch (error) {
       if (attempt < radarConfig.source.maxRetries) {
-        await sleepImpl(500 * (attempt + 1));
+        await pause(500 * (attempt + 1));
         continue;
       }
       throw new RadarApiError(
@@ -61,7 +81,7 @@ export async function fetchRadarPage(
         throw new RadarApiError(
           'La source publique limite temporairement les requêtes. Réessayez dans quelques instants.',
         );
-      await sleepImpl(retryDelay(response));
+      await pause(retryDelay(response));
       continue;
     }
     if (!response.ok)
@@ -100,16 +120,21 @@ export async function findLocalCompanies(
 ): Promise<RadarResult> {
   const radiusKm = input.radiusKm ?? radarConfig.defaults.radiusKm;
   const limit = input.limit ?? radarConfig.defaults.limit;
-  const activitySections = input.activitySections?.length
-    ? input.activitySections
-    : [...radarConfig.defaults.activitySections];
+  const activitySections = [
+    ...new Set(
+      input.activitySections?.length
+        ? input.activitySections
+        : radarConfig.defaults.activitySections,
+    ),
+  ].sort();
   const key = JSON.stringify({ radiusKm, limit, activitySections });
   if (!dependencies.fetchImpl) {
     const cached = memoryCache.get(key);
     if (cached && cached.expires > Date.now()) return cached.value;
   }
 
-  const pages = [25, 20, 30, 15];
+  const pages = [1, 2, 3, 4];
+  const deadline = Date.now() + 45_000;
   const results: RawCompany[] = [];
   for (const [index, page] of pages.entries()) {
     if (index > 0) await (dependencies.sleepImpl || sleep)(180);
@@ -125,11 +150,20 @@ export async function findLocalCompanies(
     url.searchParams.set('per_page', '25');
     url.searchParams.set('minimal', 'true');
     url.searchParams.set('include', 'siege,matching_etablissements');
-    const payload = await fetchRadarPage(url.toString(), dependencies);
+    const payload = await fetchRadarPage(url.toString(), {
+      ...dependencies,
+      deadline,
+    });
     results.push(...payload.results!);
     if (
       rankCompanies(results, { radiusKm, limit, activitySections }).length >=
       limit
+    )
+      break;
+    if (
+      !payload.results!.length ||
+      (payload.total_results !== undefined &&
+        page * 25 >= payload.total_results)
     )
       break;
   }
@@ -153,10 +187,13 @@ export async function findLocalCompanies(
       activitySections,
     }),
   };
-  if (!dependencies.fetchImpl)
+  if (!dependencies.fetchImpl) {
+    if (memoryCache.size >= 64)
+      memoryCache.delete(memoryCache.keys().next().value!);
     memoryCache.set(key, {
       value,
       expires: Date.now() + radarConfig.source.cacheHours * 60 * 60 * 1000,
     });
+  }
   return value;
 }

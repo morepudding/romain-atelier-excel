@@ -134,3 +134,53 @@ void test('fixture réaliste: exclusions appliquées et cinq cartes produites', 
     true,
   );
 });
+
+void test('la recherche commence à la première page et s’arrête à la fin des résultats', async () => {
+  const { findLocalCompanies } = await import('../lib/radar/api.ts');
+  const pages: string[] = [];
+  const result = await findLocalCompanies(
+    { radiusKm: 5 },
+    {
+      fetchImpl: async (input) => {
+        pages.push(new URL(String(input)).searchParams.get('page')!);
+        return Response.json({ results: [], total_results: 0 });
+      },
+      sleepImpl: async () => {},
+    },
+  );
+  assert.deepEqual(pages, ['1']);
+  assert.deepEqual(result.companies, []);
+});
+
+void test('un long Retry-After ne bloque pas la fonction Vercel', async () => {
+  await assert.rejects(
+    fetchRadarPage('https://example.test', {
+      fetchImpl: async () =>
+        new Response('', { status: 429, headers: { 'Retry-After': '120' } }),
+      deadline: Date.now() + 5000,
+      sleepImpl: async () => {
+        throw new Error('Ne doit pas attendre');
+      },
+    }),
+    /délai trop long/,
+  );
+});
+
+void test('le formulaire refuse rayons et secteurs invalides', async () => {
+  const { radarSearchInput } = await import('../lib/radar/search-input.ts');
+  assert.equal(radarSearchInput.safeParse({ radiusKm: 0 }).success, false);
+  assert.equal(radarSearchInput.safeParse({ radiusKm: 51 }).success, false);
+  assert.equal(
+    radarSearchInput.safeParse({ activitySections: [] }).success,
+    false,
+  );
+  assert.equal(
+    radarSearchInput.safeParse({ activitySections: ['X'] }).success,
+    false,
+  );
+  assert.equal(
+    radarSearchInput.safeParse({ radiusKm: '35', activitySections: ['C'] })
+      .success,
+    true,
+  );
+});

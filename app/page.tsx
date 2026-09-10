@@ -3,7 +3,7 @@ import Workspace from './workspace';
 import { redirect } from 'next/navigation';
 export const dynamic = 'force-dynamic';
 export default async function Page() {
-  if (process.env.VERCEL === '1') redirect('/demo/reclamation');
+  if (process.env.VERCEL === '1') redirect('/radar');
   await requireChatGPTUser('/');
   return <Workspace />;
 }

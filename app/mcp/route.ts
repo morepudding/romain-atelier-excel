@@ -120,6 +120,8 @@ function createServer() {
 }
 
 async function handle(request: Request) {
+  // Vercel uses the standalone Radar HTTP endpoint, without a ChatGPT connector.
+  if (process.env.VERCEL === '1') return new Response('Not Found', { status: 404 });
   if (request.method === 'OPTIONS')
     return new Response(null, {
       status: 204,

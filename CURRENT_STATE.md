@@ -2,12 +2,12 @@
 
 ## En cours
 
-Le cockpit contient la démonstration visuelle de traitement des réclamations et Radar local. Radar local interroge l’API publique Recherche d’entreprises, applique les exclusions configurées et expose cinq candidates dans le Site ainsi que par l’endpoint MCP `/mcp`. Une adaptation Nitro publie la démonstration de réclamation sur Vercel sans modifier le fonctionnement du Site ChatGPT.
+Adaptation Vercel : Radar natif sans MCP, recherche publique et carnet de pistes privé préparé pour Supabase. La démo réclamation reste accessible. Le cockpit et sa base D1 historiques sont conservés côté Sites.
 
 ## Étape suivante
 
-Récupérer l’URL MCP produite par Sites, puis tester sa connexion réelle dans ChatGPT en mode développeur.
+Confirmer l'organisation et le coût du nouveau projet Supabase, appliquer le schéma préparé, autoriser le compte propriétaire et configurer Vercel. Vérifier ensuite la connexion et la sauvegarde sur la base réelle avant de considérer la migration comme terminée.
 
 ## Priorité
 
-Vérifier l’appel réel, les cartes dans ChatGPT et la séparation stricte entre faits publics et hypothèses avant d’ajouter des contacts, messages ou actions CRM.
+Finaliser Radar et la sauvegarde privée. Ne pas présenter les hypothèses commerciales comme des besoins confirmés. Aucun envoi de message ni migration des anciennes données D1 dans cette étape.

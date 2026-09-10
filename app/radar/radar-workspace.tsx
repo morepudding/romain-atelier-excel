@@ -16,6 +16,8 @@ import { getSupabaseBrowser } from '@/lib/supabase/browser';
 import { radarConfig, type ActivitySection } from '@/lib/radar/config';
 import { leadStatuses, type Lead, type LeadStatus } from '@/lib/radar/leads';
 import type { RadarCompany, RadarResult } from '@/lib/radar/types';
+import CompanyResearchCard from './company-research';
+import { useCompanyResearch } from './use-company-research';
 
 const sections: Record<ActivitySection, string> = {
   C: 'Industrie',
@@ -34,6 +36,11 @@ export default function RadarWorkspace() {
   const [session, setSession] = useState<Session | null>(null);
   const [authReady, setAuthReady] = useState(!supabase);
   const [member, setMember] = useState(false);
+  const [membershipState, setMembershipState] = useState<
+    'idle' | 'checking' | 'allowed' | 'denied' | 'error'
+  >('idle');
+  const [connectForResearch, setConnectForResearch] = useState(false);
+  const researchLoginRequested = useRef(false);
   const [view, setView] = useState<'search' | 'leads'>('search');
   const [radius, setRadius] = useState(35);
   const [selected, setSelected] = useState<ActivitySection[]>([
@@ -42,6 +49,23 @@ export default function RadarWorkspace() {
   const [result, setResult] = useState<RadarResult | null>(null);
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
+  const [includeResearch, setIncludeResearch] = useState(true);
+  const [searchService, setSearchService] = useState<
+    'loading' | 'ready' | 'unavailable'
+  >('loading');
+  const [expandedResearch, setExpandedResearch] = useState<string | null>(null);
+  const research = useCompanyResearch(session?.access_token);
+  const canSearchWeb = searchService === 'ready' && member;
+  const rankedCompanies = research.running
+    ? result?.companies
+    : result?.companies.toSorted((a, b) => {
+        const priority = (company: RadarCompany) =>
+          (research.items[company.siren]?.data || company.research)
+            ?.priority === 'À contacter en priorité'
+            ? 1
+            : 0;
+        return priority(b) - priority(a);
+      });
   const [leads, setLeads] = useState<Lead[]>([]);
   const [leadsLoading, setLeadsLoading] = useState(false);
   const [refresh, setRefresh] = useState(0);
@@ -52,10 +76,35 @@ export default function RadarWorkspace() {
   const [dirty, setDirty] = useState(false);
   const userId = session?.user.id;
   const editor = useRef<HTMLElement>(null);
+  const loginEmail = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (connectForResearch && view === 'leads' && !session)
+      loginEmail.current?.focus();
+  }, [connectForResearch, view, session]);
   useEffect(() => {
     if (draft?.id) editor.current?.focus();
   }, [draft?.id, view]);
   const currentUser = useRef(userId);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch('/api/radar/research', { signal: controller.signal })
+      .then((response) => response.json())
+      .then((data) =>
+        setSearchService(
+          data &&
+            typeof data === 'object' &&
+            'automaticSearchAvailable' in data &&
+            data.automaticSearchAvailable === true
+            ? 'ready'
+            : 'unavailable',
+        ),
+      )
+      .catch(() => {
+        if (!controller.signal.aborted) setSearchService('unavailable');
+      });
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     if (!supabase) return;
@@ -64,6 +113,7 @@ export default function RadarWorkspace() {
         currentUser.current = next?.user.id;
         setLeads([]);
         setMember(false);
+        setMembershipState('idle');
         setDraft(null);
         setDirty(false);
         setLeadsLoading(!!next);
@@ -78,33 +128,71 @@ export default function RadarWorkspace() {
   useEffect(() => {
     let active = true;
     if (!supabase || !userId) return;
+    const controller = new AbortController();
     async function load() {
+      let membershipResolved = false;
+      setMembershipState('checking');
       try {
         const membership = await supabase!
           .from('radar_members')
           .select('user_id')
           .eq('user_id', userId!)
+          .abortSignal(
+            AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]),
+          )
           .maybeSingle();
-        if (membership.error) throw membership.error;
-        if (!membership.data)
+        if (!active) return;
+        membershipResolved = true;
+        if (membership.error) {
+          setMember(false);
+          setMembershipState('error');
+          throw new Error(
+            'Impossible de vérifier votre accès au radar. Réessayez la vérification.',
+          );
+        }
+        if (!membership.data) {
+          setMember(false);
+          setMembershipState('denied');
           throw new Error('Ce compte n’a pas accès aux pistes privées.');
+        }
+        // L'accès à la recherche ne dépend pas du chargement du carnet.
+        setMember(true);
+        setMembershipState('allowed');
+        if (researchLoginRequested.current) {
+          researchLoginRequested.current = false;
+          setIncludeResearch(true);
+          setConnectForResearch(false);
+          setView('search');
+          setNotice(
+            'Vous êtes connecté. La recherche des indices et contacts publics est activée.',
+          );
+        }
         const saved = await supabase!
           .from('radar_leads')
           .select('*')
           .eq('user_id', userId!)
+          .abortSignal(
+            AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]),
+          )
           .order('updated_at', { ascending: false });
         if (saved.error) throw saved.error;
         if (active) {
-          setMember(true);
           setLeads(saved.data as Lead[]);
         }
       } catch (e) {
-        if (active)
+        if (active) {
+          if (!membershipResolved) {
+            setMember(false);
+            setMembershipState('error');
+          }
           setError(
-            e instanceof Error
-              ? e.message
-              : 'Impossible de charger vos pistes. Vérifiez la connexion puis réessayez.',
+            !membershipResolved
+              ? 'Impossible de vérifier votre accès au radar. Réessayez la vérification.'
+              : e instanceof Error
+                ? e.message
+                : 'Impossible de charger vos pistes. Vérifiez la connexion puis réessayez.',
           );
+        }
       } finally {
         if (active) setLeadsLoading(false);
       }
@@ -112,8 +200,18 @@ export default function RadarWorkspace() {
     void load();
     return () => {
       active = false;
+      controller.abort();
     };
   }, [supabase, userId, refresh]);
+
+  function openResearchLogin() {
+    researchLoginRequested.current = true;
+    setConnectForResearch(true);
+    setNotice(
+      'Connectez-vous avec le compte créé pour votre radar. Vous reviendrez ensuite à la recherche.',
+    );
+    setView('leads');
+  }
 
   useEffect(() => {
     if (!dirty) return;
@@ -126,15 +224,23 @@ export default function RadarWorkspace() {
 
   async function search(event: SubmitEvent) {
     event.preventDefault();
+    if (!authReady || busy) return;
+    const owner = currentUser.current;
     setSearching(true);
     setSearchError('');
     setResult(null);
+    research.reset();
+    setExpandedResearch(null);
     try {
       const params = new URLSearchParams({
         radiusKm: String(radius),
         sections: selected.join(','),
       });
       const response = await fetch(`/api/radar?${params}`, {
+        headers: session
+          ? { Authorization: `Bearer ${session.access_token}` }
+          : {},
+        cache: 'no-store',
         signal: AbortSignal.timeout(55_000),
       });
       const payload = (await response.json()) as RadarResult & {
@@ -142,14 +248,19 @@ export default function RadarWorkspace() {
       };
       if (!response.ok)
         throw new Error(payload.error || 'Recherche indisponible.');
+      if (currentUser.current !== owner) return;
       setResult(payload);
+      if (includeResearch && canSearchWeb)
+        void research.researchAll(payload.companies);
     } catch (e) {
       setSearchError(
         e instanceof Error && e.name === 'TimeoutError'
           ? 'La recherche prend trop de temps. Réessayez dans un instant.'
-          : e instanceof Error
-            ? e.message
-            : 'Recherche indisponible.',
+          : e instanceof TypeError
+            ? 'Impossible de joindre le radar. Réessayez dans quelques instants.'
+            : e instanceof Error
+              ? e.message
+              : 'Recherche indisponible.',
       );
     } finally {
       setSearching(false);
@@ -200,7 +311,12 @@ export default function RadarWorkspace() {
         .insert({
           user_id: owner,
           siren: company.siren,
-          company,
+          company: {
+            ...company,
+            ...(research.items[company.siren]?.data
+              ? { research: research.items[company.siren].data }
+              : {}),
+          },
           source_retrieved_at: result.retrievedAt,
         })
         .select()
@@ -273,6 +389,76 @@ export default function RadarWorkspace() {
     }
   }
 
+  async function saveResearch(lead: Lead) {
+    const findings = research.items[lead.siren]?.data;
+    if (!findings || !supabase || !member || dirty || busy) return;
+    const owner = userId;
+    setBusy(`research-${lead.id}`);
+    setError('');
+    setNotice('');
+    try {
+      const saved = await supabase
+        .from('radar_leads')
+        .update({ company: { ...lead.company, research: findings } })
+        .eq('id', lead.id)
+        .eq('user_id', owner!)
+        .eq('revision', lead.revision)
+        .select()
+        .maybeSingle();
+      if (saved.error) throw saved.error;
+      if (currentUser.current !== owner) return;
+      if (!saved.data) {
+        setError(
+          'Cette piste a changé sur un autre appareil. Actualisez vos pistes avant d’enregistrer la recherche.',
+        );
+        return;
+      }
+      setLeads((old) =>
+        old.map((item) => (item.id === lead.id ? (saved.data as Lead) : item)),
+      );
+      if (draft?.id === lead.id) setDraft(saved.data as Lead);
+      setNotice('La fiche de recherche est enregistrée avec vos pistes.');
+    } catch {
+      if (currentUser.current === owner)
+        setError(
+          'La fiche de recherche n’a pas été enregistrée. Elle reste consultable ici ; réessayez plus tard.',
+        );
+    } finally {
+      setBusy('');
+    }
+  }
+
+  const researchCard = (company: RadarCompany) => {
+    const lead = leads.find((item) => item.siren === company.siren);
+    const snapshot = research.items[company.siren]?.data;
+    return (
+      <CompanyResearchCard
+        company={company}
+        state={research.items[company.siren]}
+        expanded={expandedResearch === company.siren}
+        disabled={dirty || !!busy}
+        automaticAvailable={canSearchWeb}
+        saving={!!lead && busy === `research-${lead.id}`}
+        onExpand={() =>
+          setExpandedResearch((old) =>
+            old === company.siren ? null : company.siren,
+          )
+        }
+        onResearch={(website) => {
+          setExpandedResearch(company.siren);
+          void research.research(company, website);
+        }}
+        onSave={
+          lead &&
+          snapshot &&
+          snapshot.researchedAt !== lead.company.research?.researchedAt
+            ? () => void saveResearch(lead)
+            : undefined
+        }
+      />
+    );
+  };
+
   const card = (company: RadarCompany) => (
     <>
       <div className="rl-card-head">
@@ -282,23 +468,30 @@ export default function RadarWorkspace() {
             {company.commune} · {company.distanceKm} km
           </p>
         </div>
-        <span className="rl-badge">{company.niveauPriorite}</span>
+        <span
+          className="rl-badge"
+          title="Présélection selon les données d’annuaire"
+        >
+          Candidate locale
+        </span>
       </div>
       <p>
         <strong>{company.activiteLibelle}</strong>
         <br />
         <span className="rl-muted">{company.trancheEffectif}</span>
       </p>
-      <div className="rl-reasons">
-        <p>
-          <small>Pourquoi elle ressort</small>
-          {company.raisonSelection}
-        </p>
-        <p>
-          <small>Hypothèse à vérifier</small>
-          {company.workflowProbable}
-        </p>
-      </div>
+      {!research.items[company.siren]?.data && !company.research && (
+        <div className="rl-reasons">
+          <p>
+            <small>Pourquoi elle ressort</small>
+            {company.raisonSelection}
+          </p>
+          <p>
+            <small>Hypothèse à vérifier</small>
+            {company.workflowProbable}
+          </p>
+        </div>
+      )}
       <a
         className="rl-source"
         href={officialUrl(company.siren)}
@@ -339,15 +532,20 @@ export default function RadarWorkspace() {
           <br />à rencontrer.
         </h1>
         <p>
-          Des candidates pour présenter votre démo. Leur besoin reste à
-          confirmer sur le terrain.
+          Repérez les indices publics, trouvez une porte d’entrée et préparez
+          votre premier contact. Les besoins restent à confirmer.
         </p>
       </div>
       <nav className="rl-tabs" aria-label="Radar et pistes">
         <button
           aria-current={view === 'search' ? 'page' : undefined}
           disabled={dirty || !!busy}
-          onClick={() => setView('search')}
+          onClick={() => {
+            researchLoginRequested.current = false;
+            setConnectForResearch(false);
+            setNotice('');
+            setView('search');
+          }}
         >
           Rechercher
         </button>
@@ -424,9 +622,83 @@ export default function RadarWorkspace() {
                 ))}
               </div>
             </fieldset>
+            <label
+              className="rl-research-option"
+              htmlFor="include-public-research"
+              aria-label="Rechercher aussi les indices et contacts publics"
+            >
+              <input
+                id="include-public-research"
+                type="checkbox"
+                checked={includeResearch && canSearchWeb}
+                disabled={
+                  searching ||
+                  searchService !== 'ready' ||
+                  !authReady ||
+                  !supabase ||
+                  (!!session && !member)
+                }
+                onChange={(event) => {
+                  if (!session) {
+                    openResearchLogin();
+                    return;
+                  }
+                  setIncludeResearch(event.target.checked);
+                }}
+              />
+              <span>
+                <strong>
+                  Rechercher aussi les indices et contacts publics
+                </strong>
+                <small>
+                  {searchService === 'loading'
+                    ? 'Vérification de la disponibilité…'
+                    : searchService === 'unavailable'
+                      ? 'La recherche automatique des sites reste à activer. Vous pouvez déjà renseigner un site sur chaque fiche.'
+                      : !supabase
+                        ? 'La connexion au compte radar reste à configurer.'
+                        : !authReady ||
+                            (session && membershipState === 'checking')
+                          ? 'Vérification de votre accès…'
+                          : !session
+                            ? 'Cliquez pour vous connecter avec votre compte radar et activer cette option.'
+                            : membershipState === 'denied'
+                              ? 'Vous êtes connecté, mais ce compte n’est pas autorisé sur ce radar.'
+                              : membershipState === 'error'
+                                ? 'Votre connexion est reconnue, mais la vérification de votre accès a échoué.'
+                                : 'Le radar consulte les sites repérés et prépare une fiche avec ses sources.'}
+                </small>
+              </span>
+            </label>
+            {searchService === 'ready' && authReady && supabase && !session && (
+              <div className="rl-research-access">
+                <button
+                  type="button"
+                  disabled={searching || !!busy}
+                  onClick={openResearchLogin}
+                >
+                  Se connecter pour activer la recherche
+                </button>
+              </div>
+            )}
+            {searchService === 'ready' &&
+              session &&
+              membershipState === 'error' && (
+                <div className="rl-research-access">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setError('');
+                      setRefresh((n) => n + 1);
+                    }}
+                  >
+                    Réessayer la vérification de mon accès
+                  </button>
+                </div>
+              )}
             <button
               className="rl-primary"
-              disabled={searching || !selected.length}
+              disabled={searching || !selected.length || !authReady || !!busy}
             >
               {searching ? (
                 <>
@@ -440,6 +712,12 @@ export default function RadarWorkspace() {
               )}
             </button>
           </form>
+          {session && (
+            <p className="rl-muted">
+              Les entreprises déjà dans « Mes pistes » sont exclues de chaque
+              nouvelle recherche.
+            </p>
+          )}
           {searchError && (
             <p className="rl-error" role="alert">
               {searchError}
@@ -459,6 +737,31 @@ export default function RadarWorkspace() {
                   {result.search.radiusKm} km · Données du{' '}
                   {new Date(result.retrievedAt).toLocaleDateString('fr-FR')}
                 </p>
+                {includeResearch && Object.keys(research.items).length > 0 && (
+                  <output className="rl-research-status">
+                    {research.running
+                      ? 'Consultation des sites en cours'
+                      : 'Consultation des sites terminée'}{' '}
+                    ·{' '}
+                    {
+                      result.companies.filter((company) =>
+                        ['done', 'error'].includes(
+                          research.items[company.siren]?.status,
+                        ),
+                      ).length
+                    }
+                    /
+                    {
+                      result.companies.filter(
+                        (company) => research.items[company.siren],
+                      ).length
+                    }{' '}
+                    fiches traitées.{' '}
+                    {research.running
+                      ? 'Les résultats apparaissent sur chaque entreprise.'
+                      : 'Les entreprises avec une identité confirmée, un indice métier et un contact passent en premier. Cela ne prédit pas leur réponse.'}
+                  </output>
+                )}
                 {result.companies.length < 5 && (
                   <p className="rl-muted">
                     Moins de cinq candidates dans les données examinées. Essayez
@@ -466,13 +769,17 @@ export default function RadarWorkspace() {
                   </p>
                 )}
                 <div className="rl-cards">
-                  {result.companies.map((company) => {
+                  {rankedCompanies?.map((company) => {
                     const added = leads.some(
                       (lead) => lead.siren === company.siren,
                     );
                     return (
-                      <article className="rl-card" key={company.siren}>
+                      <article
+                        className={`rl-card ${expandedResearch === company.siren ? 'rl-card-expanded' : ''}`}
+                        key={company.siren}
+                      >
                         {card(company)}
+                        {researchCard(company)}
                         <button
                           className="rl-add"
                           disabled={
@@ -525,11 +832,25 @@ export default function RadarWorkspace() {
         <output className="rl-empty">Chargement de votre espace privé…</output>
       ) : !session ? (
         <form className="rl-login" onSubmit={login}>
-          <h2>Votre espace privé</h2>
-          <p>Connectez-vous pour retrouver vos entreprises et vos notes.</p>
+          <h2>
+            {connectForResearch
+              ? 'Activer la recherche automatique'
+              : 'Votre espace privé'}
+          </h2>
+          <p>
+            {connectForResearch
+              ? 'Utilisez le compte créé pour votre radar. Après la connexion, l’option sera activée et vous retrouverez votre recherche.'
+              : 'Connectez-vous pour retrouver vos entreprises et vos notes.'}
+          </p>
           <label>
             Adresse e-mail
-            <input name="email" type="email" autoComplete="username" required />
+            <input
+              ref={loginEmail}
+              name="email"
+              type="email"
+              autoComplete="username"
+              required
+            />
           </label>
           <label>
             Mot de passe
@@ -541,7 +862,11 @@ export default function RadarWorkspace() {
             />
           </label>
           <button className="rl-primary" disabled={!!busy}>
-            {busy === 'login' ? 'Connexion…' : 'Se connecter'}
+            {busy === 'login'
+              ? 'Connexion…'
+              : connectForResearch
+                ? 'Se connecter et activer'
+                : 'Se connecter'}
           </button>
         </form>
       ) : (
@@ -592,7 +917,7 @@ export default function RadarWorkspace() {
               Actualiser
             </button>
           </div>
-          {member && !leads.length && (
+          {member && !leads.length && !error && (
             <p className="rl-empty">
               Votre carnet est vide. Lancez une recherche et ajoutez une
               entreprise à vos pistes.
@@ -600,8 +925,12 @@ export default function RadarWorkspace() {
           )}
           <div className="rl-cards">
             {leads.map((lead) => (
-              <article className="rl-card" key={lead.id}>
+              <article
+                className={`rl-card ${expandedResearch === lead.siren ? 'rl-card-expanded' : ''}`}
+                key={lead.id}
+              >
                 {card(lead.company)}
+                {researchCard(lead.company)}
                 <p>
                   <strong>{leadStatuses[lead.status]}</strong>
                   {lead.next_action && <> · {lead.next_action}</>}
@@ -728,8 +1057,9 @@ export default function RadarWorkspace() {
         </section>
       )}
       <footer className="rl-footer">
-        Données publiques : API Recherche d’entreprises. Aucun message n’est
-        envoyé par cet outil.
+        Annuaire des entreprises et pages publiques des sites consultés. Les
+        hypothèses restent à confirmer. Aucun message n’est envoyé par cet
+        outil.
       </footer>
     </main>
   );

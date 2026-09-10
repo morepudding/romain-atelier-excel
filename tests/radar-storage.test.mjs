@@ -19,6 +19,15 @@ test('private leads: ownership, membership, duplicates, persistence and concurre
     await db.exec(
       readFileSync(new URL('../supabase/schema.sql', import.meta.url), 'utf8'),
     );
+    await db.exec(
+      readFileSync(
+        new URL(
+          '../supabase/migrations/20260910_research_snapshot.sql',
+          import.meta.url,
+        ),
+        'utf8',
+      ),
+    );
     await db.query('insert into auth.users(id) values ($1), ($2), ($3)', [
       alice,
       bob,
@@ -117,6 +126,69 @@ test('private leads: ownership, membership, duplicates, persistence and concurre
       ['Ancienne saisie', lead.id, 1],
     );
     assert.equal(stale.rows.length, 0);
+    const enriched = {
+      ...company,
+      research: {
+        version: 1,
+        evidence: [
+          {
+            excerpt: 'Un indice sourcé',
+            sourceUrl: 'https://entreprise.fr/sav',
+          },
+        ],
+      },
+    };
+    const researched = await asUser(
+      alice,
+      'update public.radar_leads set company=$1 where id=$2 and revision=$3 returning *',
+      [enriched, lead.id, 2],
+    );
+    assert.equal(researched.rows[0].revision, 3);
+    assert.equal(researched.rows[0].notes, 'À appeler');
+    assert.deepEqual(
+      (
+        await asUser(
+          alice,
+          'select company from public.radar_leads where id=$1',
+          [lead.id],
+        )
+      ).rows[0].company,
+      enriched,
+    );
+    assert.equal(
+      (
+        await asUser(
+          bob,
+          'update public.radar_leads set company=$1 where id=$2 returning *',
+          [enriched, lead.id],
+        )
+      ).rows.length,
+      0,
+    );
+    assert.equal(
+      (
+        await asUser(
+          alice,
+          'update public.radar_leads set company=$1 where id=$2 and revision=2 returning *',
+          [company, lead.id],
+        )
+      ).rows.length,
+      0,
+    );
+    await assert.rejects(
+      asUser(alice, 'update public.radar_leads set company=$1 where id=$2', [
+        { ...enriched, siren: '987654321' },
+        lead.id,
+      ]),
+      /check constraint/,
+    );
+    await assert.rejects(
+      asUser(alice, 'update public.radar_leads set company=$1 where id=$2', [
+        { ...enriched, research: { text: 'x'.repeat(20_000) } },
+        lead.id,
+      ]),
+      /check constraint/,
+    );
     assert.equal(
       (
         await asUser(

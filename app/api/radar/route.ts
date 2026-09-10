@@ -1,5 +1,9 @@
 import { findLocalCompanies, RadarApiError } from '@/lib/radar/api';
 import { radarSearchInput } from '@/lib/radar/search-input';
+import {
+  savedCompanySirens,
+  SavedCompaniesError,
+} from '@/lib/radar/saved-companies';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -21,19 +25,27 @@ export async function GET(request: Request) {
       { status: 400 },
     );
   try {
-    const result = await findLocalCompanies({ ...parsed.data, limit: 5 });
+    const excludedSirens = await savedCompanySirens(request);
+    const result = await findLocalCompanies({
+      ...parsed.data,
+      limit: 5,
+      excludedSirens,
+    });
     return Response.json(result, {
-      headers: { 'Cache-Control': 'public, s-maxage=300' },
+      headers: { 'Cache-Control': 'private, no-store', Vary: 'Authorization' },
     });
   } catch (error) {
     return Response.json(
       {
         error:
-          error instanceof RadarApiError
+          error instanceof RadarApiError || error instanceof SavedCompaniesError
             ? error.message
             : 'La recherche est indisponible. Réessayez plus tard.',
       },
-      { status: 503 },
+      {
+        status: error instanceof SavedCompaniesError ? error.status : 503,
+        headers: { 'Cache-Control': 'private, no-store' },
+      },
     );
   }
 }

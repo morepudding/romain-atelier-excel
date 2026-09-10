@@ -111,6 +111,7 @@ export async function findLocalCompanies(
     limit?: number;
     targetWorkflow?: 'reclamations_client';
     activitySections?: ActivitySection[];
+    excludedSirens?: string[];
   } = {},
   dependencies: {
     fetchImpl?: FetchLike;
@@ -127,7 +128,9 @@ export async function findLocalCompanies(
         : radarConfig.defaults.activitySections,
     ),
   ].sort();
-  const key = JSON.stringify({ radiusKm, limit, activitySections });
+  const excludedSirens = [...new Set(input.excludedSirens || [])].sort();
+  const ranking = { radiusKm, limit, activitySections, excludedSirens };
+  const key = JSON.stringify(ranking);
   if (!dependencies.fetchImpl) {
     const cached = memoryCache.get(key);
     if (cached && cached.expires > Date.now()) return cached.value;
@@ -161,11 +164,7 @@ export async function findLocalCompanies(
     results.push(...payload.results!);
     if (payload.total_results !== undefined)
       lastPage = Math.max(1, Math.ceil(payload.total_results / 25));
-    if (
-      rankCompanies(results, { radiusKm, limit, activitySections }).length >=
-      limit
-    )
-      break;
+    if (rankCompanies(results, ranking).length >= limit) break;
     if (
       !payload.results!.length ||
       (payload.total_results !== undefined &&
@@ -187,11 +186,7 @@ export async function findLocalCompanies(
     retrievedAt: (dependencies.now || (() => new Date()))().toISOString(),
     source: radarConfig.source.name,
     examinedCount: results.length,
-    companies: rankCompanies(results, {
-      radiusKm,
-      limit,
-      activitySections,
-    }),
+    companies: rankCompanies(results, ranking),
   };
   if (!dependencies.fetchImpl) {
     if (memoryCache.size >= 64)

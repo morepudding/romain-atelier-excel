@@ -395,3 +395,223 @@
 .rl-shell output.rl-empty {
   display: block;
 }
+
+.rl-research-option {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+.rl-research-option input {
+  margin-top: 5px;
+  accent-color: var(--rl-ink);
+}
+.rl-research-option strong {
+  font-weight: 600;
+}
+.rl-research-option small {
+  display: block;
+  color: var(--rl-muted);
+  margin-top: 3px;
+}
+.rl-research-status {
+  color: var(--rl-muted);
+  font-size: 13px;
+  margin: -2px 0 20px;
+}
+.rl-research-access {
+  grid-column: 1 / -1;
+  margin-top: -6px;
+}
+.rl-research-access button {
+  font-size: 13px;
+}
+.rl-card-expanded {
+  grid-column: 1 / -1;
+}
+.rl-research {
+  border-top: 1px solid var(--rl-line);
+  padding-top: 15px;
+  margin: 15px 0 20px;
+  font-size: 14px;
+}
+.rl-research button {
+  height: auto;
+  white-space: normal;
+  transition-property: background-color, color, opacity, scale;
+}
+.rl-research button:active:not(:disabled) {
+  scale: 0.96;
+}
+.rl-research button:hover:not(:disabled) {
+  background: #f3f6f1;
+}
+.rl-research .rl-primary:hover:not(:disabled) {
+  background: #30463e;
+}
+.rl-research-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 14px;
+  align-items: center;
+  font-size: 12px;
+}
+.rl-research-priority {
+  display: inline-block;
+  padding: 5px 9px;
+  color: #705022;
+  background: #f5eedb;
+  border-radius: 5px;
+  font-weight: 650;
+}
+.rl-research-priority-high {
+  color: #28543c;
+  background: #e7f0e7;
+}
+.rl-research-progress {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  color: var(--rl-muted);
+  min-height: 42px;
+}
+.rl-shell .rl-research-toggle {
+  width: 100%;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-top: 8px;
+}
+.rl-research-detail {
+  margin-top: 22px;
+  border-top: 1px solid var(--rl-line);
+  padding-top: 22px;
+}
+.rl-research-identity {
+  padding: 15px 18px;
+  background: #f3f5f0;
+  border-radius: 7px;
+  margin-bottom: 24px;
+}
+.rl-research-identity p {
+  margin: 5px 0;
+}
+.rl-research a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #28543c;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.rl-research-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+}
+.rl-research h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+.rl-evidence-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.rl-evidence-list li {
+  margin-bottom: 20px;
+}
+.rl-evidence-list blockquote {
+  margin: 7px 0;
+  border-left: 2px solid #b8c7b4;
+  padding-left: 12px;
+  color: var(--rl-muted);
+}
+.rl-evidence-list a {
+  font-size: 12px;
+}
+.rl-research-hypothesis {
+  margin: 24px 0;
+  padding: 18px;
+  background: #faf3e4;
+  border-radius: 7px;
+}
+.rl-research-hypothesis h3 {
+  color: #705022;
+}
+.rl-research-questions {
+  padding-left: 20px;
+}
+.rl-research-questions li {
+  margin: 8px 0;
+}
+.rl-research-demo {
+  margin: 24px 0;
+  padding: 18px;
+  border: 1px solid var(--rl-line);
+  border-radius: 7px;
+}
+.rl-research-demo small {
+  display: block;
+  color: var(--rl-muted);
+  margin-bottom: 9px;
+}
+.rl-message-draft textarea {
+  font-size: 13px;
+  line-height: 1.65;
+  resize: vertical;
+  min-height: 245px;
+}
+.rl-message-draft button {
+  margin-top: 10px;
+}
+.rl-copy-notice {
+  display: block;
+  color: var(--rl-muted);
+  margin-top: 7px;
+  font-size: 12px;
+}
+.rl-research-sources {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--rl-line);
+}
+.rl-research-sources ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  font-size: 12px;
+}
+.rl-research-sources p {
+  font-size: 12px;
+}
+.rl-website-form {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rl-line);
+}
+.rl-website-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.rl-website-form label span {
+  display: block;
+  color: var(--rl-muted);
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+.rl-website-form > div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.rl-website-form button {
+  flex-shrink: 0;
+}

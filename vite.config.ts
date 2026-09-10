@@ -11,8 +11,9 @@ const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
 
 const { d1, r2 } = hostingConfig;
 
-// macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
-const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === 'seatbelt';
+// Le polling évite les verrous Windows et fonctionne dans le sandbox macOS.
+const usePolling =
+  process.platform === 'win32' || process.env.CODEX_SANDBOX === 'seatbelt';
 
 const localBindingConfig = {
   main: 'vinext/server/fetch-handler',
@@ -70,12 +71,13 @@ export default defineConfig(async (): Promise<UserConfig> => {
     server: {
       host: '0.0.0.0',
       allowedHosts: ['terminal.local'],
-      ...(isCodexSeatbeltSandbox ? { watch: { useFsEvents: false, usePolling: true } } : {}),
+      watch: {
+        ignored: ['**/.vercel/**', '**/work/**'],
+        ...(usePolling
+          ? { useFsEvents: false, usePolling: true, interval: 500 }
+          : {}),
+      },
     },
-    plugins: [
-      vinext(),
-      sites(),
-      deploymentPlugin,
-    ],
+    plugins: [vinext(), sites(), deploymentPlugin],
   } as unknown as UserConfig;
 });

@@ -251,6 +251,7 @@ export function rankCompanies(
     radiusKm?: number;
     limit?: number;
     activitySections?: readonly ActivitySection[];
+    excludedSirens?: readonly string[];
   } = {},
 ) {
   const center = options.center || radarConfig.center;
@@ -258,10 +259,16 @@ export function rankCompanies(
   const limit = options.limit || radarConfig.defaults.limit;
   const sections =
     options.activitySections || radarConfig.defaults.activitySections;
+  const seen = new Set(options.excludedSirens);
   return rawCompanies
     .filter((raw) =>
       sections.includes(raw.section_activite_principale as ActivitySection),
     )
+    .filter((raw) => {
+      if (!raw.siren || seen.has(raw.siren)) return false;
+      seen.add(raw.siren);
+      return true;
+    })
     .map((raw) => mapCompany(raw, center, radiusKm))
     .filter(
       (company): company is RadarCompany & { _score: number } => !!company,

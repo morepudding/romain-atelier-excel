@@ -13,6 +13,12 @@ Le schéma `schema.sql` est prêt à appliquer dans un projet Supabase dédié. 
 
 ## Données et droits
 
+### Fiche de recherche publique
+
+La migration additionnelle `migrations/20260910_research_snapshot.sql` est préparée mais n'a pas été appliquée à distance. Elle accorde la mise à jour de `company` aux utilisateurs authentifiés, sous les règles RLS existantes. Elle permet d'ajouter ou d'actualiser la recherche d'une piste déjà enregistrée. Le SIREN, le propriétaire, les notes et les révisions restent protégés par les contraintes et droits existants. Sur une base neuve, appliquer d'abord `schema.sql`, puis cette migration ; sur la base existante, appliquer uniquement la migration additionnelle après autorisation.
+
+Les indications initiales d'activation ci-dessus sont historiques : `CURRENT_STATE.md` consigne la création du propriétaire et son autorisation le 10 septembre 2026. La connexion réelle reste à vérifier.
+
 `radar_members` autorise les comptes privés. `radar_leads` conserve la fiche publique à la date de recherche, son SIREN, le statut, les notes et la prochaine action. Les règles RLS imposent simultanément l'appartenance à la liste autorisée et la propriété de la ligne. Les droits SQL interdisent de changer le propriétaire ou de modifier cette liste depuis le navigateur.
 
 Un SIREN ne peut être enregistré qu'une fois par propriétaire. La révision calculée par la base évite d'écraser une modification provenant d'un autre appareil. Un conflit conserve la saisie à l'écran et demande une actualisation. Le bouton Exporter permet de conserver une copie JSON des pistes ; aucun import automatique n'est implémenté.

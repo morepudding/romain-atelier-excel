@@ -1,8 +1,10 @@
 import type { ActivitySection } from './config.ts';
+import type { CompanyResearch } from './research-types.ts';
 
 export type PriorityLevel = 'Prioritaire' | 'Intéressante' | 'À vérifier';
 
 export type RadarCompany = {
+  research?: CompanyResearch;
   siren: string;
   nom: string;
   commune: string;

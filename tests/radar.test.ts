@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import { fetchRadarPage } from '../lib/radar/api.ts';
+import { fetchRadarPage, findLocalCompanies } from '../lib/radar/api.ts';
+import { savedCompanySirens } from '../lib/radar/saved-companies.ts';
 import { isExcluded, mapCompany, rankCompanies } from '../lib/radar/logic.ts';
 import type { RawApiResponse, RawCompany } from '../lib/radar/types.ts';
 
@@ -82,6 +83,169 @@ void test('limite le résultat final au nombre demandé', () => {
   assert.equal(rankCompanies(raw, { limit: 5 }).length, 5);
 });
 
+void test('écarte les SIREN enregistrés avant la limite et conserve les homonymes distincts', () => {
+  const raw = Array.from({ length: 7 }, (_, index) => ({
+    ...base,
+    siren: `12345678${index}`,
+  }));
+  const companies = rankCompanies([raw[0], ...raw, raw[1]], {
+    limit: 5,
+    excludedSirens: [raw[0].siren],
+  });
+  assert.equal(companies.length, 5);
+  assert.equal(new Set(companies.map((company) => company.siren)).size, 5);
+  assert.equal(
+    companies.some((company) => company.siren === raw[0].siren),
+    false,
+  );
+  assert.equal(
+    companies.every((company) => company.nom === base.nom_complet),
+    true,
+  );
+});
+
+void test('cherche des remplaçantes sur la page suivante quand les premières sont enregistrées', async () => {
+  const known = Array.from({ length: 5 }, (_, index) => ({
+    ...base,
+    siren: `12345678${index}`,
+  }));
+  const fresh = Array.from({ length: 5 }, (_, index) => ({
+    ...base,
+    siren: `98765432${index}`,
+  }));
+  const pages: string[] = [];
+  const result = await findLocalCompanies(
+    { excludedSirens: known.map((company) => company.siren) },
+    {
+      fetchImpl: async (input) => {
+        const page = new URL(
+          input instanceof Request ? input.url : input,
+        ).searchParams.get('page')!;
+        pages.push(page);
+        return Response.json({
+          results: page === '1' ? known : [...known, ...fresh, fresh[0]],
+          total_results: 500,
+        });
+      },
+      sleepImpl: async () => {},
+    },
+  );
+  assert.deepEqual(pages, ['1', '5']);
+  assert.deepEqual(
+    result.companies.map((company) => company.siren).sort(),
+    fresh.map((company) => company.siren).sort(),
+  );
+});
+
+void test('retourne zéro nouvelle entreprise si toutes les candidates disponibles sont enregistrées', async () => {
+  const result = await findLocalCompanies(
+    { excludedSirens: [base.siren!] },
+    {
+      fetchImpl: async () =>
+        Response.json({ results: [base], total_results: 1 }),
+    },
+  );
+  assert.deepEqual(result.companies, []);
+});
+
+void test('le cache distingue les carnets et normalise les exclusions', async (context) => {
+  const raw = Array.from({ length: 7 }, (_, index) => ({
+    ...base,
+    siren: `12345678${index}`,
+  }));
+  let calls = 0;
+  context.mock.method(globalThis, 'fetch', async () => {
+    calls += 1;
+    return Response.json({ results: raw, total_results: 7 });
+  });
+  const input = { radiusKm: 34, limit: 5 };
+  const initial = await findLocalCompanies(input);
+  const excludedSirens = initial.companies
+    .slice(0, 2)
+    .map((company) => company.siren);
+  const fresh = await findLocalCompanies({ ...input, excludedSirens });
+  assert.equal(fresh.companies.length, 5);
+  assert.equal(
+    fresh.companies.some((company) => excludedSirens.includes(company.siren)),
+    false,
+  );
+  await findLocalCompanies({
+    ...input,
+    excludedSirens: [...excludedSirens.toReversed(), excludedSirens[0]],
+  });
+  assert.equal(calls, 2);
+  assert.deepEqual(
+    (await findLocalCompanies(input)).companies,
+    initial.companies,
+  );
+});
+
+void test('lit toutes les pistes du propriétaire et refuse de masquer une erreur de lecture', async () => {
+  const previousUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const previousKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://radar-supabase.example.test';
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'fixture-public-key';
+  const userId = '11111111-2222-4333-8444-555555555555';
+  const request = new Request('http://localhost/api/radar', {
+    headers: { Authorization: 'Bearer fixture-token' },
+  });
+  try {
+    assert.deepEqual(
+      await savedCompanySirens(
+        new Request('http://localhost/api/radar'),
+        async () => {
+          throw new Error('Aucun appel anonyme');
+        },
+      ),
+      [],
+    );
+    const offsets: number[] = [];
+    const sirens = await savedCompanySirens(request, async (input, init) => {
+      const url = new URL(input instanceof Request ? input.url : input);
+      assert.equal(
+        new Headers(init?.headers).get('authorization'),
+        'Bearer fixture-token',
+      );
+      if (url.pathname === '/auth/v1/user')
+        return Response.json({ id: userId });
+      assert.equal(url.pathname, '/rest/v1/radar_leads');
+      assert.equal(url.searchParams.get('select'), 'siren');
+      assert.equal(url.searchParams.get('user_id'), `eq.${userId}`);
+      assert.equal(url.searchParams.has('status'), false);
+      const offset = Number(url.searchParams.get('offset'));
+      offsets.push(offset);
+      return Response.json(
+        Array.from({ length: offset === 0 ? 1000 : 1 }, (_, i) => ({
+          siren: String(offset + i).padStart(9, '0'),
+        })),
+      );
+    });
+    assert.equal(sirens.length, 1001);
+    assert.deepEqual(offsets, [0, 1000]);
+    await assert.rejects(
+      savedCompanySirens(request, async (input) => {
+        const url = new URL(input instanceof Request ? input.url : input);
+        return url.pathname === '/auth/v1/user'
+          ? Response.json({ id: userId })
+          : Response.json({ message: 'Lecture impossible' }, { status: 400 });
+      }),
+      /Impossible de vérifier vos pistes/,
+    );
+    await assert.rejects(
+      savedCompanySirens(request, async () =>
+        Response.json({ message: 'Session invalide' }, { status: 401 }),
+      ),
+      /session a expiré/,
+    );
+  } finally {
+    if (previousUrl === undefined) delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+    else process.env.NEXT_PUBLIC_SUPABASE_URL = previousUrl;
+    if (previousKey === undefined)
+      delete process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    else process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = previousKey;
+  }
+});
+
 void test('conserve un effectif inconnu si plusieurs établissements sont pertinents', () => {
   const company = mapCompany({
     ...base,
@@ -142,7 +306,11 @@ void test('la recherche commence à la première page et s’arrête à la fin d
     { radiusKm: 5 },
     {
       fetchImpl: async (input) => {
-        pages.push(new URL(String(input)).searchParams.get('page')!);
+        pages.push(
+          new URL(
+            input instanceof Request ? input.url : input,
+          ).searchParams.get('page')!,
+        );
         return Response.json({ results: [], total_results: 0 });
       },
       sleepImpl: async () => {},

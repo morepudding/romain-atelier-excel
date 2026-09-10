@@ -4,7 +4,7 @@
 
 La PR #1 est fusionnée. Radar natif sans MCP publié sur https://romain-atelier-excel.vercel.app/radar. Dépôt GitHub relié au projet Vercel ; paramètres Supabase enregistrés en Production et Preview. Version applicative vérifiée : 436e467, déploiement dpl_2g2g8cxANpfmiAgmKqofCJuQwyZP.
 
-Projet Supabase `radar-local`, référence `tsgxdokkqzgglenjsaxr`, créé dans `morepudding’s Org`, région Paris, offre gratuite confirmée. Migration `radar_private_leads` appliquée ; RLS active sur les deux tables, audit sans anomalie. Aucun compte propriétaire créé ou autorisé.
+Projet Supabase `radar-local`, référence `tsgxdokkqzgglenjsaxr`, créé dans `morepudding’s Org`, région Paris, offre gratuite confirmée. Migration `radar_private_leads` appliquée ; RLS active sur les deux tables, audit sans anomalie. Compte propriétaire créé par l’utilisateur, adresse confirmée et accès ajouté à `radar_members` le 10 septembre 2026. Autorisation vérifiée en base ; lecture des pistes sous le rôle authenticated exécutée sans erreur.
 
 ## Vérifications
 
@@ -14,7 +14,7 @@ L’API géographique ignore les filtres PME et état administratif : seuls les 
 
 ## À terminer
 
-Créer et autoriser le compte propriétaire, puis vérifier connexion, enregistrement et relecture sur la base distante. La sauvegarde privée ne doit pas être présentée comme prête tant que ce parcours n’est pas validé.
+Vérifier la première connexion du propriétaire dans le navigateur, puis l’enregistrement et la relecture d’une piste. Le compte et son autorisation sont en place ; le parcours complet de sauvegarde dans le navigateur reste à valider.
 
 ## Priorité
 

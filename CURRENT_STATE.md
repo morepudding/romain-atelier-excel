@@ -1,5 +1,11 @@
 # État actuel
 
+## Archive du film Maison Martin — 10 septembre 2026
+
+Le film validé par Romain est conservé dans `films/maison-martin/`, sous le tag `maison-martin-v1.0.0`. L’archive comprend le MP4 Full HD de 60 secondes, ses deux images de chantier fictives, les scripts d’animation et de son, ainsi que les instructions de rendu et les mesures de vérification. Publication du tag dans le dépôt de la vitrine ; la branche applicative reste à sa version existante.
+
+Contrôles : MP4 identique au fichier validé par son SHA-256, décodage des 1 800 images réussi, 120 images finales stables, installation des dépendances du rendu et essai d’encodage de deux secondes réussis. Les sources archivées utilisent un chemin FFmpeg configurable et le gain du mixage final. Les fichiers de l’application ne sont pas modifiés par cette archive.
+
 ## En ligne
 
 La PR #1 est fusionnée. Radar natif sans MCP publié sur https://romain-atelier-excel.vercel.app/radar. Dépôt GitHub relié au projet Vercel ; paramètres Supabase enregistrés en Production et Preview. Version applicative vérifiée : 436e467, déploiement dpl_2g2g8cxANpfmiAgmKqofCJuQwyZP.

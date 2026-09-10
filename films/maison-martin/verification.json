@@ -1,0 +1,16 @@
+{
+  "file": "releases/Maison-Martin_60s_Full-HD.mp4",
+  "version": "maison-martin-v1.0.0",
+  "validated_on": "2026-09-10",
+  "duration_seconds": 60,
+  "video_frames": 1800,
+  "size_pixels": [1920, 1080],
+  "fps": 30,
+  "audio": "AAC stereo 48 kHz",
+  "full_decode": "passed",
+  "stable_ending_seconds": 4,
+  "last_segment_frames": 120,
+  "maximum_mean_pixel_change_ending": 0.008045267313718796,
+  "sha256": "578259c8c4cc8f722e558272e0e3b808694c7d3f496ecaa702081b8b2b92c6dd",
+  "bytes": 12210662
+}

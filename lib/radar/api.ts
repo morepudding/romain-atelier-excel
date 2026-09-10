@@ -133,18 +133,19 @@ export async function findLocalCompanies(
     if (cached && cached.expires > Date.now()) return cached.value;
   }
 
-  const pages = [1, 2, 3, 4];
+  // The geographic API ranks large networks first and ignores SME filters.
+  // Sample deeper pages within the same bounded request budget.
+  const pages = [1, 5, 10, 15, 20, 25, 30, 35, 40];
+  let lastPage = pages[pages.length - 1];
   const deadline = Date.now() + 45_000;
   const results: RawCompany[] = [];
-  for (const [index, page] of pages.entries()) {
+  for (const [index, sampledPage] of pages.entries()) {
+    const page = Math.min(sampledPage, lastPage);
     if (index > 0) await (dependencies.sleepImpl || sleep)(180);
     const url = new URL('/near_point', radarConfig.source.baseUrl);
     url.searchParams.set('lat', String(radarConfig.center.latitude));
     url.searchParams.set('long', String(radarConfig.center.longitude));
     url.searchParams.set('radius', String(radiusKm));
-    // Filter before pagination: otherwise national groups occupy the first pages.
-    url.searchParams.set('categorie_entreprise', 'PME');
-    url.searchParams.set('etat_administratif', 'A');
     url.searchParams.set(
       'section_activite_principale',
       activitySections.join(','),
@@ -158,6 +159,8 @@ export async function findLocalCompanies(
       deadline,
     });
     results.push(...payload.results!);
+    if (payload.total_results !== undefined)
+      lastPage = Math.max(1, Math.ceil(payload.total_results / 25));
     if (
       rankCompanies(results, { radiusKm, limit, activitySections }).length >=
       limit

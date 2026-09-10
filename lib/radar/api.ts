@@ -142,6 +142,9 @@ export async function findLocalCompanies(
     url.searchParams.set('lat', String(radarConfig.center.latitude));
     url.searchParams.set('long', String(radarConfig.center.longitude));
     url.searchParams.set('radius', String(radiusKm));
+    // Filter before pagination: otherwise national groups occupy the first pages.
+    url.searchParams.set('categorie_entreprise', 'PME');
+    url.searchParams.set('etat_administratif', 'A');
     url.searchParams.set(
       'section_activite_principale',
       activitySections.join(','),

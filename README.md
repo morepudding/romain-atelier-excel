@@ -8,7 +8,7 @@ L'accueil redirige vers `/radar`. Cette page native fonctionne sans ChatGPT, san
 
 L'onglet Mes pistes utilise Supabase Auth et une base PostgreSQL protégée par RLS. Il permet d'enregistrer une entreprise, de modifier ses notes, son statut et sa prochaine action, puis d'exporter ses pistes. La connexion est réservée aux comptes explicitement autorisés. Sans configuration Supabase, la recherche reste disponible et l'interface indique que la sauvegarde n'est pas encore activée.
 
-Le schéma et la procédure d'activation sont dans `supabase/`. La base distante doit encore être créée et configurée : la présence du code ne signifie pas que la sauvegarde est déjà active.
+Le schéma et la procédure d'activation sont dans `supabase/`. Le projet Supabase `radar-local` (`tsgxdokkqzgglenjsaxr`, région Paris) est créé et le schéma est appliqué. Les règles RLS sont actives et le contrôle de sécurité Supabase ne remonte aucune anomalie. Le compte propriétaire et les variables Vercel restent à configurer : la sauvegarde n’est pas encore active pour l’utilisateur.
 
 ## Démonstration
 

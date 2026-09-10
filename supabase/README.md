@@ -1,11 +1,11 @@
 # Radar local — base privée
 
-Le schéma `schema.sql` est prêt à appliquer dans un projet Supabase dédié. Il ne crée aucun compte et n'accorde automatiquement l'accès à personne. Il n'a pas encore été appliqué à une base distante.
+Le schéma `schema.sql` est prêt à appliquer dans un projet Supabase dédié. Il ne crée aucun compte et n'accorde automatiquement l'accès à personne. Il a été appliqué au projet `radar-local` (`tsgxdokkqzgglenjsaxr`, Paris) via la migration `radar_private_leads`. Le projet a été créé à 0 €/mois dans l’organisation confirmée par l’utilisateur. Les deux tables ont RLS activée et le contrôle de sécurité Supabase est sans anomalie. Aucun compte Auth ni membre autorisé n’existe encore.
 
 ## Activation
 
-1. Confirmer l'organisation et le coût, puis créer le projet dédié en région Europe.
-2. Appliquer `schema.sql` avec l'outil de migration Supabase (nom `radar_private_leads`) et vérifier les recommandations de sécurité.
+1. Effectué : organisation et coût confirmés ; projet dédié créé à Paris.
+2. Effectué : migration `radar_private_leads` appliquée et contrôle de sécurité vérifié. Ne pas réappliquer le schéma.
 3. Dans Supabase Auth, désactiver les inscriptions publiques et créer le compte du propriétaire avec son adresse confirmée. L'interface propose uniquement une connexion par mot de passe, aucune inscription.
 4. Ajouter l'UUID réel de ce compte à `public.radar_members` depuis l'administration. Les utilisateurs ne peuvent pas s'ajouter eux-mêmes. Ne jamais utiliser une adresse ou un UUID supposé.
 5. Configurer `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` dans Vercel puis reconstruire le site. Aucune clé secrète Supabase ou OpenAI n'est nécessaire dans l'application.

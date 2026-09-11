@@ -1,10 +1,10 @@
-# Premier client — Radar local et démonstration
+# Premier client — Vitrine, Radar local et démonstrations
 
 Un outil personnel pour identifier des entreprises autour de Vairé, conserver des pistes privées et présenter des démonstrations métier. Les besoins des entreprises restent des hypothèses à confirmer.
 
 ## Version Vercel
 
-L'accueil redirige vers `/radar`. Cette page native fonctionne sans ChatGPT, sans iframe et sans MCP : choix du rayon (5–50 km), secteurs, recherche de cinq candidates et fiches officielles. `/api/radar` utilise l'API publique Recherche d'entreprises pour trouver les candidates ; les erreurs ne sont jamais remplacées par des données fictives. La recherche examine jusqu'à neuf pages et peut retourner moins de cinq candidates si les critères ne sont pas satisfaits. Cache mémoire borné de six heures, délai global de recherche de 45 secondes.
+L'accueil public présente la vitrine « Votre métier. En plus simple. », avec un accès direct au Radar local et à la vidéo Maison Martin. Le Radar reste disponible sur /radar et fonctionne sans ChatGPT, sans iframe et sans MCP : choix du rayon (5–50 km), secteurs, recherche de cinq candidates et fiches officielles. /api/radar utilise l'API publique Recherche d'entreprises pour trouver les candidates ; les erreurs ne sont jamais remplacées par des données fictives. La recherche examine jusqu'à neuf pages et peut retourner moins de cinq candidates si les critères ne sont pas satisfaits. Cache mémoire borné de six heures, délai global de recherche de 45 secondes.
 
 Quand l'utilisateur est connecté, le serveur relit les SIREN de son carnet privé avant chaque recherche (délai de huit secondes), puis écarte toutes ses pistes, quel que soit leur statut. Il cherche des remplaçantes avant de retenir jusqu'à cinq entreprises distinctes. Une lecture du carnet en erreur ne produit pas de sélection contenant potentiellement des doublons. Le cache mémoire tient compte des exclusions ; les réponses HTTP sont privées et non mises en cache. Aucun SIREN enregistré n'est ajouté à l'URL de recherche.
 
@@ -34,7 +34,7 @@ La consultation d'un site saisi fonctionne sans fournisseur de recherche. La dé
 
 ## Cockpit historique Sites
 
-L'accueil conserve le cockpit « Premier client » et l'authentification ChatGPT dans l'environnement Sites. Les données historiques restent dans D1 ; cette adaptation ne les migre pas. Conserver le Site ChatGPT privé. `/vitrine` redirige vers l'accueil.
+Le cockpit historique « Premier client » et l'authentification ChatGPT restent disponibles dans l'environnement Sites. Les données historiques restent dans D1 ; cette adaptation ne les migre pas. La vitrine est aussi accessible sur /vitrine.
 
 Le connecteur historique `/mcp` et sa prévisualisation `/radar-preview` restent dans le dépôt pour Sites. `/mcp` retourne 404 sur Vercel et n'est jamais appelé par le Radar natif. Les fixtures de prévisualisation ne sont jamais utilisées pour la recherche réelle.
 

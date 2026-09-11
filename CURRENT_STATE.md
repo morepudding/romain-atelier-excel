@@ -4,6 +4,11 @@
 
 La vidéo Maison-Martin_60s_Full-HD.mp4 remplace l’ancienne démonstration interactive de réclamation dans la navigation. Elle est servie par /demo/maison-martin, avec un lecteur vidéo Full HD et un habillage de présentation. L’ancienne route /demo/reclamation redirige vers cette nouvelle page ; ses composants restent conservés dans le dépôt pour préserver l’historique.
 
+## Vitrine publique intégrée — 11 septembre 2026
+
+La vitrine commencée dans design/vitrine/ est maintenant la page d’accueil publique / et reste accessible sur /vitrine. Elle reprend la palette ivoire, vert forêt, sauge et ambre, le monogramme r., Manrope, Instrument Serif et l’accroche « Votre métier. En plus simple. ».
+
+Les accès de la vitrine sont réels : Radar local ouvre /radar et Vidéo Maison Martin ouvre /demo/maison-martin. Le visuel central reste explicitement illustratif et fictif ; il ne simule ni IA ni envoi de message.
 ## Direction de la vitrine — 10 septembre 2026
 
 La deuxième proposition locale du premier écran est disponible dans `design/vitrine/` : accueil et planche palette/typographies. Romain apprécie l’apparition du logo, l’espace et la composition centrale ; il demande de sortir complètement des bougies et de renforcer la navigation, le contact et le texte d’introduction. La palette, Manrope, Instrument Serif et l’accroche « Votre métier. En plus simple. » sont conservés. La navigation est plus grande et plus marquée, le contact devient un bouton vert, le texte d’introduction est agrandi et plus contrasté.
@@ -44,7 +49,7 @@ Activation vérifiée le 10 septembre 2026 : appel Tavily réel HTTP 200, puis u
 
 ## En ligne
 
-La PR #1 est fusionnée. Radar natif sans MCP publié sur https://romain-atelier-excel.vercel.app/radar. Dépôt GitHub relié au projet Vercel ; paramètres Supabase enregistrés en Production et Preview. Dernière version contrôlée au début de cette intervention : d785ead, déploiement dpl_D3wvQEWT7hgQbMNS6vhMuuegS5mh. Les changements locaux décrits ci-dessus n'y figurent pas.
+La PR #1 est fusionnée. Le Radar natif sans MCP reste publié sur https://romain-atelier-excel.vercel.app/radar. La vitrine publique est désormais la page racine et propose les accès au Radar local et à la vidéo Maison Martin. Version contrôlée le 11 septembre 2026 : 3deeeef, déploiement Vercel READY.
 
 Projet Supabase `radar-local`, référence `tsgxdokkqzgglenjsaxr`, créé dans `morepudding’s Org`, région Paris, offre gratuite confirmée. Migration `radar_private_leads` appliquée ; RLS active sur les deux tables, audit sans anomalie. Compte propriétaire créé par l’utilisateur, adresse confirmée et accès ajouté à `radar_members` le 10 septembre 2026. Autorisation vérifiée en base ; lecture des pistes sous le rôle authenticated exécutée sans erreur.
 

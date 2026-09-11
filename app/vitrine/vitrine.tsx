@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
+import './vitrine.css';
+
 const views = [
   {
     kicker: 'Du premier message à la prochaine action.',

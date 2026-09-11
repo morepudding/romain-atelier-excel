@@ -1,6 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+/* oxlint-disable next/no-html-link-for-pages -- Native navigation is intentional here: vinext's client router currently blocks these public links. */
+
 import { useState } from 'react';
 
 import './vitrine.css';
@@ -61,7 +62,7 @@ export default function Vitrine() {
 
       <div className="vitrine-page">
         <header className="vitrine-header">
-          <Link
+          <a
             className="vitrine-brand"
             href="/"
             aria-label="Romain Atelier Excel, accueil"
@@ -70,17 +71,17 @@ export default function Vitrine() {
               r<span className="vitrine-signature-dot">.</span>
             </span>
             <span className="vitrine-brand-name">Romain Atelier Excel</span>
-          </Link>
+          </a>
 
           <nav className="vitrine-nav" aria-label="Navigation principale">
             <a href="#demonstrations">Démonstrations</a>
-            <Link href="/radar">Radar local</Link>
-            <Link href="/demo/maison-martin">Vidéo Maison Martin</Link>
+            <a href="/radar">Radar local</a>
+            <a href="/demo/maison-martin">Vidéo Maison Martin</a>
           </nav>
 
-          <Link className="vitrine-contact" href="/demo/maison-martin">
+          <a className="vitrine-contact" href="/demo/maison-martin">
             Voir la vidéo <span aria-hidden="true">↗</span>
-          </Link>
+          </a>
         </header>
 
         <main>
@@ -143,7 +144,7 @@ export default function Vitrine() {
               </div>
 
               <div className="vitrine-showcase-actions">
-                <Link
+                <a
                   className="vitrine-showcase-action vitrine-showcase-action-primary"
                   href="/demo/maison-martin"
                 >
@@ -154,10 +155,10 @@ export default function Vitrine() {
                     Voir la vidéo Maison Martin
                     <small>Une démonstration · 60 secondes</small>
                   </span>
-                </Link>
-                <Link className="vitrine-radar-link" href="/radar">
+                </a>
+                <a className="vitrine-radar-link" href="/radar">
                   Ouvrir le Radar local <span aria-hidden="true">↗</span>
-                </Link>
+                </a>
               </div>
             </div>
 
@@ -323,10 +324,10 @@ export default function Vitrine() {
         <footer className="vitrine-footer">
           <span>Romain Atelier Excel · Outils métier concrets</span>
           <div>
-            <Link href="/radar">Radar local</Link>
-            <Link href="/demo/maison-martin">
+            <a href="/radar">Radar local</a>
+            <a href="/demo/maison-martin">
               Vidéo Maison Martin <span aria-hidden="true">↗</span>
-            </Link>
+            </a>
           </div>
         </footer>
       </div>

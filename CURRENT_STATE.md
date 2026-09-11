@@ -1,5 +1,19 @@
 # État actuel
 
+## Retour vers le cockpit depuis les pages secondaires — 11 septembre 2026
+
+Le Radar `/radar` et la vidéo `/demo/maison-martin` proposent désormais un accès direct au cockpit principal (`/`) dans leur en-tête. Le retour contextuel vers le Radar depuis la vidéo est conservé.
+
+Vérifications : typecheck, lint ciblé, 33 tests, build Vercel et réponses HTTP 200 de `/`, `/radar` et `/demo/maison-martin` sur le serveur local. Aucun déploiement ni changement de données n’a été effectué.
+
+## Sélecteur Radar Refonte — 11 septembre 2026
+
+Le Radar `/radar` propose désormais un sélecteur entre « Radar local » et « Radar Refonte ». Le radar local, sa recherche, ses fiches et « Mes pistes » restent inchangés. Le mode Refonte recherche dans l’annuaire officiel les entreprises et associations actives de petite taille autour de Vairé, sans consulter ni évaluer leur site internet. Les résultats affichent uniquement leur identité, leur activité, leur commune, leur distance et leur fiche officielle.
+
+La recherche est bornée à cinq résultats, échantillonne des pages profondes pour éviter la domination des grands réseaux et exclut les SIREN déjà enregistrés dans le carnet du propriétaire. Les associations, les entreprises individuelles et les structures à zéro salarié restent éligibles dans ce mode. Aucun score de site, aucune hypothèse commerciale et aucune cible fictive ne sont produits.
+
+Vérifications : typecheck, lint ciblé, 33 tests, build Vercel, réponse HTTP 200 de `/radar`, réponse HTTP 200 de l’API Refonte avec cinq résultats réels dont quatre entreprises et une association à 5 km, et réponse HTTP 400 pour un rayon invalide. Aucun déploiement ni changement de données n’a été effectué.
+
 ## Démonstration vidéo Maison Martin — 11 septembre 2026
 
 La vidéo Maison-Martin_60s_Full-HD.mp4 remplace l’ancienne démonstration interactive de réclamation dans la navigation. Elle est servie par /demo/maison-martin, avec un lecteur vidéo Full HD et un habillage de présentation. L’ancienne route /demo/reclamation redirige vers cette nouvelle page ; ses composants restent conservés dans le dépôt pour préserver l’historique.

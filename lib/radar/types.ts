@@ -20,6 +20,38 @@ export type RadarCompany = {
   sourceUrl: string;
 };
 
+export type RadarTargetKind = 'Entreprise' | 'Association';
+
+export type RadarTarget = {
+  siren: string;
+  nom: string;
+  type: RadarTargetKind;
+  commune: string;
+  codePostal: string;
+  distanceKm: number;
+  activiteCode: string;
+  activiteLibelle: string;
+  trancheEffectif: string;
+  nombreEtablissements: number;
+  sourceUrl: string;
+};
+
+export type RadarRefonteSearch = {
+  center: string;
+  latitude: number;
+  longitude: number;
+  radiusKm: number;
+  limit: number;
+};
+
+export type RadarRefonteResult = {
+  search: RadarRefonteSearch;
+  retrievedAt: string;
+  source: string;
+  examinedCount: number;
+  targets: RadarTarget[];
+};
+
 export type RadarSearch = {
   center: string;
   latitude: number;

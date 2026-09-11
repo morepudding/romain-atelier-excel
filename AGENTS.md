@@ -14,6 +14,14 @@ Construire des éléments réutilisables plutôt qu’une application différent
 
 Ne jamais présenter une hypothèse comme un problème confirmé.
 
+## Règle immuable de l’interface
+
+L’interface contient uniquement le produit, ses données réelles et les actions utiles à l’utilisateur. Elle ne contient jamais de contenu méta qui explique l’implémentation, le raisonnement, l’état de construction, la roadmap ou la prochaine étape.
+
+Lorsqu’une fonctionnalité est demandée, ne pas ajouter de texte de présentation pour expliquer ce qui vient d’être construit. Ne pas ajouter de badges temporels ou promotionnels comme « Nouveau », « Bêta », « En préparation » ou « Première version ». Si une fonctionnalité n’a pas encore de résultat réel, laisser l’espace sobre ou afficher uniquement un état fonctionnel nécessaire ; ne pas le remplacer par une explication méta.
+
+Cette règle s’applique à toute nouvelle interface du projet et reste prioritaire pour les prochaines évolutions, sauf demande explicite contraire de Romain.
+
 ## Travail dans le dépôt
 
 Inspecter l’existant avant toute modification.

@@ -50,8 +50,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  flex-wrap: wrap;
   border-bottom: 1px solid var(--rl-line);
   padding: 24px 0;
+}
+.rl-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 .rl-header a {
   color: inherit;
@@ -59,6 +67,20 @@
   gap: 10px;
   align-items: center;
   text-decoration: none;
+}
+.rl-header .rl-dashboard-link {
+  color: var(--rl-muted);
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.rl-header .rl-dashboard-link:hover {
+  color: var(--rl-accent);
+}
+.rl-header-divider {
+  width: 1px;
+  height: 26px;
+  background: var(--rl-line);
 }
 .rl-brand {
   font-weight: 750;
@@ -91,6 +113,45 @@
   color: var(--rl-muted);
   margin: 0;
   max-width: 650px;
+}
+.rl-radar-switch {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 4px 0 22px;
+  padding: 8px;
+  border: 1px solid var(--rl-line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(23 39 36 / 6%);
+}
+.rl-radar-switch-buttons {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 9px;
+  background: #edf1ea;
+}
+.rl-radar-switch button {
+  border: 0;
+  border-radius: 7px;
+  padding: 9px 12px;
+  background: transparent;
+  transition-property: background-color, color, box-shadow, scale;
+  transition-duration: 150ms;
+}
+.rl-radar-switch button:hover:not(:disabled) {
+  background: #f7f9f5;
+}
+.rl-radar-switch button:active:not(:disabled) {
+  scale: 0.96;
+}
+.rl-radar-switch button[aria-pressed='true'] {
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(23 39 36 / 15%);
+  font-weight: 650;
 }
 .rl-tabs {
   display: flex;

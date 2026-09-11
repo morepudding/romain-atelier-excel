@@ -12,7 +12,7 @@
     "start": "wrangler dev --config dist/server/wrangler.json",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/radar.test.ts tests/radar-research.test.ts tests/radar-storage.test.mjs",
+    "test": "node --test tests/radar.test.ts tests/radar-refonte.test.ts tests/radar-research.test.ts tests/radar-storage.test.mjs",
     "format": "oxfmt",
     "db:generate": "drizzle-kit generate"
   },

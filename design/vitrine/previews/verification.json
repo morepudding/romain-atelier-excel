@@ -1,0 +1,28 @@
+{
+  "fonts": [
+    {
+      "family": "Manrope",
+      "status": "loaded"
+    },
+    {
+      "family": "Instrument Serif",
+      "status": "loaded"
+    },
+    {
+      "family": "Instrument Serif",
+      "status": "loaded"
+    }
+  ],
+  "candleContentRemoved": true,
+  "desktopWidths": [
+    1440,
+    1100
+  ],
+  "sliderButtons": true,
+  "sliderKeyboard": true,
+  "enlargedPreviewAndEscape": true,
+  "contactPrototype": true,
+  "reducedMotion": true,
+  "errors": [],
+  "failed": []
+}

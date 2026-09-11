@@ -12,9 +12,14 @@ export default function MaisonMartinPage() {
   return (
     <main className="maison-demo">
       <header className="maison-demo__header">
-        <Link href="/radar" className="maison-demo__back">
-          ← Retour au Radar
-        </Link>
+        <nav className="maison-demo__navigation" aria-label="Navigation">
+          <Link href="/" className="maison-demo__dashboard">
+            ← Retour au cockpit
+          </Link>
+          <Link href="/radar" className="maison-demo__back">
+            ← Retour au Radar
+          </Link>
+        </nav>
         <div className="maison-demo__brand">
           <span className="maison-demo__monogram" aria-hidden="true">R</span>
           <span>Romain Atelier Excel</span>

@@ -29,6 +29,14 @@
   border-bottom: 1px solid rgb(23 63 53 / 22%);
 }
 
+.maison-demo__navigation {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.maison-demo__dashboard,
 .maison-demo__back {
   color: var(--maison-green);
   font-size: 0.8rem;
@@ -36,6 +44,7 @@
   text-decoration: none;
 }
 
+.maison-demo__dashboard:hover,
 .maison-demo__back:hover {
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -146,6 +155,7 @@
   letter-spacing: 0.04em;
 }
 
+.maison-demo__dashboard:focus-visible,
 .maison-demo__back:focus-visible,
 .maison-demo__video:focus-visible {
   outline: 3px solid var(--maison-amber);

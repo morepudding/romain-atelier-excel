@@ -396,7 +396,7 @@ export default function Workspace() {
           ))}
         </TabsList>
         <Link href="/radar" className="reclamation-entry"><Radar size={18} /><span>Radar local</span><ArrowRight size={16} /></Link>
-        <Link href="/demo/reclamation" className="reclamation-entry secondary-entry"><FileText size={18} /><span>Démo réclamation</span><ArrowRight size={16} /></Link>
+        <Link href="/demo/maison-martin" className="reclamation-entry secondary-entry"><FileText size={18} /><span>Vidéo Maison Martin</span><ArrowRight size={16} /></Link>
         <div className="rail-level">
           <span>NIVEAU {levelIndex + 1}</span>
           <strong>{level[0]}</strong>
@@ -423,7 +423,7 @@ export default function Workspace() {
             <span>PC</span>
             <b>Premier client</b>
           </div>
-          <div className="mobile-tools"><Link href="/radar" className="reclamation-mobile-entry">Radar local <ArrowRight size={16} /></Link><Link href="/demo/reclamation" className="reclamation-mobile-entry">Démo réclamation <ArrowRight size={16} /></Link></div>
+          <div className="mobile-tools"><Link href="/radar" className="reclamation-mobile-entry">Radar local <ArrowRight size={16} /></Link><Link href="/demo/maison-martin" className="reclamation-mobile-entry">Vidéo Maison Martin <ArrowRight size={16} /></Link></div>
         </header>
         {error && (
           <div className="alert" role="alert">

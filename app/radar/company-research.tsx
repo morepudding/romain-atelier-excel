@@ -223,11 +223,11 @@ export default function CompanyResearchCard({
                     <h3>{data.demo.title}</h3>
                     <p>{data.demo.explanation}</p>
                     <a
-                      href="/demo/reclamation"
+                      href="/demo/maison-martin"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Ouvrir la démo
+                      Voir la vidéo Maison Martin
                       <ArrowUpRight size={14} />
                     </a>
                   </div>

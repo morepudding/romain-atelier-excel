@@ -1,6 +1,6 @@
 # Premier client — Radar local et démonstration
 
-Un outil personnel pour identifier des entreprises autour de Vairé, conserver des pistes privées et présenter une démonstration de traitement des réclamations. Les besoins des entreprises restent des hypothèses à confirmer.
+Un outil personnel pour identifier des entreprises autour de Vairé, conserver des pistes privées et présenter des démonstrations métier. Les besoins des entreprises restent des hypothèses à confirmer.
 
 ## Version Vercel
 
@@ -30,7 +30,7 @@ La consultation d'un site saisi fonctionne sans fournisseur de recherche. La dé
 
 ## Démonstration
 
-`/demo/reclamation` montre un mail fictif transformé en dossier, avec procédure, responsable, échéance et réponse préparée. Les résultats sont simulés, sans modèle IA, téléversement ou envoi de mail.
+`/demo/maison-martin` présente la vidéo Maison Martin en Full HD. L’ancienne route `/demo/reclamation` redirige vers cette vidéo ; les composants de l’ancienne démonstration sont conservés dans le dépôt mais ne sont plus proposés dans la navigation.
 
 ## Cockpit historique Sites
 

@@ -513,7 +513,7 @@ export default function RadarWorkspace() {
           </span>
         </Link>
         <Link
-          href="/demo/reclamation"
+          href="/demo/maison-martin"
           onClick={(e) => {
             if (
               dirty &&
@@ -522,7 +522,7 @@ export default function RadarWorkspace() {
               e.preventDefault();
           }}
         >
-          Voir la démo réclamation <ArrowRight size={16} />
+          Voir la vidéo Maison Martin <ArrowRight size={16} />
         </Link>
       </header>
       <div className="rl-heading">

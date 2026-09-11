@@ -1,9 +1,7 @@
-import type { Metadata } from "next";
-import { ReclamationDemo } from "./components/ReclamationDemo";
-import "./reclamation.css";
+import { redirect } from 'next/navigation';
 
-export const metadata: Metadata = { title: "Démo réclamation — Premier client" };
+export const metadata = { title: 'Maison Martin — Démonstration vidéo' };
 
 export default function ReclamationPage() {
-  return <ReclamationDemo />;
+  redirect('/demo/maison-martin');
 }

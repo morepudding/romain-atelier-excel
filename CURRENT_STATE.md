@@ -1,5 +1,9 @@
 # État actuel
 
+## Démonstration vidéo Maison Martin — 11 septembre 2026
+
+La vidéo Maison-Martin_60s_Full-HD.mp4 remplace l’ancienne démonstration interactive de réclamation dans la navigation. Elle est servie par /demo/maison-martin, avec un lecteur vidéo Full HD et un habillage de présentation. L’ancienne route /demo/reclamation redirige vers cette nouvelle page ; ses composants restent conservés dans le dépôt pour préserver l’historique.
+
 ## Direction de la vitrine — 10 septembre 2026
 
 La deuxième proposition locale du premier écran est disponible dans `design/vitrine/` : accueil et planche palette/typographies. Romain apprécie l’apparition du logo, l’espace et la composition centrale ; il demande de sortir complètement des bougies et de renforcer la navigation, le contact et le texte d’introduction. La palette, Manrope, Instrument Serif et l’accroche « Votre métier. En plus simple. » sont conservés. La navigation est plus grande et plus marquée, le contact devient un bouton vert, le texte d’introduction est agrandi et plus contrasté.

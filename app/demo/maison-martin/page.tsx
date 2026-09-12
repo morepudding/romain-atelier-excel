@@ -1,58 +1,50 @@
+/* oxlint-disable next/no-html-link-for-pages -- Native navigation preserves the public links in vinext. */
 import type { Metadata } from 'next';
-import Link from 'next/link';
-
+import VraiWordmark from '../../vitrine/wordmark';
+import '../../vitrine/vitrine.css';
 import './maison-martin.css';
 
 export const metadata: Metadata = {
-  title: 'Maison Martin — Démonstration vidéo',
-  description: 'Démonstration vidéo Maison Martin par Romain Atelier Excel.',
+  icons: { icon: '/brand/favicon.svg' },
+  title: 'Maison Martin — Vrai Consulting',
+  description:
+    'Du terrain au compte rendu : une démonstration de suivi de chantier par Vrai Consulting. Scénario fictif.',
 };
 
 export default function MaisonMartinPage() {
   return (
-    <main className="maison-demo">
-      <header className="maison-demo__header">
-        <nav className="maison-demo__navigation" aria-label="Navigation">
-          <Link href="/" className="maison-demo__dashboard">
-            ← Retour au cockpit
-          </Link>
-          <Link href="/radar" className="maison-demo__back">
-            ← Retour au Radar
-          </Link>
-        </nav>
-        <div className="maison-demo__brand">
-          <span className="maison-demo__monogram" aria-hidden="true">R</span>
-          <span>Romain Atelier Excel</span>
-        </div>
-        <span className="maison-demo__tag">Démonstration vidéo</span>
-      </header>
-
-      <section className="maison-demo__hero" aria-labelledby="maison-demo-title">
-        <div className="maison-demo__intro">
-          <p className="maison-demo__eyebrow">Maison Martin · 60 secondes</p>
-          <h1 id="maison-demo-title">
-            Une vidéo qui
-            <br />
-            <em>montre vraiment.</em>
-          </h1>
-          <p className="maison-demo__lede">
-            Une démonstration courte, pensée pour présenter Maison Martin en
-            un regard.
-          </p>
-          <p className="maison-demo__meta">
-            Maison Martin <span aria-hidden="true">·</span> Full HD{' '}
-            <span aria-hidden="true">·</span> 01:00
-          </p>
-        </div>
-
-        <div className="maison-demo__video-frame">
-          {/* oxlint-disable-next-line jsx-a11y/media-has-caption -- aucun transcript n’a été fourni avec la vidéo */}
+    <div className="vrai-site">
+      <main className="maison-film">
+        <header className="maison-film-header">
+          <a href="/" className="maison-film-back">
+            ← Retour à l’accueil
+          </a>
+          <a
+            href="/"
+            className="maison-film-brand"
+            aria-label="Vrai Consulting, accueil"
+          >
+            <VraiWordmark />
+          </a>
+        </header>
+        <section aria-labelledby="maison-film-title">
+          <div className="maison-film-intro">
+            <div>
+              <p>
+                Maison Martin <span aria-hidden="true">·</span> 60 secondes
+              </p>
+              <h1 id="maison-film-title">Du terrain au compte rendu.</h1>
+            </div>
+            <span>Scénario fictif</span>
+          </div>
+          {/* oxlint-disable-next-line jsx-a11y/media-has-caption -- Existing film supplied without a caption track. */}
           <video
-            className="maison-demo__video"
+            className="maison-film-video"
             controls
             preload="metadata"
             playsInline
-            aria-label="Vidéo de présentation Maison Martin"
+            poster="/brand/maison-martin-poster.webp"
+            aria-label="Vidéo de démonstration Maison Martin"
           >
             <source
               src="/videos/Maison-Martin_60s_Full-HD.mp4"
@@ -60,13 +52,16 @@ export default function MaisonMartinPage() {
             />
             Votre navigateur ne permet pas de lire cette vidéo.
           </video>
-        </div>
-      </section>
-
-      <footer className="maison-demo__footer">
-        <span>Maison Martin</span>
-        <span>Une démonstration de Romain Atelier Excel</span>
-      </footer>
-    </main>
+          <p className="maison-film-summary">
+            Messages de l’équipe, photos et informations fournisseur réunis dans
+            un compte rendu. L’équipe relit et valide.
+          </p>
+        </section>
+        <footer className="maison-film-footer">
+          <span>Une démonstration Vrai Consulting</span>
+          <a href="/radar">Espace personnel ↗</a>
+        </footer>
+      </main>
+    </div>
   );
 }

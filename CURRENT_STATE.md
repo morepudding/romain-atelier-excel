@@ -1,5 +1,17 @@
 # État actuel
 
+## Identité Vrai Consulting — 12 septembre 2026
+
+Romain a validé le nom Vrai Consulting, le logo typographique 01 « Le mot » et une direction avec grand logo ivoire, fond vert profond et touches orange. Cette direction est intégrée sur `/` (Vercel) et `/vitrine`, sur la branche `design/vrai-vitrine`.
+
+Le premier écran conserve sa composition éditoriale et utilise une illustration de dossier Maison Martin, cohérente avec la vidéo existante de suivi de chantier. L’image n’est pas une preuve client : le scénario est indiqué comme fictif. Logo vectoriel, apparition brève désactivée en mouvement réduit, images WebP locales, lecteur vidéo dans un dialogue natif et page du film harmonisée. La vidéo originale n’a pas été modifiée ; un futur montage peut remplacer le même fichier.
+
+Le Radar n’apparaît plus dans la navigation principale ; son accès est conservé dans le pied de page « Espace personnel ». Aucune donnée ni authentification modifiée. Une courte présentation de Romain est disponible sous le premier écran. L’adresse professionnelle de contact reste à choisir : le bouton « Faisons connaissance » mène à cette présentation, sans publier l’adresse personnelle utilisée pour le Radar.
+
+Vérifications initiales : typecheck, lint ciblé et build Vercel réussis. L’accès du navigateur au serveur local et aux fichiers locaux est indisponible dans cet environnement ; le rendu ordinateur/mobile et les interactions restent à vérifier sur une prévisualisation Vercel. Un aperçu HTML autonome a été compilé à partir du même composant pour examen par Romain, avec police, images et vidéo intégrées. Il n’a pas été inspecté visuellement par l’agent.
+
+Romain a explicitement autorisé la publication de la branche et de sa prévisualisation Vercel le 12 septembre (« oui pousse »). La publication passe par la connexion GitHub, le terminal ne disposant pas d’identifiants pour l’envoi. Vérifier la prévisualisation avant toute mise à jour de la production.
+
 ## Retour vers le cockpit depuis les pages secondaires — 11 septembre 2026
 
 Le Radar `/radar` et la vidéo `/demo/maison-martin` proposent désormais un accès direct au cockpit principal (`/`) dans leur en-tête. Le retour contextuel vers le Radar depuis la vidéo est conservé.

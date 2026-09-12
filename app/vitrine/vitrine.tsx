@@ -1,336 +1,254 @@
 'use client';
 
-/* oxlint-disable next/no-html-link-for-pages -- Native navigation is intentional here: vinext's client router currently blocks these public links. */
+/* oxlint-disable next/no-html-link-for-pages -- Native links preserve navigation in vinext and work before hydration. */
+/* oxlint-disable next/no-img-element -- Local, pre-optimized artwork without an image service. */
 
-import { useState } from 'react';
-
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import VraiWordmark from './wordmark';
 import './vitrine.css';
 
-const views = [
-  {
-    kicker: 'Du premier message à la prochaine action.',
-    title: (
-      <>
-        Une demande.
-        <br />
-        <em>La suite est claire.</em>
-      </>
-    ),
-    description: (
-      <>
-        Un dossier, un responsable, une prochaine action.
-        <br />
-        Votre équipe sait où elle en est.
-      </>
-    ),
-  },
-  {
-    kicker: 'L’assistant prépare. Votre équipe décide.',
-    title: (
-      <>
-        Moins de ressaisie.
-        <br />
-        <em>Plus de temps utile.</em>
-      </>
-    ),
-    description: (
-      <>
-        Les informations sont réunies, la réponse préparée.
-        <br />
-        Vous gardez la main sur la décision.
-      </>
-    ),
-  },
-];
+const film = '/videos/Maison-Martin_60s_Full-HD.mp4';
 
 export default function Vitrine() {
-  const [current, setCurrent] = useState(0);
-  const view = views[current];
+  const dialog = useRef<HTMLDialogElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
+  const [filmOpen, setFilmOpen] = useState(false);
+  const [filmError, setFilmError] = useState(false);
 
-  function selectView(index: number) {
-    setCurrent((index + views.length) % views.length);
+  useEffect(() => {
+    if (!filmOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [filmOpen]);
+
+  function openFilm(event: MouseEvent<HTMLAnchorElement>) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+      return;
+    if (!dialog.current?.showModal) return;
+    event.preventDefault();
+    setFilmError(false);
+    setFilmOpen(true);
+    dialog.current.showModal();
   }
 
+  function closeFilm() {
+    video.current?.pause();
+    dialog.current?.close();
+    setFilmOpen(false);
+  }
 
   return (
-    <div className="vitrine-site">
-      <div className="vitrine-intro" aria-hidden="true">
-        <span>
-          r<span className="vitrine-signature-dot">.</span>
-        </span>
-      </div>
-
-      <div className="vitrine-page">
-        <header className="vitrine-header">
+    <div className="vrai-site">
+      <a className="vrai-skip" href="#contenu">
+        Aller au contenu
+      </a>
+      <div className="vrai-stage">
+        <header className="vrai-header">
           <a
-            className="vitrine-brand"
+            className="vrai-founder"
             href="/"
-            aria-label="Romain Atelier Excel, accueil"
+            aria-label="Vrai Consulting, accueil"
           >
-            <span className="vitrine-monogram">
-              r<span className="vitrine-signature-dot">.</span>
-            </span>
-            <span className="vitrine-brand-name">Romain Atelier Excel</span>
+            Romain Bottero <span aria-hidden="true">·</span> Vendée
           </a>
-
-          <nav className="vitrine-nav" aria-label="Navigation principale">
-            <a href="#demonstrations">Démonstrations</a>
-            <a href="/radar">Radar local</a>
-            <a href="/demo/maison-martin">Vidéo Maison Martin</a>
+          <nav className="vrai-nav" aria-label="Navigation principale">
+            <a href="#demonstrations">Démonstration</a>
+            <a href="#a-propos">À propos</a>
           </nav>
-
-          <a className="vitrine-contact" href="/demo/maison-martin">
-            Voir la vidéo <span aria-hidden="true">↗</span>
+          <a className="vrai-contact" href="#a-propos">
+            Faisons connaissance <span aria-hidden="true">↗</span>
           </a>
         </header>
-
-        <main>
-          <section className="vitrine-hero" aria-labelledby="vitrine-headline">
-            <div className="vitrine-hero-title">
-              <p className="vitrine-eyebrow">
-                <span className="vitrine-small-dot" />
-                Des outils pensés pour votre réalité
-              </p>
-              <h1 id="vitrine-headline">
-                Votre métier.
+        <main id="contenu">
+          <section className="vrai-hero" aria-labelledby="vrai-headline">
+            <div className="vrai-masthead">
+              <div className="vrai-logo-reveal">
+                <VraiWordmark />
+              </div>
+              <p className="vrai-positioning">
+                Applications &amp; IA
                 <br />
-                <em>En plus simple.</em>
-              </h1>
+                pour les petites entreprises.
+              </p>
             </div>
-
-            <div className="vitrine-hero-aside">
-              <p>
-                Je crée les outils qui simplifient
+            <div className="vrai-hero-bottom">
+              <div className="vrai-manifesto">
+                <h1 id="vrai-headline">
+                  De vrais outils.
+                  <br />À votre portée.
+                </h1>
+                <p>
+                  Des solutions concrètes, adaptées
+                  <br className="vrai-desktop-break" /> à votre métier et à
+                  votre budget.
+                </p>
+              </div>
+              <figure className="vrai-feature" id="demonstrations">
+                <a
+                  className="vrai-art-link"
+                  href="/demo/maison-martin"
+                  onClick={openFilm}
+                  aria-label="Voir la vidéo Maison Martin, 60 secondes"
+                  aria-haspopup="dialog"
+                >
+                  <img
+                    className="vrai-art"
+                    src="/brand/maison-martin-scene.webp"
+                    width={1536}
+                    height={1024}
+                    fetchPriority="high"
+                    alt="Mise en scène du chantier fictif Maison Martin : les notes de l’équipe deviennent un compte rendu à valider."
+                  />
+                  <span className="vrai-play" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M8 4 21 12 8 20Z" />
+                    </svg>
+                  </span>
+                </a>
+                <figcaption className="vrai-feature-caption">
+                  <span className="vrai-feature-number" aria-hidden="true">
+                    01
+                  </span>
+                  <a
+                    className="vrai-film-link"
+                    href="/demo/maison-martin"
+                    onClick={openFilm}
+                    aria-haspopup="dialog"
+                  >
+                    <strong>Du terrain au compte rendu.</strong>
+                    <span>
+                      Maison Martin <span aria-hidden="true">·</span> Voir le
+                      film <span aria-hidden="true">↗</span>{' '}
+                      <span className="vrai-duration">60 s</span>
+                    </span>
+                  </a>
+                  <span className="vrai-fiction">Scénario fictif</span>
+                </figcaption>
+              </figure>
+            </div>
+            <a className="vrai-discover" href="#a-propos">
+              Une autre façon de travailler <span aria-hidden="true">↓</span>
+            </a>
+          </section>
+          <section
+            className="vrai-about"
+            id="a-propos"
+            aria-labelledby="vrai-about-title"
+          >
+            <div className="vrai-about-label">
+              <span aria-hidden="true">02 /</span> Faisons connaissance
+            </div>
+            <div className="vrai-about-content">
+              <h2 id="vrai-about-title">
+                Les petites entreprises
                 <br />
-                le quotidien de vos équipes.
-                <br />
-                Et je vous aide à les prendre en main.
-              </p>
-              <a className="vitrine-text-link" href="#demonstrations">
-                Découvrir les démonstrations
-                <span aria-hidden="true">↘</span>
+                méritent de bons outils.
+              </h2>
+              <div className="vrai-about-details">
+                <p>
+                  Je suis Romain, consultant IA en Vendée, issu du nautisme.
+                  J’aime comprendre comment une équipe travaille, puis
+                  construire avec elle des outils qui lui servent vraiment.
+                </p>
+                <p>
+                  Une application métier, une tâche à automatiser, des
+                  informations à retrouver : on part de votre quotidien et de
+                  vos moyens.
+                </p>
+              </div>
+              <a
+                className="vrai-about-demo"
+                href="/demo/maison-martin"
+                onClick={openFilm}
+                aria-haspopup="dialog"
+              >
+                Voir un exemple concret <span aria-hidden="true">↗</span>
               </a>
             </div>
-
-            <span className="vitrine-background-letter" aria-hidden="true">
-              r.
-            </span>
           </section>
-
-          <section
-            className="vitrine-showcase"
-            id="demonstrations"
-            aria-roledescription="carrousel"
-            aria-label="Démonstration illustrative d’un outil métier"
-            data-slide={current}
-          >
-            <div className="vitrine-showcase-wash" aria-hidden="true" />
-            <div className="vitrine-showcase-content">
-              <div className="vitrine-showcase-heading">
-                <span className="vitrine-eyebrow vitrine-light">Du concret</span>
-                <span className="vitrine-project-type">
-                  Outils métier · vidéo et terrain
-                </span>
-              </div>
-
-              <div
-                className="vitrine-slide-copy"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <p className="vitrine-slide-kicker">{view.kicker}</p>
-                <h2>{view.title}</h2>
-                <p className="vitrine-slide-description">{view.description}</p>
-              </div>
-
-              <div className="vitrine-showcase-actions">
-                <a
-                  className="vitrine-showcase-action vitrine-showcase-action-primary"
-                  href="/demo/maison-martin"
-                >
-                  <span className="vitrine-play-circle" aria-hidden="true">
-                    ↗
-                  </span>
-                  <span>
-                    Voir la vidéo Maison Martin
-                    <small>Une démonstration · 60 secondes</small>
-                  </span>
-                </a>
-                <a className="vitrine-radar-link" href="/radar">
-                  Ouvrir le Radar local <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-            </div>
-
-            <div
-              className="vitrine-demo-art"
-              aria-hidden="true"
-            >
-              <div className="vitrine-app-scene" aria-hidden="true">
-                <div className="vitrine-art-orbit" />
-                <div className="vitrine-message-card">
-                  <div className="vitrine-message-top">
-                    <span aria-hidden="true">✉</span>
-                    <span>Tout commence ici</span>
-                    <span>↗</span>
-                  </div>
-                  <div className="vitrine-message-sender">
-                    <span className="vitrine-sender-initials">→</span>
-                    <div>
-                      <strong>Demande entrante</strong>
-                      <small>À votre équipe</small>
-                    </div>
-                    <time>09:41</time>
-                  </div>
-                  <h3>Une demande à suivre.</h3>
-                  <p>
-                    Bonjour, pouvez-vous me confirmer
-                    <br />
-                    la prise en charge de mon dossier ?
-                  </p>
-                  <div className="vitrine-message-attachment">
-                    <span>↳</span> Pièce jointe.pdf <small>1 fichier</small>
-                  </div>
-                  <div className="vitrine-message-bottom">
-                    Message reçu <span>✓</span>
-                  </div>
-                </div>
-
-                <div className="vitrine-workspace-window">
-                  <div className="vitrine-workspace-bar">
-                    <span className="vitrine-workspace-symbol">r.</span>
-                    <span>Votre espace de travail</span>
-                    <span className="vitrine-workspace-menu">···</span>
-                  </div>
-                  <div className="vitrine-workspace-heading">
-                    <div>
-                      <span className="vitrine-workspace-eyebrow">
-                        Le quotidien, organisé
-                      </span>
-                      <h3>Le suivi des demandes</h3>
-                    </div>
-                    <span className="vitrine-workspace-add">+</span>
-                  </div>
-                  <div className="vitrine-workspace-tabs">
-                    <span className="vitrine-active">Toutes les demandes</span>
-                    <span>À traiter</span>
-                    <span>Terminées</span>
-                  </div>
-                  <div className="vitrine-workspace-table">
-                    <div className="vitrine-workspace-row vitrine-workspace-table-head">
-                      <span>Demande</span>
-                      <span>Responsable</span>
-                      <span>Statut</span>
-                    </div>
-                    <div className="vitrine-workspace-row vitrine-featured">
-                      <span>
-                        <b>Suivi d’une demande client</b>
-                        <small>Équipe support · Aujourd’hui</small>
-                      </span>
-                      <span className="vitrine-owner">
-                        <i>EQ</i> Équipe
-                      </span>
-                      <span className="vitrine-status-tag">En cours</span>
-                    </div>
-                    <div className="vitrine-workspace-row">
-                      <span>
-                        <b>Validation d’un devis</b>
-                        <small>Équipe commerciale</small>
-                      </span>
-                      <span className="vitrine-owner">
-                        <i>RC</i> Référent
-                      </span>
-                      <span className="vitrine-status-tag vitrine-waiting">
-                        À valider
-                      </span>
-                    </div>
-                    <div className="vitrine-workspace-row">
-                      <span>
-                        <b>Préparation de commande</b>
-                        <small>Équipe logistique</small>
-                      </span>
-                      <span className="vitrine-owner">
-                        <i>EQ</i> Équipe
-                      </span>
-                      <span className="vitrine-status-tag vitrine-done">
-                        Terminée
-                      </span>
-                    </div>
-                  </div>
-                  <div className="vitrine-workspace-bottom">
-                    <span>
-                      <b>✓</b> Chaque demande a sa prochaine action.
-                    </span>
-                    <span>↗</span>
-                  </div>
-                </div>
-
-                <div className="vitrine-assistant-card">
-                  <span className="vitrine-assistant-label">
-                    <span className="vitrine-assistant-mark">r.</span>
-                    Votre assistant
-                    <span className="vitrine-assistant-state">Prêt</span>
-                  </span>
-                  <strong>La réponse est préparée.</strong>
-                  <p>Vous la relisez. Vous décidez de l’envoyer.</p>
-                  <div>
-                    Voir le brouillon <span>↗</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="vitrine-showcase-bottom">
-              <span className="vitrine-visual-note">
-                Mise en scène illustrative · Données fictives
-              </span>
-              <div className="vitrine-slide-controls">
-                <span className="vitrine-slide-count">
-                  <b>{String(current + 1).padStart(2, '0')}</b>
-                  <span>/</span>02
-                </span>
-                <div className="vitrine-slide-lines" aria-hidden="true">
-                  <span className={current === 0 ? 'selected' : ''} />
-                  <span className={current === 1 ? 'selected' : ''} />
-                </div>
-                <button
-                  className="vitrine-slide-control"
-                  type="button"
-                  aria-label="Vue précédente"
-                  onClick={() => selectView(current - 1)}
-                >
-                  ←
-                </button>
-                <button
-                  className="vitrine-slide-control"
-                  type="button"
-                  aria-label="Vue suivante"
-                  onClick={() => selectView(current + 1)}
-                >
-                  →
-                </button>
-              </div>
-            </div>
-          </section>
-
-          <div className="vitrine-services" aria-label="Domaines d’intervention">
-            <span>Applications métier</span>
-            <span>Assistants &amp; agents IA</span>
-            <span>Automatisations</span>
-            <span>Formations</span>
-          </div>
         </main>
-
-        <footer className="vitrine-footer">
-          <span>Romain Atelier Excel · Outils métier concrets</span>
-          <div>
-            <a href="/radar">Radar local</a>
-            <a href="/demo/maison-martin">
-              Vidéo Maison Martin <span aria-hidden="true">↗</span>
-            </a>
-          </div>
+        <footer className="vrai-footer">
+          <a href="/" aria-label="Vrai Consulting, accueil">
+            <VraiWordmark />
+          </a>
+          <span>
+            Romain Bottero <span aria-hidden="true">·</span> Vendée
+          </span>
+          <a href="/radar">
+            Espace personnel <span aria-hidden="true">↗</span>
+          </a>
         </footer>
       </div>
+      {/* Native dialog provides Escape, focus trapping and focus restoration; clicking its backdrop is an additional close action. */}
+      {/* oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
+      <dialog
+        className="vrai-film-dialog"
+        ref={dialog}
+        aria-labelledby="vrai-film-title"
+        onClose={() => {
+          video.current?.pause();
+          setFilmOpen(false);
+        }}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) closeFilm();
+        }}
+      >
+        <div className="vrai-film-shell">
+          <div className="vrai-film-top">
+            <div>
+              <h2 id="vrai-film-title">Maison Martin</h2>
+              <p>
+                Du terrain au compte rendu <span aria-hidden="true">·</span>{' '}
+                Scénario fictif
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={closeFilm}
+              className="vrai-film-close"
+              aria-label="Fermer la vidéo"
+            >
+              <span aria-hidden="true">✕</span>
+            </button>
+          </div>
+          {filmOpen ? (
+            <>
+              {/* oxlint-disable-next-line jsx-a11y/media-has-caption -- Existing film supplied without a caption track; unchanged here. */}
+              <video
+                ref={video}
+                className="vrai-film-video"
+                controls
+                autoPlay
+                playsInline
+                preload="metadata"
+                poster="/brand/maison-martin-poster.webp"
+                onError={() => setFilmError(true)}
+                aria-label="Démonstration vidéo Maison Martin"
+              >
+                <source
+                  src={film}
+                  type="video/mp4"
+                  onError={() => setFilmError(true)}
+                />
+                Votre navigateur ne permet pas de lire cette vidéo.
+              </video>
+              {filmError ? (
+                <p className="vrai-film-error" role="alert">
+                  La vidéo n’a pas pu être chargée.{' '}
+                  <a href={film}>Ouvrir le fichier vidéo</a>
+                </p>
+              ) : null}
+            </>
+          ) : null}
+          <div className="vrai-film-bottom">
+            <span>Une démonstration Vrai Consulting</span>
+            <a href="/demo/maison-martin">Ouvrir la page du film ↗</a>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

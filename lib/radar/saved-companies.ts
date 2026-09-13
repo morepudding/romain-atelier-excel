@@ -14,6 +14,7 @@ export class SavedCompaniesError extends Error {
 export async function savedCompanySirens(
   request: Request,
   fetchImpl: typeof fetch = fetch,
+  table: 'radar_leads' | 'radar_rework_projects' = 'radar_leads',
 ): Promise<string[]> {
   const authorization = request.headers.get('authorization');
   if (!authorization) return [];
@@ -50,14 +51,20 @@ export async function savedCompanySirens(
     for (let offset = 0; ; offset += pageSize) {
       // La clé publique et le jeton utilisateur conservent les protections RLS.
       const saved = await client
-        .from('radar_leads')
-        .select('siren')
+        .from(table)
+        .select(table === 'radar_leads' ? 'siren' : 'data')
         .eq('user_id', data.user.id)
-        .order('siren')
+        .order('id')
         .range(offset, offset + pageSize - 1);
       if (saved.error || !saved.data)
         throw new SavedCompaniesError(unavailable);
-      for (const row of saved.data) sirens.add(row.siren);
+      for (const row of saved.data as unknown as {
+        siren?: string;
+        data?: { siren?: string };
+      }[]) {
+        const siren = row.siren || row.data?.siren;
+        if (siren) sirens.add(siren);
+      }
       if (saved.data.length < pageSize) return [...sirens];
     }
   } catch (error) {

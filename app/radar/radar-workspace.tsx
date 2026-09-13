@@ -18,10 +18,9 @@ import { radarConfig, type ActivitySection } from '@/lib/radar/config';
 import { leadStatuses, type Lead, type LeadStatus } from '@/lib/radar/leads';
 import type {
   RadarCompany,
-  RadarRefonteResult,
   RadarResult,
-  RadarTarget,
 } from '@/lib/radar/types';
+import ReworkWorkspace from './rework-workspace';
 import CompanyResearchCard from './company-research';
 import { useCompanyResearch } from './use-company-research';
 
@@ -37,7 +36,7 @@ const sections: Record<ActivitySection, string> = {
 const officialUrl = (siren: string) =>
   `https://annuaire-entreprises.data.gouv.fr/entreprise/${encodeURIComponent(siren)}`;
 
-export default function RadarWorkspace() {
+export default function RadarWorkspace({ initialMode = 'local' }: { initialMode?: 'local' | 'refonte' }) {
   const [supabase] = useState(getSupabaseBrowser);
   const [session, setSession] = useState<Session | null>(null);
   const [authReady, setAuthReady] = useState(!supabase);
@@ -48,20 +47,15 @@ export default function RadarWorkspace() {
   const [connectForResearch, setConnectForResearch] = useState(false);
   const researchLoginRequested = useRef(false);
   const [view, setView] = useState<'search' | 'leads'>('search');
-  const [radarMode, setRadarMode] = useState<'local' | 'refonte'>('local');
+  const [radarMode, setRadarMode] = useState<'local' | 'refonte'>(initialMode);
   const [radius, setRadius] = useState(35);
-  const [refonteRadius, setRefonteRadius] = useState(35);
+  const [reworkDirty, setReworkDirty] = useState(false);
   const [selected, setSelected] = useState<ActivitySection[]>([
     ...radarConfig.defaults.activitySections,
   ]);
   const [result, setResult] = useState<RadarResult | null>(null);
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
-  const [refonteResult, setRefonteResult] = useState<RadarRefonteResult | null>(
-    null,
-  );
-  const [refonteSearching, setRefonteSearching] = useState(false);
-  const [refonteSearchError, setRefonteSearchError] = useState('');
   const [includeResearch, setIncludeResearch] = useState(true);
   const [searchService, setSearchService] = useState<
     'loading' | 'ready' | 'unavailable'
@@ -227,9 +221,9 @@ export default function RadarWorkspace() {
   }
 
   function changeRadar(next: 'local' | 'refonte') {
-    if (next === radarMode || searching || refonteSearching || busy) return;
+    if (next === radarMode || searching || busy) return;
     if (
-      dirty &&
+      (dirty || reworkDirty) &&
       !window.confirm('Quitter sans enregistrer les modifications ?')
     )
       return;
@@ -240,7 +234,6 @@ export default function RadarWorkspace() {
     setNotice('');
     setError('');
     setSearchError('');
-    setRefonteSearchError('');
   }
 
   useEffect(() => {
@@ -294,46 +287,6 @@ export default function RadarWorkspace() {
       );
     } finally {
       setSearching(false);
-    }
-  }
-
-  async function searchRefonte(event: SubmitEvent) {
-    event.preventDefault();
-    if (!authReady || busy) return;
-    const owner = currentUser.current;
-    setRefonteSearching(true);
-    setRefonteSearchError('');
-    setRefonteResult(null);
-    try {
-      const params = new URLSearchParams({
-        radiusKm: String(refonteRadius),
-      });
-      const response = await fetch(`/api/radar/refonte?${params}`, {
-        headers: session
-          ? { Authorization: `Bearer ${session.access_token}` }
-          : {},
-        cache: 'no-store',
-        signal: AbortSignal.timeout(55_000),
-      });
-      const payload = (await response.json()) as RadarRefonteResult & {
-        error?: string;
-      };
-      if (!response.ok)
-        throw new Error(payload.error || 'Recherche indisponible.');
-      if (currentUser.current !== owner) return;
-      setRefonteResult(payload);
-    } catch (e) {
-      setRefonteSearchError(
-        e instanceof Error && e.name === 'TimeoutError'
-          ? 'La recherche prend trop de temps. Réessayez dans un instant.'
-          : e instanceof TypeError
-            ? 'Impossible de joindre le radar. Réessayez dans quelques instants.'
-            : e instanceof Error
-              ? e.message
-              : 'Recherche indisponible.',
-      );
-    } finally {
-      setRefonteSearching(false);
     }
   }
 
@@ -573,38 +526,6 @@ export default function RadarWorkspace() {
     </>
   );
 
-  const refonteCard = (target: RadarTarget) => (
-    <article className="rl-card rl-target-card" key={target.siren}>
-      <div className="rl-card-head">
-        <div>
-          <h2>{target.nom}</h2>
-          <p>
-            {target.commune} · {target.distanceKm} km
-          </p>
-        </div>
-        <span className="rl-badge">{target.type}</span>
-      </div>
-      <p>
-        <strong>{target.activiteLibelle}</strong>
-        <br />
-        <span className="rl-muted">
-          {target.trancheEffectif} · {target.nombreEtablissements}{' '}
-          {target.nombreEtablissements > 1
-            ? 'établissements'
-            : 'établissement'}
-        </span>
-      </p>
-      <a
-        className="rl-source"
-        href={target.sourceUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Fiche officielle <ExternalLink size={14} />
-      </a>
-    </article>
-  );
-
   return (
     <main className="rl-shell">
       <header className="rl-header">
@@ -614,7 +535,7 @@ export default function RadarWorkspace() {
             className="rl-dashboard-link"
             onClick={(e) => {
               if (
-                dirty &&
+                (dirty || reworkDirty) &&
                 !window.confirm('Quitter sans enregistrer les modifications ?')
               )
                 e.preventDefault();
@@ -624,12 +545,14 @@ export default function RadarWorkspace() {
             Retour au cockpit
           </Link>
           <span className="rl-header-divider" aria-hidden="true" />
-          <Link href="/radar" className="rl-brand">
+          <Link href="/radar" className="rl-brand" onClick={(e) => {
+            if ((dirty || reworkDirty) && !window.confirm('Quitter sans enregistrer les modifications ?')) e.preventDefault();
+          }}>
             <Radar size={24} />
             <span>
               Premier client
               <small>
-                {radarMode === 'local' ? 'Radar local' : 'Radar Refonte'}
+                {radarMode === 'local' ? 'Radar local' : 'Radar Rework'}
               </small>
             </span>
           </Link>
@@ -638,7 +561,7 @@ export default function RadarWorkspace() {
           href="/demo/maison-martin"
           onClick={(e) => {
             if (
-              dirty &&
+              (dirty || reworkDirty) &&
               !window.confirm('Quitter sans enregistrer les modifications ?')
             )
               e.preventDefault();
@@ -647,7 +570,7 @@ export default function RadarWorkspace() {
           Voir la vidéo Maison Martin <ArrowRight size={16} />
         </Link>
       </header>
-      <div className="rl-heading">
+      <div className={`rl-heading ${radarMode === 'refonte' ? 'rw-heading' : ''}`}>
         {radarMode === 'local' ? (
           <>
             <p className="rl-eyebrow">Vairé et ses alentours</p>
@@ -662,10 +585,10 @@ export default function RadarWorkspace() {
           </>
         ) : (
           <>
-            <p className="rl-eyebrow">Radar Refonte</p>
+            <p className="rl-eyebrow">Radar Rework</p>
             <h1>
-              Les acteurs locaux
-              <br />à rencontrer.
+              Des entreprises aux
+              <br />propositions de site.
             </h1>
           </>
         )}
@@ -675,7 +598,7 @@ export default function RadarWorkspace() {
           <button
             type="button"
             aria-pressed={radarMode === 'local'}
-            disabled={searching || refonteSearching || !!busy}
+            disabled={searching || !!busy}
             onClick={() => changeRadar('local')}
           >
             Radar local
@@ -683,10 +606,10 @@ export default function RadarWorkspace() {
           <button
             type="button"
             aria-pressed={radarMode === 'refonte'}
-            disabled={searching || refonteSearching || !!busy}
+            disabled={searching || !!busy}
             onClick={() => changeRadar('refonte')}
           >
-            Radar Refonte
+            Radar Rework
           </button>
         </div>
       </nav>
@@ -1224,74 +1147,15 @@ export default function RadarWorkspace() {
         </>
       )}
       {radarMode === 'refonte' && (
-        <>
-          <form className="rl-filters" onSubmit={searchRefonte}>
-            <label className="rl-radius">
-              Rayon autour de Vairé{' '}
-              <span>
-                <input
-                  type="number"
-                  min={5}
-                  max={50}
-                  step={1}
-                  required
-                  value={refonteRadius}
-                  disabled={refonteSearching}
-                  onChange={(e) => setRefonteRadius(Number(e.target.value))}
-                />{' '}
-                km
-              </span>
-            </label>
-            <button
-              className="rl-primary"
-              disabled={refonteSearching || !authReady || !!busy}
-            >
-              {refonteSearching ? (
-                <>
-                  <LoaderCircle size={16} className="rl-spin" /> Recherche en
-                  cours…
-                </>
-              ) : (
-                <>
-                  Trouver des acteurs <ArrowRight size={16} />
-                </>
-              )}
-            </button>
-          </form>
-          {refonteSearchError && (
-            <p className="rl-error" role="alert">
-              {refonteSearchError}
-            </p>
-          )}
-          <div aria-live="polite">
-            {refonteSearching ? (
-              <p className="rl-empty">Recherche en cours…</p>
-            ) : refonteResult ? (
-              <>
-                <p className="rl-result-count">
-                  {refonteResult.targets.length} acteur
-                  {refonteResult.targets.length > 1 ? 's' : ''} trouvé
-                  {refonteResult.targets.length > 1 ? 's' : ''} · Rayon de{' '}
-                  {refonteResult.search.radiusKm} km · Données du{' '}
-                  {new Date(refonteResult.retrievedAt).toLocaleDateString(
-                    'fr-FR',
-                  )}
-                </p>
-                {refonteResult.targets.length ? (
-                  <div className="rl-cards">
-                    {refonteResult.targets.map(refonteCard)}
-                  </div>
-                ) : (
-                  <p className="rl-empty">Aucun acteur trouvé.</p>
-                )}
-              </>
-            ) : (
-              <p className="rl-empty">
-                Choisissez un rayon, puis lancez la recherche.
-              </p>
-            )}
-          </div>
-        </>
+        <ReworkWorkspace
+          supabase={supabase}
+          session={session}
+          authReady={authReady}
+          member={member}
+          membershipState={membershipState}
+          onRetry={() => setRefresh(n => n + 1)}
+          onDirty={setReworkDirty}
+        />
       )}
       <footer className="rl-footer">
         {radarMode === 'local' ? (
@@ -1300,7 +1164,7 @@ export default function RadarWorkspace() {
             Les hypothèses restent à confirmer.
           </>
         ) : (
-          <>Annuaire des entreprises et associations. Aucun message n’est envoyé par cet outil.</>
+          <>Dossiers privés · Sources et observations conservées dans chaque dossier.</>
         )}
       </footer>
     </main>

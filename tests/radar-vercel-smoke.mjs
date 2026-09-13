@@ -27,6 +27,13 @@ globalThis.fetch = async (input, init) => {
       ? Response.json({ message: 'Lecture indisponible' }, { status: 400 })
       : Response.json(savedSirens.map((siren) => ({ siren })));
   }
+  if (url.pathname === '/rest/v1/radar_rework_projects') {
+    assert.equal(url.searchParams.get('user_id'), `eq.${testUserId}`);
+    assert.equal(url.searchParams.get('select'), 'data');
+    return savedReadFails
+      ? Response.json({ message: 'Lecture indisponible' }, { status: 400 })
+      : Response.json(savedSirens.map(siren => ({ data: { siren } })));
+  }
   return originalFetch(input, init);
 };
 try {
@@ -34,8 +41,10 @@ try {
     await import('../.vercel/output/functions/__server.func/index.mjs');
   const request = (path) => app.fetch(new Request(`http://localhost${path}`));
   const home = await request('/');
-  assert.ok([302, 307, 308].includes(home.status));
-  assert.equal(home.headers.get('location'), '/radar');
+  assert.equal(home.status, 200);
+  const rework = await request('/radar/rework');
+  assert.equal(rework.status, 200);
+  assert.match(await rework.text(), /Radar Rework/);
   const radar = await request('/radar');
   assert.equal(radar.status, 200);
   const html = await radar.text();
@@ -100,6 +109,17 @@ try {
     ).companies,
     companies.companies,
   );
+  const reworkSearch = () => app.fetch(new Request('http://localhost/api/radar/refonte?radiusKm=35', {
+    headers: { Authorization: 'Bearer fixture-radar-session' },
+  }));
+  const reworkResult = await reworkSearch();
+  assert.equal(reworkResult.status, 200);
+  const reworkPayload = await reworkResult.json();
+  assert.equal(reworkPayload.search.limit, 8);
+  assert.equal(reworkPayload.targets.some(target => savedSirens.includes(target.siren)), false);
+  savedReadFails = true;
+  assert.equal((await reworkSearch()).status, 503);
+  savedReadFails = false;
   const postResearch = (body, headers = {}) =>
     app.fetch(
       new Request('http://localhost/api/radar/research', {
@@ -146,10 +166,13 @@ try {
   const mcp = await request('/mcp');
   assert.equal(mcp.status, 404);
   const demo = await request('/demo/reclamation');
-  assert.equal(demo.status, 200);
-  assert.match(await demo.text(), /Traiter la réclamation/);
+  assert.equal(demo.status, 307);
+  assert.equal(demo.headers.get('location'), '/demo/maison-martin');
+  const video = await request('/demo/maison-martin');
+  assert.equal(video.status, 200);
+  assert.match(await video.text(), /45 secondes/);
   console.log(
-    'Vercel handler OK: root, Radar, saved companies excluded and refreshed, private cache, failed reads and expired sessions, research guards, MCP disabled, demo.',
+    'Vercel handler OK: vitrine, Radar local, Rework (8), saved companies excluded and refreshed, private cache, failed reads and expired sessions, research guards, MCP disabled, demo.',
   );
 } finally {
   globalThis.fetch = originalFetch;

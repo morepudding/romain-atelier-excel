@@ -20,10 +20,10 @@ export async function GET(request: Request) {
       { status: 400 },
     );
   try {
-    const excludedSirens = await savedCompanySirens(request);
+    const excludedSirens = await savedCompanySirens(request, fetch, 'radar_rework_projects');
     const result = await findRefonteTargets({
       ...parsed.data,
-      limit: 5,
+      limit: 8,
       excludedSirens,
     });
     return Response.json(result, {

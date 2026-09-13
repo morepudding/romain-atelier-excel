@@ -1,5 +1,11 @@
 # État actuel
 
+## Vidéo Maison Martin — 13 septembre 2026
+
+La page `/demo/maison-martin` utilise désormais la mini-BD ChatCut V14 validée : 45 secondes, Full HD, voix off, musique et bruitages. Le lecteur conserve ses commandes, la lecture au clic et le mode intégré sur mobile. Une image extraite de la vidéo sert d’aperçu et une piste française de sous-titres est disponible. La durée affichée et le texte du cas fictif sont mis à jour. Le fichier de la précédente vidéo reste conservé.
+
+Source : projet ChatCut `638d5de1-2c6d-4cc4-93c5-c3fe4e9cf354`, séquence `449ab68a-116b-4e78-9fec-b41f73dba161`, export `986df563-d37c-4e39-bb5c-1b92f9d3565e`. Média contrôlé : H.264 1920 × 1080, audio AAC, environ 45 secondes. Typecheck, lint ciblé et build Vercel réussis. Lecture vérifiée dans le navigateur sur le déploiement `dpl_A11SvxPP4hxQXQ7kThhFUehJvo14` : aperçu visible, temps de lecture qui avance, son non coupé, piste française présente et aucune erreur du lecteur. Le mixage n’a pas fait l’objet d’une nouvelle écoute humaine.
+
 ## Retour vers le cockpit depuis les pages secondaires — 11 septembre 2026
 
 Le Radar `/radar` et la vidéo `/demo/maison-martin` proposent désormais un accès direct au cockpit principal (`/`) dans leur en-tête. Le retour contextuel vers le Radar depuis la vidéo est conservé.

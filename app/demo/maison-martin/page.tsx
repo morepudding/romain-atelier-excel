@@ -29,34 +29,40 @@ export default function MaisonMartinPage() {
 
       <section className="maison-demo__hero" aria-labelledby="maison-demo-title">
         <div className="maison-demo__intro">
-          <p className="maison-demo__eyebrow">Maison Martin · 60 secondes</p>
+          <p className="maison-demo__eyebrow">Maison Martin · 45 secondes</p>
           <h1 id="maison-demo-title">
             Une vidéo qui
             <br />
             <em>montre vraiment.</em>
           </h1>
           <p className="maison-demo__lede">
-            Une démonstration courte, pensée pour présenter Maison Martin en
-            un regard.
+            Des documents de chantier au compte rendu : une démonstration
+            animée sur le cas fictif Maison Martin.
           </p>
           <p className="maison-demo__meta">
             Maison Martin <span aria-hidden="true">·</span> Full HD{' '}
-            <span aria-hidden="true">·</span> 01:00
+            <span aria-hidden="true">·</span> 00:45
           </p>
         </div>
 
         <div className="maison-demo__video-frame">
-          {/* oxlint-disable-next-line jsx-a11y/media-has-caption -- aucun transcript n’a été fourni avec la vidéo */}
           <video
             className="maison-demo__video"
             controls
             preload="metadata"
             playsInline
+            poster="/videos/Maison-Martin_45s_BD-V14.jpg"
             aria-label="Vidéo de présentation Maison Martin"
           >
             <source
-              src="/videos/Maison-Martin_60s_Full-HD.mp4"
+              src="/videos/Maison-Martin_45s_BD-V14.mp4"
               type="video/mp4"
+            />
+            <track
+              kind="captions"
+              src="/videos/Maison-Martin_45s_BD-V14.fr.vtt"
+              srcLang="fr"
+              label="Français"
             />
             Votre navigateur ne permet pas de lire cette vidéo.
           </video>

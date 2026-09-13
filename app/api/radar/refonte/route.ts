@@ -20,7 +20,11 @@ export async function GET(request: Request) {
       { status: 400 },
     );
   try {
-    const excludedSirens = await savedCompanySirens(request, fetch, 'radar_rework_projects');
+    const [localSirens, reworkSirens] = await Promise.all([
+      savedCompanySirens(request),
+      savedCompanySirens(request, fetch, 'radar_rework_projects'),
+    ]);
+    const excludedSirens = [...new Set([...localSirens, ...reworkSirens])];
     const result = await findRefonteTargets({
       ...parsed.data,
       limit: 8,

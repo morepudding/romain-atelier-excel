@@ -52,19 +52,14 @@ export async function savedCompanySirens(
       // La clé publique et le jeton utilisateur conservent les protections RLS.
       const saved = await client
         .from(table)
-        .select(table === 'radar_leads' ? 'siren' : 'data')
+        .select(table === 'radar_leads' ? 'siren' : 'siren:data->>siren')
         .eq('user_id', data.user.id)
         .order('id')
         .range(offset, offset + pageSize - 1);
       if (saved.error || !saved.data)
         throw new SavedCompaniesError(unavailable);
-      for (const row of saved.data as unknown as {
-        siren?: string;
-        data?: { siren?: string };
-      }[]) {
-        const siren = row.siren || row.data?.siren;
-        if (siren) sirens.add(siren);
-      }
+      for (const row of saved.data as unknown as { siren?: string }[])
+        if (row.siren) sirens.add(row.siren);
       if (saved.data.length < pageSize) return [...sirens];
     }
   } catch (error) {

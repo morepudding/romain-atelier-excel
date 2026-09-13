@@ -9,6 +9,7 @@ const fixture = JSON.parse(
 const originalFetch = globalThis.fetch;
 const testUserId = '11111111-2222-4333-8444-555555555555';
 let savedSirens = [];
+let savedReworkSirens = [];
 let savedReadFails = false;
 globalThis.fetch = async (input, init) => {
   const url = new URL(input instanceof Request ? input.url : String(input));
@@ -29,10 +30,10 @@ globalThis.fetch = async (input, init) => {
   }
   if (url.pathname === '/rest/v1/radar_rework_projects') {
     assert.equal(url.searchParams.get('user_id'), `eq.${testUserId}`);
-    assert.equal(url.searchParams.get('select'), 'data');
+    assert.equal(url.searchParams.get('select'), 'siren:data->>siren');
     return savedReadFails
       ? Response.json({ message: 'Lecture indisponible' }, { status: 400 })
-      : Response.json(savedSirens.map(siren => ({ data: { siren } })));
+      : Response.json(savedReworkSirens.map(siren => ({ siren })));
   }
   return originalFetch(input, init);
 };
@@ -117,6 +118,10 @@ try {
   const reworkPayload = await reworkResult.json();
   assert.equal(reworkPayload.search.limit, 8);
   assert.equal(reworkPayload.targets.some(target => savedSirens.includes(target.siren)), false);
+  assert.ok(reworkPayload.targets.length > 0);
+  savedReworkSirens = [reworkPayload.targets[0].siren];
+  const followingRework = await (await reworkSearch()).json();
+  assert.equal(followingRework.targets.some(target => [...savedSirens, ...savedReworkSirens].includes(target.siren)), false);
   savedReadFails = true;
   assert.equal((await reworkSearch()).status, 503);
   savedReadFails = false;

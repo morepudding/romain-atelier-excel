@@ -11,6 +11,9 @@ const availabilityGateway = createGateway({
     fetch(input, { ...init, signal: AbortSignal.timeout(6000) }),
 });
 export async function generationAvailability() {
+  // Preparation is performed by the connected agent. Paid calls require a separate explicit opt-in.
+  if (process.env.REWORK_PAID_GENERATION_ENABLED !== 'true')
+    return { available: false, reason: 'agent' };
   try {
     const result = await availabilityGateway.getCredits();
     return {

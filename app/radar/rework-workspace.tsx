@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import ReworkValidation from './rework-validation';
+import ReworkPage from './rework-page';
 import {
   useCallback,
   useEffect,
@@ -889,10 +890,24 @@ function ReworkDesk({
                 <div className="rw-directions">
                   <section>
                     {field('direction_a', 'Direction A', 18)}
+                    {data.pages.a && draft && supabase && (
+                      <ReworkPage
+                        supabase={supabase}
+                        project={draft}
+                        slot="a"
+                      />
+                    )}
                     {picture('a')}
                   </section>
                   <section>
                     {field('direction_b', 'Direction B', 18)}
+                    {data.pages.b && draft && supabase && (
+                      <ReworkPage
+                        supabase={supabase}
+                        project={draft}
+                        slot="b"
+                      />
+                    )}
                     {picture('b')}
                   </section>
                 </div>

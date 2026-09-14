@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import ReworkPage from './rework-page';
 import {
   useCallback,
   useEffect,
@@ -30,6 +31,8 @@ import {
 } from '@/lib/radar/rework';
 import {
   canPrepare,
+  comparisonReady,
+  hasProposal,
   preparationStep,
   preparationLabels,
   decide,
@@ -235,9 +238,7 @@ export default function ReworkValidation({
   const awaiting = retained.filter(
     (project) => !project.data.selected_direction,
   );
-  const ready = awaiting.filter(
-    (project) => project.data.images.a && project.data.images.b,
-  );
+  const ready = awaiting.filter((project) => comparisonReady(project.data));
   const selectedProjects = retained.filter(
     (project) => !!project.data.selected_direction,
   );
@@ -334,6 +335,7 @@ export default function ReworkValidation({
       )}
       {notice && <output className="rv-notice">{notice}</output>}
       {availability &&
+        availability.reason !== 'agent' &&
         !availability.available &&
         awaiting.some((project) => preparationStep(project.data)) && (
           <output className="rv-service">
@@ -457,7 +459,7 @@ export default function ReworkValidation({
                 </div>
                 <Evidence data={current.data} />
               </header>
-              {current.data.images.a && current.data.images.b ? (
+              {comparisonReady(current.data) ? (
                 <>
                   <div className="rv-comparison">
                     {(['a', 'b'] as const).map((slot) => (
@@ -555,10 +557,10 @@ export default function ReworkValidation({
                       <li data-done={!!current.data.brief}>
                         <Check size={15} /> Brief et directions
                       </li>
-                      <li data-done={!!current.data.images.a}>
+                      <li data-done={hasProposal(current.data, 'a')}>
                         <Check size={15} /> Maquette A
                       </li>
-                      <li data-done={!!current.data.images.b}>
+                      <li data-done={hasProposal(current.data, 'b')}>
                         <Check size={15} /> Maquette B
                       </li>
                     </ol>
@@ -765,6 +767,8 @@ function ProjectImage({
       clearInterval(timer);
     };
   }, [path, project.id, project.user_id, supabase, refresh]);
+  if (slot !== 'before' && project.data.pages[slot])
+    return <ReworkPage supabase={supabase} project={project} slot={slot} />;
   if (!path) return null;
   const title =
     slot === 'before' ? 'Référence' : `Proposition ${slot.toUpperCase()}`;

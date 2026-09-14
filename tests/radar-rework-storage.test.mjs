@@ -16,6 +16,7 @@ test('Rework owner isolation, immutable history, duplicate import and optimistic
     for (const file of [
       '../supabase/schema.sql',
       '../supabase/migrations/20260913205521_radar_rework.sql',
+      '../supabase/migrations/20260914113321_radar_rework_pages.sql',
     ])
       await db.exec(readFileSync(new URL(file, import.meta.url), 'utf8'));
     await db.query('insert into auth.users values ($1),($2),($3)', [
@@ -127,6 +128,56 @@ test('Rework owner isolation, immutable history, duplicate import and optimistic
     await db.exec('begin; set local role anon;');
     await assert.rejects(
       db.query('select * from public.radar_rework_projects'),
+      /permission denied/,
+    );
+    await db.exec('rollback');
+    const html = '<!doctype html><html><body>Private proposal</body></html>';
+    const {
+      rows: [page],
+    } = await asUser(
+      alice,
+      "insert into public.radar_rework_pages(user_id,project_id,slot,html,sha256) values ($1,$2,'a',$3,encode(sha256(convert_to($3,'UTF8')),'hex')) returning id",
+      [alice, p.id, html],
+    );
+    assert.equal(
+      (await asUser(bob, 'select * from public.radar_rework_pages')).rows
+        .length,
+      0,
+    );
+    assert.equal(
+      (await asUser(alice, 'select html from public.radar_rework_pages'))
+        .rows[0].html,
+      html,
+    );
+    await assert.rejects(
+      asUser(alice, 'update public.radar_rework_pages set html=$1', [html]),
+      /permission denied/,
+    );
+    await assert.rejects(
+      asUser(alice, save, [
+        { ...changed, pages: { a: page.id, b: page.id } },
+        p.id,
+        2,
+      ]),
+      /Invalid proposal reference/,
+    );
+    await assert.rejects(
+      asUser(alice, save, [{ ...changed, pages: { a: bob, b: '' } }, p.id, 2]),
+      /Invalid proposal reference/,
+    );
+    assert.equal(
+      (
+        await asUser(alice, save, [
+          { ...changed, pages: { a: page.id, b: '' } },
+          p.id,
+          2,
+        ])
+      ).rows[0].revision,
+      3,
+    );
+    await db.exec('begin; set local role anon;');
+    await assert.rejects(
+      db.query('select * from public.radar_rework_pages'),
       /permission denied/,
     );
     await db.exec('rollback');

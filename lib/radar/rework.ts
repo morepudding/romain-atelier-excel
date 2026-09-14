@@ -71,6 +71,12 @@ export const reworkDataSchema = z.object({
   direction_a: text.default(''),
   direction_b: text.default(''),
   selected_direction: z.enum(['', 'a', 'b']).default(''),
+  pages: z
+    .object({
+      a: z.union([z.literal(''), z.uuid()]).default(''),
+      b: z.union([z.literal(''), z.uuid()]).default(''),
+    })
+    .default({ a: '', b: '' }),
   automation: z
     .object({
       status: z.enum(['queued', 'working', 'ready', 'error']).default('queued'),

@@ -1,5 +1,15 @@
 # État actuel
 
+## Radar Rework — pages consultables et livraison agent, 14 septembre 2026
+
+Le bureau accepte désormais les propositions HTML/CSS autonomes en plus des images. Les UUID `data.pages.a/b` pointent vers `radar_rework_pages`, table privée avec appartenance membre, propriétaire et dossier vérifiés. Les pages sont immuables, dédupliquées par empreinte et conservées lors des révisions. Un trigger refuse toute référence inexistante ou appartenant à un autre dossier/slot. Les pages ne sont pas dans le dépôt public.
+
+Les deux propositions se comparent dans « Propositions à choisir », s’ouvrent en grand, avec commandes Ordinateur/Mobile, et restent disponibles dans les dossiers détaillés et après choix. Les iframes isolées interdisent scripts, accès au parent, formulaires et ressources réseau ; seules les images/polices data: et styles intégrés sont acceptés. Les choix et demandes de correction utilisent le même contrôle de révision que précédemment.
+
+La préparation payante est désactivée par défaut (`REWORK_PAID_GENERATION_ENABLED` absent ou différent de true), avant tout accès au fournisseur. Le travail vient de l’agent ; aucun crédit IA n’est requis pour lire les pages ou les intégrer. Le protocole durable `scripts/REWORK_DELIVERY.md` et le générateur SQL `scripts/rework-import-pages.py` permettent une livraison atomique et idempotente via le connecteur Supabase existant. La sauvegarde du brief seule ne vaut plus livraison visuelle.
+
+Migration appliquée au projet radar-local. Les quatre pages du pilote sont enregistrées et rattachées aux deux dossiers existants, révision 3 ; empreintes et historique relus. Choix humains conservés. Vérifications : typage, lint et 41 tests réussis, dont pages privées, refus de références invalides, choix A/B sans image et préservation de l’historique. L’audit Supabase ne relève aucun défaut RLS des nouvelles tables ; l’avertissement Auth préexistant est hors périmètre. Le navigateur de contrôle n’a pas de session personnelle connectée : ce parcours réel n’est pas encore vérifié visuellement.
+
 ## Radar Rework — validations du 14 septembre 2026
 
 Le parcours par défaut devient un bureau de validation : retenir ou passer une entreprise, puis comparer visuellement deux propositions et en choisir une. Aucun champ obligatoire dans ces deux décisions ; enregistrement immédiat avec contrôle de révision. Les dossiers détaillés, imports, exports, références et versions restent accessibles dans « Tous les dossiers ». Les entreprises déjà retenues sont reprises sans nouvelle validation. Un choix peut être revu ; une consigne courte facultative relance les propositions tout en conservant les versions précédentes.

@@ -90,3 +90,23 @@ void test('a requested refinement preserves evidence and reference, and resets o
   assert.equal(preparationStep(next), 'brief');
   assert.equal(data.images.a, 'old-a.png');
 });
+
+void test('private HTML proposals support comparison, selection and revision without image paths', () => {
+  const data = reworkDataSchema.parse({
+    name: 'Page témoin',
+    decision: 'retained',
+    pages: {
+      a: '00000000-0000-4000-8000-000000000001',
+      b: '00000000-0000-4000-8000-000000000002',
+    },
+  });
+  assert.equal(preparationStep(data), null);
+  assert.equal(canPrepare(data), false);
+  assert.equal(choose(data, 'b').selected_direction, 'b');
+  const revised = revise(data, 'Plus de photos');
+  assert.deepEqual(revised.pages, { a: '', b: '' });
+  assert.notEqual(data.pages.a, '');
+  assert.throws(() =>
+    choose({ ...data, pages: { ...data.pages, b: '' } }, 'a'),
+  );
+});

@@ -1,11 +1,17 @@
 import { reworkDataSchema, type ReworkData } from './rework.ts';
 
 export type PreparationStep = 'brief' | 'a' | 'b';
+export function hasProposal(data: ReworkData, slot: 'a' | 'b') {
+  return !!(data.pages?.[slot] || data.images[slot]);
+}
+export function comparisonReady(data: ReworkData) {
+  return hasProposal(data, 'a') && hasProposal(data, 'b');
+}
 export function preparationStep(data: ReworkData): PreparationStep | null {
   if (data.decision !== 'retained' || data.selected_direction) return null;
-  if (data.images.a && data.images.b) return null;
+  if (comparisonReady(data)) return null;
   if (!data.brief || !data.direction_a || !data.direction_b) return 'brief';
-  return data.images.a ? 'b' : 'a';
+  return hasProposal(data, 'a') ? 'b' : 'a';
 }
 export function canPrepare(data: ReworkData, now = Date.now()) {
   return (
@@ -25,14 +31,14 @@ export function decide(data: ReworkData, decision: ReworkData['decision']) {
           ...data.automation,
           lease: '',
           lease_until: 0,
-          status: data.images.a && data.images.b ? 'ready' : 'queued',
+          status: comparisonReady(data) ? 'ready' : 'queued',
           error: '',
         }
       : undefined,
   });
 }
 export function choose(data: ReworkData, direction: 'a' | 'b') {
-  if (data.decision !== 'retained' || !data.images.a || !data.images.b)
+  if (data.decision !== 'retained' || !comparisonReady(data))
     throw new Error(
       'Les deux propositions doivent être disponibles avant de choisir.',
     );
@@ -48,6 +54,7 @@ export function revise(data: ReworkData, instruction: string) {
     direction_b: '',
     selected_direction: '',
     images: { ...data.images, a: '', b: '' },
+    pages: { a: '', b: '' },
     automation: { instruction: instruction.trim(), status: 'queued' },
   });
 }

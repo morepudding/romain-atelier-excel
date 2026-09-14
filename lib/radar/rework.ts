@@ -71,6 +71,8 @@ export const reworkDataSchema = z.object({
   direction_a: text.default(''),
   direction_b: text.default(''),
   selected_direction: z.enum(['', 'a', 'b']).default(''),
+  presentation: z.enum(['pair', 'single']).default('pair'),
+  interactive_url: url.default(''),
   pages: z
     .object({
       a: z.union([z.literal(''), z.uuid()]).default(''),

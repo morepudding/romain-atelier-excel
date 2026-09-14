@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#d8f24b"><meta name="robots" content="noindex,nofollow">
+  <title>Coif’Hommes — Le vestiaire du quai</title>
+  <meta name="description" content="Une coupe, une barbe, votre style. Coif’Hommes, 16 quai Franqueville aux Sables-d’Olonne. Proposition de site non officielle.">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="./assets/manrope.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="scissors" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="12" r="6"/><circle cx="10" cy="36" r="6"/><path d="M15 15l28 27M15 33L43 6M24 24l-5-5"/><circle cx="25" cy="24" r="1.3"/></g></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs></svg>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <div id="entrance" class="entrance" hidden role="dialog" aria-modal="true" aria-labelledby="entrance-title" tabindex="-1">
+    <div class="entrance-top"><a class="brand" href="#main" id="intro-brand">coif’hommes<span>LE VESTIAIRE DU QUAI</span></a><span class="intro-location">LES SABLES-D’OLONNE</span></div>
+    <div class="entrance-copy"><span class="eyebrow" id="intro-status">ON PRÉPARE LES CISEAUX</span><h1 id="entrance-title">À VOUS<br>DE COUPER<span class="dot">.</span></h1><p id="intro-instruction">Le salon ouvre dans un instant.</p></div>
+    <canvas id="hair" aria-hidden="true"></canvas>
+    <div class="entrance-bottom"><div class="intro-progress"><span id="load-number">00</span><span id="load-label">PRÉPARATION</span><div class="load-line"><i id="load-fill"></i><svg><use href="#scissors"/></svg></div></div><button id="skip-intro" class="text-button">Entrer directement <svg><use href="#arrow"/></svg></button></div>
+    <span id="cut-feedback" aria-live="polite"></span>
+  </div>
+  <div id="scissor-cursor" aria-hidden="true"><svg><use href="#scissors"/></svg></div>
+  <header class="site-header" id="header"><a class="brand" href="#main">coif’hommes<span>LE VESTIAIRE DU QUAI</span></a><nav aria-label="Navigation principale"><a href="#styles">Les coupes</a><a href="#salon">Le salon</a><a class="header-cta" href="tel:+33251323481">On se coupe ? <svg><use href="#arrow"/></svg></a></nav></header>
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-label"><span>COIFFURE HOMMES & ENFANTS</span><span>BARBE AUSSI.</span></div>
+      <div class="hero-portrait"><img id="hero-image" src="./assets/hero.webp" alt="Portrait d’inspiration : coupe courte et texturée" width="1024" height="1536" fetchpriority="high"></div>
+      <div class="hero-title"><h1 id="hero-title">BIEN<br>DANS<br>SA <span>COUPE.</span></h1></div>
+      <div class="hero-note"><span class="note-line"></span><p>Votre style.<br>Notre coup de ciseaux.</p></div>
+      <div class="hero-bottom"><a class="hero-address" href="#contact">16 quai Franqueville<br>Les Sables-d’Olonne</a><a class="round-link" href="#styles"><span>VOIR<br>LES COUPES</span><svg><use href="#arrow"/></svg></a><button class="replay" id="replay-cut"><svg><use href="#scissors"/></svg> Rejouer la coupe</button></div>
+    </section>
+    <section class="styles-sequence" id="styles" aria-labelledby="styles-title">
+      <div class="styles-sticky">
+        <div class="styles-heading"><span class="eyebrow">LE STYLE, C’EST PERSONNEL.</span><h2 id="styles-title">À CHACUN<br>SA <em>TÊTE.</em></h2></div>
+        <div class="card-stage">
+          <article class="style-card card-one" data-card="0"><div class="card-top"><span>01 / LA COUPE</span><svg><use href="#scissors"/></svg></div><img src="./assets/hero.webp" alt="Inspiration de coupe homme, cheveux texturés" width="1024" height="1536"><div class="card-bottom"><h3>DU<br>CARACTÈRE.</h3><p>Coiffure hommes</p></div></article>
+          <article class="style-card card-two" data-card="1"><div class="card-top"><span>02 / LA BARBE</span><svg><use href="#scissors"/></svg></div><img src="./assets/beard.webp" alt="Inspiration de barbe courte aux contours dessinés" width="1024" height="1536"><div class="card-bottom"><h3>AU POIL.<br>PRÈS.</h3><p>Taille de barbe</p></div></article>
+          <article class="style-card card-three" data-card="2"><div class="card-top"><span>03 / LES ENFANTS</span><svg><use href="#scissors"/></svg></div><img src="./assets/kid.webp" alt="Portrait d’inspiration pour une coupe enfant" width="1024" height="1536"><div class="card-bottom"><h3>PETITE TÊTE.<br>GRAND STYLE.</h3><p>Coiffure enfants</p></div></article>
+        </div>
+        <div class="styles-footer"><p>Trois façons de sortir<br>avec la bonne tête.</p><div class="card-controls" aria-label="Parcourir les prestations"><button data-go-card="0" aria-label="Voir coiffure hommes" aria-pressed="true">01</button><button data-go-card="1" aria-label="Voir taille de barbe" aria-pressed="false">02</button><button data-go-card="2" aria-label="Voir coiffure enfants" aria-pressed="false">03</button></div><span class="scroll-prompt">FAITES DÉFILER <span>↓</span></span></div>
+        <span class="image-disclosure">Portraits d’inspiration · images de création</span>
+      </div>
+    </section>
+    <section class="mirror-sequence" id="salon" aria-labelledby="salon-title">
+      <div class="mirror-sticky">
+        <div class="mirror-heading"><span class="eyebrow">16 QUAI FRANQUEVILLE</span><h2 id="salon-title">DE L’AUTRE<br>CÔTÉ DU <em>MIROIR.</em></h2><p>Bienvenue au vestiaire.</p></div>
+        <svg class="mirror-trace" viewBox="0 0 1000 800" preserveAspectRatio="none" aria-hidden="true"><path id="trace-path" d="M60 0 C60 130 450 30 450 240 C450 350 225 280 225 400 L225 615 Q225 680 290 680 L690 680 Q755 680 755 615 L755 410 Q755 210 555 210 L425 210 Q225 210 225 410"/></svg>
+        <div class="mirror-frame" id="mirror-frame"><div class="mirror-inner"><img src="./assets/salon.jpg" alt="Photo du salon Coif’Hommes : fauteuils noirs, miroirs et décor de vestiaire" width="414" height="414"><div class="mirror-light" aria-hidden="true"></div><div class="mirror-overlay"><span>LE VESTIAIRE DU QUAI</span><p>PRENEZ<br>PLACE.</p><a href="tel:+33251323481">Appeler le salon <svg><use href="#arrow"/></svg></a></div></div></div>
+        <span class="mirror-caption">L’intérieur de Coif’Hommes · photo du salon</span>
+        <div class="mirror-number" aria-hidden="true">16</div>
+      </div>
+    </section>
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="contact-top"><span class="eyebrow">LA PROCHAINE COUPE ?</span><svg><use href="#scissors"/></svg></div>
+      <h2 id="contact-title">ON SE<br><a href="tel:+33251323481">VOIT ?<svg><use href="#arrow"/></svg></a></h2>
+      <div class="contact-details"><a class="telephone" href="tel:+33251323481">02 51 32 34 81</a><address>16 quai Franqueville<br>85100 Les Sables-d’Olonne</address><a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Coif%27Hommes%2016%20quai%20Franqueville%20Les%20Sables-d%27Olonne" target="_blank" rel="noopener noreferrer">L’itinéraire <svg><use href="#arrow"/></svg></a></div>
+      <div class="contact-links"><a href="mailto:coifhommes@gmail.com">coifhommes@gmail.com</a><a href="https://www.facebook.com/coifhommes85/" target="_blank" rel="noopener noreferrer">Le salon sur Facebook ↗</a></div>
+    </section>
+  </main>
+  <footer class="site-footer"><a class="brand" href="#main">coif’hommes</a><p>Proposition non officielle · Vrai Consulting</p><button id="motion-toggle" aria-pressed="false">Réduire les animations</button></footer>
+  <noscript><style>#entrance{display:none!important}.style-card{transform:none!important}.styles-sequence,.mirror-sequence{height:auto!important}.styles-sticky,.mirror-sticky{position:relative!important;height:auto!important}.card-stage{position:relative!important;display:flex;flex-wrap:wrap;gap:24px}.style-card{position:relative!important;inset:auto!important;opacity:1!important}.mirror-frame{position:relative!important;inset:auto!important;width:100%!important;height:500px!important}.mirror-overlay{opacity:1!important}</style></noscript>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,5 +1,13 @@
 # État actuel
 
+## Radar Rework — proposition interactive unique, 14 septembre 2026
+
+Ajout d’un mode explicite par dossier `presentation: single` et d’un `interactive_url` HTTP(S) filtré. Une proposition unique peut être validée sans direction B ; les dossiers A/B conservent leur fonctionnement par défaut. Coif’Hommes sert de pilote demandé par Romain, en attente de son avis avant toute officialisation du nouveau workflow.
+
+Romain a autorisé la publication du code Radar et demandé un lien Vercel accessible au prospect sans compte ChatGPT. La maquette seule est publiée sur https://coif-hommes-experience.vercel.app/ dans le projet Vercel `coif-hommes-experience` (production READY). Les fichiers portables se trouvent dans `public/maquettes/coif-hommes/` ; toutes les ressources sont relatives. Romain a ensuite autorisé explicitement la publication des modifications sur la branche `main` du dépôt public `morepudding/romain-atelier-excel`, puis la mise à jour de Radar sur Vercel. Le rattachement de Coif’Hommes utilise le lien Vercel public, le mode unique et un aperçu statique privé ; il est exécuté après confirmation du déploiement de cette interface. Radar ouvre le lien dans un nouvel onglet avec noopener/noreferrer et conserve un aperçu HTML statique privé. La sandbox et la CSP des iframes ne sont pas assouplies. Les références aux anciennes pages et les révisions restent conservées dans l’historique. Une demande de correction efface aussi le lien actif pour éviter de valider une version périmée. Aucun changement de l’activation payante ni des consignes officielles de génération.
+
+Vérifications : typage, lint et 42 tests réussis, dont le nouveau cas de validation unique, le refus du choix B et des liens javascript:, ainsi que la conservation du mode A/B. Revue ciblée des composants React : effet annulable et dépendances stables conservés, pas de bibliothèque d’animation ajoutée au Radar. Le parcours connecté reste à confirmer avec la session du propriétaire.
+
 ## Radar Rework — pages consultables et livraison agent, 14 septembre 2026
 
 Le bureau accepte désormais les propositions HTML/CSS autonomes en plus des images. Les UUID `data.pages.a/b` pointent vers `radar_rework_pages`, table privée avec appartenance membre, propriétaire et dossier vérifiés. Les pages sont immuables, dédupliquées par empreinte et conservées lors des révisions. Un trigger refuse toute référence inexistante ou appartenant à un autre dossier/slot. Les pages ne sont pas dans le dépôt public.

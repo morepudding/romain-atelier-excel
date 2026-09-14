@@ -461,11 +461,11 @@ export default function ReworkValidation({
               </header>
               {comparisonReady(current.data) ? (
                 <>
-                  <div className="rv-comparison">
-                    {(['a', 'b'] as const).map((slot) => (
+                  <div className="rv-comparison" data-single={current.data.presentation === 'single'}>
+                    {(current.data.presentation === 'single' ? (['a'] as const) : (['a', 'b'] as const)).map((slot) => (
                       <section className="rv-direction" key={slot}>
                         <header>
-                          <span>{slot.toUpperCase()}</span>
+                          {current.data.presentation !== 'single' && <span>{slot.toUpperCase()}</span>}
                           <h3>
                             {(slot === 'a'
                               ? current.data.direction_a
@@ -489,12 +489,12 @@ export default function ReworkValidation({
                               await save(current, choose(current.data, slot));
                               setSelected('');
                               setNotice(
-                                `Proposition ${slot.toUpperCase()} choisie pour ${current.data.name}.`,
+                                `Proposition${current.data.presentation === 'single' ? '' : ` ${slot.toUpperCase()}`} choisie pour ${current.data.name}.`,
                               );
                             })
                           }
                         >
-                          Choisir cette proposition <Check size={17} />
+                          {current.data.presentation === 'single' ? 'Valider cette proposition' : 'Choisir cette proposition'} <Check size={17} />
                         </button>
                       </section>
                     ))}
@@ -612,10 +612,9 @@ export default function ReworkValidation({
                   <summary>Consulter le brief et les directions</summary>
                   <h3>Brief</h3>
                   <p>{current.data.brief}</p>
-                  <h3>Direction A</h3>
+                  <h3>{current.data.presentation === 'single' ? 'Direction' : 'Direction A'}</h3>
                   <p>{current.data.direction_a}</p>
-                  <h3>Direction B</h3>
-                  <p>{current.data.direction_b}</p>
+                  {current.data.presentation !== 'single' && <><h3>Direction B</h3><p>{current.data.direction_b}</p></>}
                 </details>
               )}
             </article>
@@ -767,7 +766,7 @@ function ProjectImage({
       clearInterval(timer);
     };
   }, [path, project.id, project.user_id, supabase, refresh]);
-  if (slot !== 'before' && project.data.pages[slot])
+  if (slot !== 'before' && (project.data.pages[slot] || (slot === 'a' && project.data.interactive_url)))
     return <ReworkPage supabase={supabase} project={project} slot={slot} />;
   if (!path) return null;
   const title =

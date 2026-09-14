@@ -887,10 +887,10 @@ function ReworkDesk({
                     </div>
                   )}
                 {field('brief', 'Brief', 13)}
-                <div className="rw-directions">
+                <div className="rw-directions" data-single={data.presentation === 'single'}>
                   <section>
-                    {field('direction_a', 'Direction A', 18)}
-                    {data.pages.a && draft && supabase && (
+                    {field('direction_a', data.presentation === 'single' ? 'Direction' : 'Direction A', 18)}
+                    {(data.pages.a || data.interactive_url) && draft && supabase && (
                       <ReworkPage
                         supabase={supabase}
                         project={draft}
@@ -899,7 +899,7 @@ function ReworkDesk({
                     )}
                     {picture('a')}
                   </section>
-                  <section>
+                  {data.presentation !== 'single' && <section>
                     {field('direction_b', 'Direction B', 18)}
                     {data.pages.b && draft && supabase && (
                       <ReworkPage
@@ -909,7 +909,7 @@ function ReworkDesk({
                       />
                     )}
                     {picture('b')}
-                  </section>
+                  </section>}
                 </div>
                 <label>
                   Direction choisie
@@ -923,8 +923,8 @@ function ReworkDesk({
                     }
                   >
                     <option value="">Pas encore choisie</option>
-                    <option value="a">Proposition A</option>
-                    <option value="b">Proposition B</option>
+                    <option value="a">{data.presentation === 'single' ? 'Proposition validée' : 'Proposition A'}</option>
+                    {data.presentation !== 'single' && <option value="b">Proposition B</option>}
                   </select>
                 </label>
                 <button

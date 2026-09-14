@@ -641,6 +641,9 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 28px;
 }
+.rv-comparison[data-single='true'], .rw-directions[data-single='true'] { grid-template-columns: minmax(0, 1fr); }
+.rv-interactive-link { display: flex; justify-content: center; align-items: center; min-height: 56px; padding: 16px 22px; background: var(--ink, #173d32); color: #fff; font-weight: 700; text-decoration: none; }
+.rv-interactive-link:focus-visible { outline: 3px solid #9d6d2e; outline-offset: 4px; }
 .rv-direction {
   min-width: 0;
 }

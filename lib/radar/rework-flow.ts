@@ -2,15 +2,15 @@ import { reworkDataSchema, type ReworkData } from './rework.ts';
 
 export type PreparationStep = 'brief' | 'a' | 'b';
 export function hasProposal(data: ReworkData, slot: 'a' | 'b') {
-  return !!(data.pages?.[slot] || data.images[slot]);
+  return !!(data.pages?.[slot] || data.images[slot] || (slot === 'a' && data.interactive_url));
 }
 export function comparisonReady(data: ReworkData) {
-  return hasProposal(data, 'a') && hasProposal(data, 'b');
+  return hasProposal(data, 'a') && (data.presentation === 'single' || hasProposal(data, 'b'));
 }
 export function preparationStep(data: ReworkData): PreparationStep | null {
   if (data.decision !== 'retained' || data.selected_direction) return null;
   if (comparisonReady(data)) return null;
-  if (!data.brief || !data.direction_a || !data.direction_b) return 'brief';
+  if (!data.brief || !data.direction_a || (data.presentation !== 'single' && !data.direction_b)) return 'brief';
   return hasProposal(data, 'a') ? 'b' : 'a';
 }
 export function canPrepare(data: ReworkData, now = Date.now()) {
@@ -38,9 +38,9 @@ export function decide(data: ReworkData, decision: ReworkData['decision']) {
   });
 }
 export function choose(data: ReworkData, direction: 'a' | 'b') {
-  if (data.decision !== 'retained' || !comparisonReady(data))
+  if (data.decision !== 'retained' || !comparisonReady(data) || (data.presentation === 'single' && direction !== 'a'))
     throw new Error(
-      'Les deux propositions doivent être disponibles avant de choisir.',
+      data.presentation === 'single' ? 'La proposition doit être disponible avant de la valider.' : 'Les deux propositions doivent être disponibles avant de choisir.',
     );
   return { ...data, selected_direction: direction };
 }
@@ -55,6 +55,7 @@ export function revise(data: ReworkData, instruction: string) {
     selected_direction: '',
     images: { ...data.images, a: '', b: '' },
     pages: { a: '', b: '' },
+    interactive_url: '',
     automation: { instruction: instruction.trim(), status: 'queued' },
   });
 }

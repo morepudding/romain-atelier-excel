@@ -110,3 +110,22 @@ void test('private HTML proposals support comparison, selection and revision wit
     choose({ ...data, pages: { ...data.pages, b: '' } }, 'a'),
   );
 });
+
+void test('one interactive proposal is sufficient only for the explicit single presentation', () => {
+  const data = reworkDataSchema.parse({
+    name: 'Proposition unique', decision: 'retained', presentation: 'single',
+    interactive_url: 'https://example.com/maquette',
+  });
+  assert.equal(preparationStep(data), null);
+  assert.equal(canPrepare(data), false);
+  assert.equal(choose(data, 'a').selected_direction, 'a');
+  assert.throws(() => choose(data, 'b'));
+  const revised = revise(data, 'Ajuster les couleurs');
+  assert.equal(revised.presentation, 'single');
+  assert.equal(revised.interactive_url, '');
+  assert.equal(preparationStep(revised), 'brief');
+  const pair = reworkDataSchema.parse({name: 'Comparaison', decision: 'retained', interactive_url: data.interactive_url});
+  assert.equal(pair.presentation, 'pair');
+  assert.throws(() => choose(pair, 'a'));
+  assert.equal(reworkDataSchema.safeParse({...data, interactive_url: 'javascript:alert(1)'}).success, false);
+});

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { ReworkProject } from '@/lib/radar/rework';
+import { safeUrl, type ReworkProject } from '@/lib/radar/rework';
 
 // Proposals never execute code or access the parent origin, cookies or session.
 // Data images and inline CSS are sufficient for the autonomous HTML/CSS format.
@@ -25,8 +25,10 @@ export default function ReworkPage({
   const [retry, setRetry] = useState(0);
   const [mobile, setMobile] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
-  const label = `Proposition ${slot.toUpperCase()} — ${project.data.name}`;
+  const label = `Proposition${project.data.presentation === 'single' ? '' : ` ${slot.toUpperCase()}`} — ${project.data.name}`;
+  const interactiveUrl = slot === 'a' ? safeUrl(project.data.interactive_url || '') : null;
   useEffect(() => {
+    if (!id) return;
     const abort = new AbortController();
     let active = true;
     async function read() {
@@ -66,9 +68,15 @@ export default function ReworkPage({
             sandbox=""
             referrerPolicy="no-referrer"
           />
-          <button type="button" onClick={() => dialog.current?.showModal()}>
-            Ouvrir en grand
-          </button>
+          {interactiveUrl ? (
+            <a className="rv-interactive-link" href={interactiveUrl} target="_blank" rel="noopener noreferrer">
+              Ouvrir la maquette interactive ↗
+            </a>
+          ) : (
+            <button type="button" onClick={() => dialog.current?.showModal()}>
+              Ouvrir en grand
+            </button>
+          )}
           <dialog ref={dialog} className="rv-page-dialog" aria-label={label}>
             <header>
               <strong>{label}</strong>
@@ -101,9 +109,12 @@ export default function ReworkPage({
             />
           </dialog>
         </>
+      ) : !id && interactiveUrl ? (
+        <a className="rv-interactive-link" href={interactiveUrl} target="_blank" rel="noopener noreferrer">Ouvrir la maquette interactive ↗</a>
       ) : page.id === id && page.error ? (
         <div role="alert">
           <p>{page.error}</p>
+          {interactiveUrl && <a href={interactiveUrl} target="_blank" rel="noopener noreferrer">Ouvrir la maquette interactive ↗</a>}
           <button type="button" onClick={() => setRetry((n) => n + 1)}>
             Réessayer
           </button>

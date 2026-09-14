@@ -1,5 +1,7 @@
 'use client';
 
+import { decide } from '@/lib/radar/rework-flow';
+
 import Image from 'next/image';
 import ReworkValidation from './rework-validation';
 import ReworkPage from './rework-page';
@@ -29,7 +31,6 @@ import {
   sameCompany,
   fromTarget,
   parseReworkImport,
-  prepareRework,
   reworkDataSchema,
   safeUrl,
   type ReworkData,
@@ -844,9 +845,9 @@ function ReworkDesk({
                   <select
                     value={data.decision}
                     onChange={(e) =>
-                      edit({
-                        decision: e.target.value as ReworkData['decision'],
-                      })
+                      edit(
+                        decide(data, e.target.value as ReworkData['decision']),
+                      )
                     }
                   >
                     {Object.entries(decisions).map(([v, l]) => (
@@ -870,46 +871,62 @@ function ReworkDesk({
                   </p>
                 )}
                 {data.decision === 'retained' &&
+                  data.automation?.workflow !== 'interactive-v1' &&
                   !(data.brief || data.direction_a || data.direction_b) && (
                     <div className="rw-start">
                       <h3>Préparer une proposition qui lui ressemble</h3>
-                      <p>
-                        Choisissez l’activité et précisez votre piste dans le
-                        dossier, puis préparez le brief et deux directions à
-                        travailler.
-                      </p>
                       <button
                         className="rl-primary"
-                        onClick={() => edit(prepareRework(data))}
+                        onClick={() =>
+                          void run('Enregistrement…', () =>
+                            persist({
+                              ...draft!,
+                              data: decide(data, 'retained'),
+                            }),
+                          )
+                        }
                       >
-                        Préparer le brief et les deux directions
+                        Créer la maquette interactive
                       </button>
                     </div>
                   )}
                 {field('brief', 'Brief', 13)}
-                <div className="rw-directions" data-single={data.presentation === 'single'}>
+                <div
+                  className="rw-directions"
+                  data-single={data.presentation === 'single'}
+                >
                   <section>
-                    {field('direction_a', data.presentation === 'single' ? 'Direction' : 'Direction A', 18)}
-                    {(data.pages.a || data.interactive_url) && draft && supabase && (
-                      <ReworkPage
-                        supabase={supabase}
-                        project={draft}
-                        slot="a"
-                      />
+                    {field(
+                      'direction_a',
+                      data.presentation === 'single'
+                        ? 'Direction'
+                        : 'Direction A',
+                      18,
                     )}
+                    {(data.pages.a || data.interactive_url) &&
+                      draft &&
+                      supabase && (
+                        <ReworkPage
+                          supabase={supabase}
+                          project={draft}
+                          slot="a"
+                        />
+                      )}
                     {picture('a')}
                   </section>
-                  {data.presentation !== 'single' && <section>
-                    {field('direction_b', 'Direction B', 18)}
-                    {data.pages.b && draft && supabase && (
-                      <ReworkPage
-                        supabase={supabase}
-                        project={draft}
-                        slot="b"
-                      />
-                    )}
-                    {picture('b')}
-                  </section>}
+                  {data.presentation !== 'single' && (
+                    <section>
+                      {field('direction_b', 'Direction B', 18)}
+                      {data.pages.b && draft && supabase && (
+                        <ReworkPage
+                          supabase={supabase}
+                          project={draft}
+                          slot="b"
+                        />
+                      )}
+                      {picture('b')}
+                    </section>
+                  )}
                 </div>
                 <label>
                   Direction choisie
@@ -923,8 +940,14 @@ function ReworkDesk({
                     }
                   >
                     <option value="">Pas encore choisie</option>
-                    <option value="a">{data.presentation === 'single' ? 'Proposition validée' : 'Proposition A'}</option>
-                    {data.presentation !== 'single' && <option value="b">Proposition B</option>}
+                    <option value="a">
+                      {data.presentation === 'single'
+                        ? 'Proposition validée'
+                        : 'Proposition A'}
+                    </option>
+                    {data.presentation !== 'single' && (
+                      <option value="b">Proposition B</option>
+                    )}
                   </select>
                 </label>
                 <button

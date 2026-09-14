@@ -30,7 +30,6 @@ import {
   type ReworkProject,
 } from '@/lib/radar/rework';
 import {
-  canPrepare,
   comparisonReady,
   hasProposal,
   preparationStep,
@@ -46,7 +45,6 @@ type Props = {
   session: Session;
   onOpenDossiers: () => void;
 };
-type Availability = { available: boolean; reason: string };
 const errorMessage = (error: unknown) =>
   error instanceof Error
     ? error.message
@@ -71,9 +69,8 @@ export default function ReworkValidation({
   const [view, setView] = useState<'companies' | 'proposals'>('companies');
   const [selected, setSelected] = useState('');
   const [busy, setBusy] = useState(false);
-  const [activeJob, setActiveJob] = useState('');
-  const [availability, setAvailability] = useState<Availability | null>(null);
   const [refresh, setRefresh] = useState(0);
+  const [observedAt, setObservedAt] = useState(0);
   const mutationLock = useRef(false);
   const owner = session.user.id;
   const read = useCallback(async () => {
@@ -107,69 +104,18 @@ export default function ReworkValidation({
     return result.data.session.access_token;
   }, [supabase]);
 
-  // One sequential worker per mounted desk. The server's revision lease arbitrates across tabs.
-  // Completed steps survive navigation; unfinished steps resume on the next visit.
+  // Rendering only: the scheduled agent consumes the persisted queue independently of this tab.
   useEffect(() => {
     let stopped = false;
     let timer: ReturnType<typeof setTimeout>;
-    let provider: Availability | null = null;
-    let checkedAt = 0;
     async function tick() {
       let next = 6000;
       try {
         const rows = await read();
         if (stopped) return;
         setProjects((current) => mergeRows(current, rows));
+        setObservedAt(Date.now());
         setLoading(false);
-        if (Date.now() - checkedAt > 60000) {
-          const response = await fetch('/api/radar/rework/prepare', {
-            signal: AbortSignal.timeout(10000),
-          });
-          if (!response.ok)
-            throw new Error(
-              'Impossible de vérifier la disponibilité des maquettes.',
-            );
-          provider = (await response.json()) as Availability;
-          checkedAt = Date.now();
-          if (!stopped) setAvailability(provider);
-        }
-        const project = rows.find((row) => canPrepare(row.data));
-        if (!stopped && project && provider?.available) {
-          setActiveJob(project.id);
-          const response = await fetch('/api/radar/rework/prepare', {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${await token()}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: project.id }),
-            signal: AbortSignal.timeout(175000),
-          });
-          const result = (await response.json()) as {
-            project?: ReworkProject;
-            error?: string;
-            availability?: Availability;
-          };
-          if (stopped) return;
-          if (result.project)
-            setProjects((current) =>
-              mergeRows(current, [
-                {
-                  ...result.project!,
-                  data: reworkDataSchema.parse(result.project!.data),
-                },
-              ]),
-            );
-          if (result.availability) {
-            provider = result.availability;
-            setAvailability(provider);
-          }
-          if (!response.ok && !result.project && response.status !== 409)
-            throw new Error(
-              result.error || 'La préparation est momentanément indisponible.',
-            );
-          next = 500;
-        }
       } catch (err) {
         if (!stopped) {
           setError(errorMessage(err));
@@ -177,10 +123,7 @@ export default function ReworkValidation({
         }
         next = 20000;
       } finally {
-        if (!stopped) {
-          setActiveJob('');
-          timer = setTimeout(() => void tick(), next);
-        }
+        if (!stopped) timer = setTimeout(() => void tick(), next);
       }
     }
     void tick();
@@ -188,7 +131,7 @@ export default function ReworkValidation({
       stopped = true;
       clearTimeout(timer);
     };
-  }, [read, token, refresh]);
+  }, [read, refresh]);
 
   async function save(project: ReworkProject, data: ReworkData) {
     const result = await supabase
@@ -313,7 +256,7 @@ export default function ReworkValidation({
               setSelected('');
             }}
           >
-            <span>2</span> Propositions à choisir <b>{awaiting.length}</b>
+            <span>2</span> Maquettes à valider <b>{awaiting.length}</b>
           </button>
         </nav>
         <button className="rv-text-button" onClick={onOpenDossiers}>
@@ -334,18 +277,6 @@ export default function ReworkValidation({
         </div>
       )}
       {notice && <output className="rv-notice">{notice}</output>}
-      {availability &&
-        availability.reason !== 'agent' &&
-        !availability.available &&
-        awaiting.some((project) => preparationStep(project.data)) && (
-          <output className="rv-service">
-            {availability.reason === 'credits'
-              ? 'La préparation est suspendue : le crédit de génération est épuisé.'
-              : availability.reason === 'configuration'
-                ? 'La génération des maquettes doit être connectée. Vos entreprises retenues sont enregistrées.'
-                : 'La préparation est momentanément indisponible. Nouvelle vérification automatique.'}
-          </output>
-        )}
       {loading ? (
         <output className="rv-empty">Chargement de votre sélection…</output>
       ) : current ? (
@@ -355,7 +286,7 @@ export default function ReworkValidation({
               {view === 'companies'
                 ? 'Votre prochaine décision'
                 : ready.length
-                  ? `${ready.length} ${ready.length > 1 ? 'comparaisons disponibles' : 'comparaison disponible'}`
+                  ? `${ready.length} ${ready.length > 1 ? 'maquettes disponibles' : 'maquette disponible'}`
                   : 'Vos entreprises retenues'}
             </p>
             <div>
@@ -461,11 +392,19 @@ export default function ReworkValidation({
               </header>
               {comparisonReady(current.data) ? (
                 <>
-                  <div className="rv-comparison" data-single={current.data.presentation === 'single'}>
-                    {(current.data.presentation === 'single' ? (['a'] as const) : (['a', 'b'] as const)).map((slot) => (
+                  <div
+                    className="rv-comparison"
+                    data-single={current.data.presentation === 'single'}
+                  >
+                    {(current.data.presentation === 'single'
+                      ? (['a'] as const)
+                      : (['a', 'b'] as const)
+                    ).map((slot) => (
                       <section className="rv-direction" key={slot}>
                         <header>
-                          {current.data.presentation !== 'single' && <span>{slot.toUpperCase()}</span>}
+                          {current.data.presentation !== 'single' && (
+                            <span>{slot.toUpperCase()}</span>
+                          )}
                           <h3>
                             {(slot === 'a'
                               ? current.data.direction_a
@@ -494,7 +433,10 @@ export default function ReworkValidation({
                             })
                           }
                         >
-                          {current.data.presentation === 'single' ? 'Valider cette proposition' : 'Choisir cette proposition'} <Check size={17} />
+                          {current.data.presentation === 'single'
+                            ? 'Valider cette proposition'
+                            : 'Choisir cette proposition'}{' '}
+                          <Check size={17} />
                         </button>
                       </section>
                     ))}
@@ -526,11 +468,9 @@ export default function ReworkValidation({
                         rows={2}
                         maxLength={2000}
                         required
-                        placeholder="Par exemple : garder la composition A, avec des images plus présentes."
+                        placeholder="Par exemple : donner plus de place aux photos du lieu."
                       />
-                      <button disabled={busy}>
-                        Reprendre les propositions
-                      </button>
+                      <button disabled={busy}>Reprendre la maquette</button>
                     </form>
                   </details>
                 </>
@@ -541,12 +481,17 @@ export default function ReworkValidation({
                     <h3>
                       {current.data.automation?.status === 'error'
                         ? 'La préparation s’est interrompue.'
-                        : activeJob === current.id ||
-                            current.data.automation?.status === 'working'
-                          ? preparationLabels[
-                              preparationStep(current.data) || 'brief'
-                            ]
-                          : 'Les propositions attendent leur préparation.'}
+                        : current.data.automation?.status === 'working' &&
+                            current.data.automation.lease_until > observedAt
+                          ? current.data.presentation === 'single'
+                            ? 'Création de la maquette interactive'
+                            : preparationLabels[
+                                preparationStep(current.data) || 'brief'
+                              ]
+                          : current.data.automation?.workflow ===
+                              'interactive-v1'
+                            ? 'Maquette en attente de création.'
+                            : 'Cette entreprise attend sa maquette.'}
                     </h3>
                     <p>
                       {current.data.automation?.status === 'error'
@@ -555,34 +500,47 @@ export default function ReworkValidation({
                     </p>
                     <ol className="rv-progress-steps">
                       <li data-done={!!current.data.brief}>
-                        <Check size={15} /> Brief et directions
+                        <Check size={15} />{' '}
+                        {current.data.presentation === 'single'
+                          ? 'Direction visuelle'
+                          : 'Brief et directions'}
                       </li>
                       <li data-done={hasProposal(current.data, 'a')}>
-                        <Check size={15} /> Maquette A
+                        <Check size={15} />{' '}
+                        {current.data.presentation === 'single'
+                          ? 'Maquette'
+                          : 'Maquette A'}
                       </li>
-                      <li data-done={hasProposal(current.data, 'b')}>
-                        <Check size={15} /> Maquette B
+                      <li
+                        data-done={
+                          current.data.presentation === 'single'
+                            ? !!current.data.interactive_url
+                            : hasProposal(current.data, 'b')
+                        }
+                      >
+                        <Check size={15} />{' '}
+                        {current.data.presentation === 'single'
+                          ? 'Lien public'
+                          : 'Maquette B'}
                       </li>
                     </ol>
-                    {current.data.automation?.status === 'error' && (
+                    {(current.data.automation?.status === 'error' ||
+                      current.data.automation?.workflow !==
+                        'interactive-v1') && (
                       <button
-                        disabled={busy || current.data.automation.attempts >= 9}
+                        disabled={busy}
                         onClick={() =>
                           void action(async () => {
-                            await save(current, {
-                              ...current.data,
-                              automation: {
-                                ...current.data.automation!,
-                                status: 'queued',
-                                error: '',
-                                lease: '',
-                                lease_until: 0,
-                              },
-                            });
+                            await save(
+                              current,
+                              decide(current.data, 'retained'),
+                            );
                           })
                         }
                       >
-                        Reprendre la préparation
+                        {current.data.automation?.status === 'error'
+                          ? 'Reprendre la création'
+                          : 'Créer la maquette'}
                       </button>
                     )}
                   </div>
@@ -593,7 +551,8 @@ export default function ReworkValidation({
                         project={current}
                         slot="a"
                       />
-                    ) : activeJob === current.id ? (
+                    ) : current.data.automation?.status === 'working' &&
+                      current.data.automation.lease_until > observedAt ? (
                       <LoaderCircle
                         className="rv-spinner"
                         size={30}
@@ -612,9 +571,18 @@ export default function ReworkValidation({
                   <summary>Consulter le brief et les directions</summary>
                   <h3>Brief</h3>
                   <p>{current.data.brief}</p>
-                  <h3>{current.data.presentation === 'single' ? 'Direction' : 'Direction A'}</h3>
+                  <h3>
+                    {current.data.presentation === 'single'
+                      ? 'Direction'
+                      : 'Direction A'}
+                  </h3>
                   <p>{current.data.direction_a}</p>
-                  {current.data.presentation !== 'single' && <><h3>Direction B</h3><p>{current.data.direction_b}</p></>}
+                  {current.data.presentation !== 'single' && (
+                    <>
+                      <h3>Direction B</h3>
+                      <p>{current.data.direction_b}</p>
+                    </>
+                  )}
                 </details>
               )}
             </article>
@@ -766,7 +734,10 @@ function ProjectImage({
       clearInterval(timer);
     };
   }, [path, project.id, project.user_id, supabase, refresh]);
-  if (slot !== 'before' && (project.data.pages[slot] || (slot === 'a' && project.data.interactive_url)))
+  if (
+    slot !== 'before' &&
+    (project.data.pages[slot] || (slot === 'a' && project.data.interactive_url))
+  )
     return <ReworkPage supabase={supabase} project={project} slot={slot} />;
   if (!path) return null;
   const title =

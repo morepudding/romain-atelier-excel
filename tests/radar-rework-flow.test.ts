@@ -24,8 +24,12 @@ void test('the two human decisions gate generation and selection without replaci
   assert.equal(retained.initial_assessment, 'Écarter');
   assert.equal(retained.user_reason, 'Garder les photos');
   assert.throws(() => choose(retained, 'a'));
+  assert.equal(retained.presentation, 'single');
+  assert.equal(retained.automation?.workflow, 'interactive-v1');
+  assert.equal(retained.automation?.status, 'queued');
   const withBrief = {
     ...retained,
+    presentation: 'pair' as const,
     brief: 'brief',
     direction_a: 'A',
     direction_b: 'B',
@@ -113,8 +117,11 @@ void test('private HTML proposals support comparison, selection and revision wit
 
 void test('one interactive proposal is sufficient only for the explicit single presentation', () => {
   const data = reworkDataSchema.parse({
-    name: 'Proposition unique', decision: 'retained', presentation: 'single',
+    name: 'Proposition unique',
+    decision: 'retained',
+    presentation: 'single',
     interactive_url: 'https://example.com/maquette',
+    pages: { a: '00000000-0000-4000-8000-000000000001', b: '' },
   });
   assert.equal(preparationStep(data), null);
   assert.equal(canPrepare(data), false);
@@ -124,8 +131,54 @@ void test('one interactive proposal is sufficient only for the explicit single p
   assert.equal(revised.presentation, 'single');
   assert.equal(revised.interactive_url, '');
   assert.equal(preparationStep(revised), 'brief');
-  const pair = reworkDataSchema.parse({name: 'Comparaison', decision: 'retained', interactive_url: data.interactive_url});
+  const pair = reworkDataSchema.parse({
+    name: 'Comparaison',
+    decision: 'retained',
+    interactive_url: data.interactive_url,
+  });
   assert.equal(pair.presentation, 'pair');
   assert.throws(() => choose(pair, 'a'));
-  assert.equal(reworkDataSchema.safeParse({...data, interactive_url: 'javascript:alert(1)'}).success, false);
+  assert.equal(
+    reworkDataSchema.safeParse({
+      ...data,
+      interactive_url: 'javascript:alert(1)',
+    }).success,
+    false,
+  );
+});
+
+void test('the official workflow preserves finished pairs, requires link and preview, and queues corrections once', () => {
+  const old = reworkDataSchema.parse({
+    name: 'Ancien dossier',
+    decision: 'retained',
+    pages: {
+      a: '00000000-0000-4000-8000-000000000001',
+      b: '00000000-0000-4000-8000-000000000002',
+    },
+  });
+  assert.equal(decide(old, 'retained').presentation, 'pair');
+  assert.equal(decide(old, 'retained').automation, undefined);
+  const queued = revise(old, 'Une entrée plus forte');
+  assert.equal(queued.presentation, 'single');
+  assert.equal(queued.automation?.workflow, 'interactive-v1');
+  assert.equal(queued.automation?.artifact_path, '');
+  const cover = {
+    ...queued,
+    brief: 'Brief',
+    direction_a: 'Direction',
+    pages: { ...queued.pages, a: old.pages.a },
+  };
+  assert.equal(preparationStep(cover), 'a');
+  assert.throws(() => choose(cover, 'a'));
+  const linkOnly = { ...queued, interactive_url: 'https://example.com/' };
+  assert.throws(() => choose(linkOnly, 'a'));
+  assert.equal(
+    choose({ ...cover, interactive_url: 'https://example.com/' }, 'a')
+      .selected_direction,
+    'a',
+  );
+  assert.deepEqual(old.pages, {
+    a: '00000000-0000-4000-8000-000000000001',
+    b: '00000000-0000-4000-8000-000000000002',
+  });
 });

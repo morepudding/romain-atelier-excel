@@ -1,17 +1,83 @@
-# Livraison des propositions Rework
+# Workflow officiel : une maquette interactive par validation
 
-Le résultat utilisateur est une comparaison A/B visible dans `/radar/rework`, onglet « Propositions à choisir ». Un lien scratch, une référence Library ou un brief seul ne termine pas une livraison.
+Validé par Romain le 14 septembre 2026 après le pilote Coif’Hommes : https://coif-hommes-experience.vercel.app/. Le résultat attendu est une seule maquette codée, vivante, adaptée au métier, consultable sur Vercel sans compte ChatGPT, puis rattachée au dossier privé Radar. Coif’Hommes est une référence de qualité, pas un gabarit à recolorer.
 
-Le lecteur accepte `data.pages.a/b` (UUID dans `radar_rework_pages`) et les anciens chemins `data.images.a/b`. Les pages autonomes HTML/CSS et leurs images data: sont stockées dans la table privée, jamais dans le dépôt public. Le navigateur les rend dans une iframe isolée sans scripts, accès au parent, formulaires ou ressources réseau. Garder styles et photos intégrés et compresser les images (8 Mo maximum par page). Les ancres de page fonctionnent ; aucune transaction/contact n'est exécutée par l'aperçu.
+## Déclenchement et décisions humaines
 
-L'agent autorisé lit le propriétaire, le dossier, sa révision, la décision et les références existantes. Il conserve les versions déjà livrées et reprend les étapes manquantes. Après les contrôles visuels, il génère l'import avec :
+« Retenir cette entreprise » enregistre `decision=retained`, `presentation=single` et `automation.workflow=interactive-v1,status=queued`. Une demande de correction produit une nouvelle série avec sa consigne et conserve les versions précédentes. Le bureau n’appelle plus le générateur d’images par API. La création continue sans laisser Radar ouvert.
+
+Une tâche ChatGPT relève cette file chaque heure, un dossier à la fois. Il s’agit d’une relève périodique, pas d’un webhook Supabase ni d’une promesse de livraison en une heure. Le temps de création s’ajoute au délai de relève. Les tâches de découverte restent séparées.
+
+Les dossiers anciens A/B restent consultables. Ne pas les régénérer automatiquement. Les anciens dossiers retenus mais non inscrits à cette file peuvent y entrer avec « Créer la maquette ». Ne jamais réactiver une ancienne suspension à partir du seul statut retained. Ne jamais choisir la maquette, écarter un dossier ou contacter une entreprise à la place de Romain.
+
+## Accès et périmètre
+
+Lire la version courante de `AGENTS.md`, `CURRENT_STATE.md`, ce protocole et `scripts/rework-interactive.py` dans le dépôt autorisé. Le propriétaire et le projet Supabase sont donnés par la tâche, pas intégrés aux sources publiques. Vérifier l’appartenance à `radar_members`. Toutes les opérations métier sont filtrées par propriétaire et dossier ; les triggers gèrent révisions et historique.
+
+Utiliser les capacités incluses de ChatGPT et les connecteurs autorisés. Ne pas appeler `/api/radar/rework/prepare`, une API d’IA payante ou Vercel AI Gateway ; ne pas acheter de crédits, abonnement ni changer la facturation. Ne pas ajouter de worker IA payant pour obtenir un départ instantané. Aucun sous-agent. Pas de modification du schéma, des droits, de l’authentification, des tâches de découverte ni du code applicatif par le worker de maquettes.
+
+## Réserver et reprendre
+
+Exécuter les SQL générés par ce script avec le connecteur Supabase autorisé. Le script ne contacte aucun service.
 
 ```sh
-python scripts/rework-import-pages.py --owner UUID --project UUID --revision N --a proposition-a.html --b proposition-b.html --output /tmp/import-rework.sql
+python scripts/rework-interactive.py claim --owner UUID --output /tmp/rework-claim.sql
 ```
 
-Exécuter ce SQL exact via Supabase `execute_sql` sur le projet autorisé. Ne pas l'afficher dans la réponse. La transaction verrouille et vérifie la révision ainsi que l'absence de choix humain, insère les pages de façon idempotente par empreinte SHA-256, puis attache les deux UUID et le statut. Elle préserve les autres données ; les triggers créent la version. Une révision concurrente provoque un échec et impose une relecture, jamais un écrasement.
+La réservation atomique traite uniquement les validations explicites `interactive-v1`, ignore les choix humains et les livraisons complètes, respecte les erreurs et empêche deux exécutions actives pour ce propriétaire. Elle retourne le dossier, sa nouvelle révision et un bail de 90 minutes. Si aucun dossier n’est retourné, terminer sans notification. Après trois interruptions non résolues, le dossier passe en erreur ; une action « Reprendre la création » permet une nouvelle tentative.
 
-Relire `pages`, `selected_direction`, `revision` et, pour chaque UUID, le propriétaire, dossier, slot, longueur et empreinte réelle de `html`. Vérifier la présence des deux pages dans l'historique. Contrôler si possible leur chargement dans le Radar connecté et le passage ordinateur/mobile. Mentionner précisément tout contrôle qui manque. En cas de blocage du navigateur, garder la livraison en base et poursuivre les contrôles disponibles ; ne prétendre ni avoir vu le rendu ni avoir testé la connexion personnelle.
+Lire le dossier retourné, sa consigne, ses sources et `automation.artifact_path`. Le chemin réservé est `public/maquettes/<UUID-dossier>/v<N>`. Il reste identique lors des reprises ; une correction crée un autre chemin. Avant de recréer quoi que ce soit, chercher ce dossier dans GitHub et relire `source_commit`, `deployment_id`, `deployment_url` et `context`. Si les sources ou le déploiement existent déjà, reprendre le contrôle ou le rattachement manquant.
 
-Si un import échoue, résoudre le problème accessible et réessayer uniquement la partie manquante. Ne pas annoncer « intégré » si seuls des fichiers annexes existent. La tâche ne doit ni appeler `/api/radar/rework/prepare` ni acheter du crédit IA ; le fournisseur payant est désactivé par défaut. Les corrections utilisateur vident les références courantes, conservent les pages historiques et inscrivent leur consigne dans `automation.instruction`.
+Faire un checkpoint après le brief, la sauvegarde Git et le déploiement, et avant l’expiration du bail :
+
+```sh
+python scripts/rework-interactive.py checkpoint --owner UUID --project UUID --revision N --lease UUID --metadata /tmp/rework-progress.json --output /tmp/rework-checkpoint.sql
+```
+
+Le JSON accepte `brief`, `direction_a` (12 000 caractères chacun) ; `context` (14 000 caractères : sources, inconnues, étapes et contrôles privés) ; `source_commit` (SHA complet) ; `deployment_id` ; `deployment_url` (HTTPS Vercel, sans identifiants). Chaque écriture renouvelle le bail et retourne une nouvelle révision : utiliser cette révision pour la suite. Toute révision concurrente ou perte du bail impose une relecture. Ne pas forcer l’import, renouveler un bail expiré ou écraser la décision humaine. Relire décision et bail juste avant une publication externe ; si un changement intervient pendant la publication, ne pas rattacher le résultat au dossier.
+
+## Direction artistique et séquence d’ouverture
+
+Consulter les skills de conception et de navigateur applicables. Examiner le site existant, ses photos et sa présence publique ; vérifier l’identité, l’offre et le contact. Les observations, sources, dates, avis et inconnues restent dans Radar, jamais dans le code public. Ne pas inventer avis, chiffres, horaires, prix, labels, équipe ou prestations. Exploiter les vraies photos utilisables ; identifier clairement les images d’inspiration sans les faire passer pour des réalisations du commerce.
+
+Avant de coder, choisir une idée directrice liée au métier et décrire dans le brief ce que le visiteur voit et peut faire dès les premières secondes : image ou composition forte, typographie assumée, message court, action utile. Choisir une interaction signature et une ou deux séquences de défilement pertinentes. Par exemple, un geste de coupe pour un coiffeur, une découverte de matière pour un artisan, un jeu de reflets pour un bijoutier. Les ciseaux, le citron/noir et les cartes du pilote ne sont pas des éléments obligatoires.
+
+L’ouverture doit déjà être visuellement aboutie avant toute interaction. Si un chargement réel le justifie, prévoir une entrée très courte adaptée au métier, sans fausse attente ni jeu bloquant. L’accès au contenu et au contact reste immédiat. Une scène épinglée peut faire apparaître des cartes au défilement ; un tracé peut progresser et conduire à un média qui s’agrandit. Sélectionner ces effets pour raconter le métier, sans les empiler systématiquement.
+
+Préserver le défilement naturel, le clavier, les liens et les zones cliquables. Le curseur thématique reste limité à une scène appropriée et dispose d’un équivalent tactile. Respecter `prefers-reduced-motion` : toutes les informations restent visibles sans animation, ni écran de chargement bloquant. Utiliser une image pertinente si aucune vraie vidéo n’existe. Aucune fausse réservation ou formulaire qui prétend envoyer une demande.
+
+## Construction et publication
+
+Construire une page autonome HTML/CSS/JS avec ressources locales et chemins relatifs dans le dossier réservé. La page doit rester lisible si le JS échoue. Images optimisées, polices locales lorsque possible, pas de CDN obligatoire ni dépendance inutile. Ajouter `noindex,nofollow` aux maquettes de prospection. Ne pas publier de notes commerciales, prompts, captures du Radar, SQL, secrets ou données privées dans GitHub. Seuls les fichiers publics destinés à être vus par le prospect vont sous `public/maquettes/`.
+
+Contrôler le résultat au navigateur : première vue ordinateur et mobile, parcours complet au défilement, interaction signature, clavier, CTA/contact, médias chargés, absence de débordement et mode mouvement réduit. Corriger les problèmes réellement constatés. Ne pas livrer une page statique médiocre simplement parce que le script fonctionne. Conserver une capture d’accueil utilisable pour l’aperçu et un compte rendu honnête des contrôles dans le dossier privé.
+
+Publier uniquement le dossier de cette série sur `main` de `morepudding/romain-atelier-excel`, avec l’autorisation permanente donnée par Romain pour ce workflow. Utiliser un commit normal, jamais force-push ; relire la branche et résoudre toute concurrence. Les connecteurs GitHub natifs peuvent créer blobs, arbre et commit puis avancer la référence sans forçage si Git CLI n’est pas authentifié. Ne pas remplacer le reste du dépôt et ne pas modifier les anciennes versions des maquettes.
+
+La publication du dépôt déclenche le projet Vercel Radar existant. Attendre un déploiement de production READY contenant ce commit ; un statut BUILDING n’est pas une livraison. Ne pas créer de nouveau projet Vercel par défaut. Le lien public, stable pour cette version, est :
+
+`https://romain-atelier-excel.vercel.app/maquettes/<UUID-dossier>/v<N>/index.html`
+
+Vérifier ce lien sans session ChatGPT ou Radar, y compris les ressources relatives et interactions après déploiement. Enregistrer le SHA Git, l’identifiant du déploiement et son URL dans le checkpoint. Si une reprise trouve déjà le bon commit déployé, ne pas republier inutilement. L’ancien lien reste fonctionnel lors des corrections car chaque série a son propre répertoire.
+
+## Rattachement obligatoire dans Radar
+
+Créer un aperçu HTML/CSS autonome privé avec une capture fidèle ou une version statique lisible de l’accueil. Intégrer styles et images data:, maximum 8 Mo. L’aperçu ne dépend d’aucun script ou réseau. Ne pas affaiblir la sandbox ou la CSP des iframes Radar pour faire fonctionner les animations : celles-ci sont accessibles via le lien Vercel public.
+
+Après contrôle du lien et checkpoint, importer l’aperçu et le lien ensemble :
+
+```sh
+python scripts/rework-interactive.py complete --owner UUID --project UUID --revision N --lease UUID --preview /tmp/preview.html --url https://romain-atelier-excel.vercel.app/maquettes/UUID/vN/index.html --output /tmp/rework-complete.sql
+```
+
+La transaction vérifie propriétaire, appartenance, décision, révision, bail et chemin réservé. Elle insère l’aperçu immuable dédupliqué SHA-256 et met à jour `presentation=single`, `interactive_url`, `pages.a`, `pages.b=''`, `automation.status=ready`. Elle préserve les raisons de Romain, les observations, les anciennes pages et l’historique. Un seul lien ou brief ne vaut pas livraison.
+
+Relire les références, le propriétaire/dossier/slot, le SHA recalculé depuis le HTML, la nouvelle version et l’absence de choix automatique. Vérifier l’interface connectée si une session est disponible ; sans session, contrôler les données et le site public et signaler précisément cette limite. Ne pas contourner la connexion.
+
+En cas de blocage réel, conserver les sources et checkpoints, puis exécuter `fail` avec les mêmes gardes et `--error` (500 caractères maximum). Garder une erreur courte sans secrets. Aucun achat ni tentative en boucle. Un conflit humain n’est pas une erreur à écrire de force.
+
+## Livraison à Romain
+
+Notifier uniquement une maquette réellement livrée ou un blocage nécessitant son intervention. Répondre en français, sans liste à puces, avec le lien Radar et le lien public, le concept en une phrase et les contrôles/limites utiles. Le parcours devient : retenir l’entreprise, ouvrir la maquette, la valider ou demander une correction. La diffusion à l’entreprise attend une autorisation distincte ; aucun message automatique.
+
+Le script historique `rework-import-pages.py` reste disponible pour les imports A/B anciens, mais n’est plus le protocole de création courante.

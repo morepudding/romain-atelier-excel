@@ -58,7 +58,10 @@ export async function POST(request: Request) {
     ...read.data,
     data: reworkDataSchema.parse(read.data.data),
   } as ReworkProject;
-  if (!canPrepare(current.data))
+  if (
+    current.data.automation?.workflow === 'interactive-v1' ||
+    !canPrepare(current.data)
+  )
     return respond({ project: current, idle: true });
   const availability = await generationAvailability();
   if (!availability.available)

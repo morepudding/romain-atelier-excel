@@ -81,6 +81,11 @@ export const reworkDataSchema = z.object({
     .default({ a: '', b: '' }),
   automation: z
     .object({
+      workflow: z.enum(['legacy', 'interactive-v1']).default('legacy'),
+      artifact_path: z.string().max(500).default(''),
+      source_commit: z.string().max(100).default(''),
+      deployment_id: z.string().max(100).default(''),
+      deployment_url: url.default(''),
       status: z.enum(['queued', 'working', 'ready', 'error']).default('queued'),
       step: z.enum(['brief', 'a', 'b']).default('brief'),
       lease: z.string().default(''),

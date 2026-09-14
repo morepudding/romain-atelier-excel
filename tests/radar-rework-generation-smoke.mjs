@@ -28,7 +28,7 @@ globalThis.fetch = async (input, init) => {
   const headers = new Headers(init?.headers);
   if (url.hostname === 'ai-gateway.vercel.sh') {
     if (url.pathname.endsWith('/credits'))
-      return Response.json({ balance: '1.00' });
+      return Response.json({ balance: '1.00', total_used: '0.00' });
     if (url.pathname.endsWith('/language-model')) {
       const body = JSON.parse(init.body);
       const isImage = !body.responseFormat;

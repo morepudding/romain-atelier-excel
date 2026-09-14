@@ -1,33 +1,33 @@
-import { generateText, Output } from 'ai';
+import { createGateway, generateText, Output } from 'ai';
 import { load } from 'cheerio';
 import { z } from 'zod';
 import { readPublicPage } from './public-page.ts';
 import type { ReworkData } from './rework.ts';
 
+// Use the provider's request-aware OIDC resolution. Vercel may supply its token
+// through the invocation context instead of process.env.
+const availabilityGateway = createGateway({
+  fetch: (input, init) =>
+    fetch(input, { ...init, signal: AbortSignal.timeout(6000) }),
+});
 export async function generationAvailability() {
-  const token = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
-  if (!token) return { available: false, reason: 'configuration' };
   try {
-    const response = await fetch('https://ai-gateway.vercel.sh/v1/credits', {
-      headers: { Authorization: `Bearer ${token}` },
-      signal: AbortSignal.timeout(6000),
-      cache: 'no-store',
-    });
-    if (!response.ok)
-      return {
-        available: false,
-        reason:
-          response.status === 401 || response.status === 403
-            ? 'configuration'
-            : 'unavailable',
-      };
-    const result = (await response.json()) as { balance?: string };
+    const result = await availabilityGateway.getCredits();
     return {
       available: Number(result.balance) > 0,
       reason: Number(result.balance) > 0 ? '' : 'credits',
     };
-  } catch {
-    return { available: false, reason: 'unavailable' };
+  } catch (error) {
+    const failure = error as { name?: string; statusCode?: number };
+    return {
+      available: false,
+      reason:
+        failure.statusCode === 401 ||
+        failure.statusCode === 403 ||
+        /Authentication|Oidc|LoadAPIKey/.test(failure.name || '')
+          ? 'configuration'
+          : 'unavailable',
+    };
   }
 }
 

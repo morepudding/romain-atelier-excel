@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import ReworkValidation from './rework-validation';
 import {
   useCallback,
   useEffect,
@@ -85,12 +86,55 @@ export default function ReworkWorkspace(props: Props) {
       </div>
     );
   return (
-    <ReworkDesk
+    <ReworkHome
       key={props.session.user.id}
       supabase={props.supabase}
       session={props.session}
       onDirty={props.onDirty}
     />
+  );
+}
+
+function ReworkHome(props: {
+  supabase: SupabaseClient;
+  session: Session;
+  onDirty: Props['onDirty'];
+}) {
+  const [archive, setArchive] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const reportDirty = props.onDirty;
+  const onDirty = useCallback(
+    (value: boolean) => {
+      setDirty(value);
+      reportDirty(value);
+    },
+    [reportDirty],
+  );
+  if (!archive)
+    return (
+      <ReworkValidation
+        supabase={props.supabase}
+        session={props.session}
+        onOpenDossiers={() => setArchive(true)}
+      />
+    );
+  return (
+    <>
+      <button
+        className="rv-back"
+        onClick={() => {
+          if (
+            dirty &&
+            !window.confirm('Quitter sans enregistrer les modifications ?')
+          )
+            return;
+          setArchive(false);
+        }}
+      >
+        <ArrowLeft size={16} /> Retour aux validations
+      </button>
+      <ReworkDesk {...props} onDirty={onDirty} />
+    </>
   );
 }
 

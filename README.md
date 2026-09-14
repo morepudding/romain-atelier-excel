@@ -47,3 +47,12 @@ Sous PowerShell : `$env:VERCEL='1'` puis `npm.cmd run dev`. Pour le build, arrê
 Sous Windows, Vite surveille les fichiers par polling pour éviter qu'un fichier temporairement verrouillé fasse tomber le serveur. Les sorties `.vercel/` et les vérifications locales dans `work/` sont exclues de cette surveillance.
 
 `npm run typecheck` vérifie les types ; `npm test` teste la recherche et les protections PostgreSQL localement. Les tests historiques du Worker/D1 restent séparés. Une vérification locale ne prouve pas que l'authentification, la sauvegarde distante ou le déploiement fonctionnent tant que le projet Supabase n'est pas configuré.
+
+
+### Préparation des propositions Rework
+
+`/radar/rework` affiche deux validations et reprend automatiquement les dossiers retenus. Le serveur appelle AI Gateway, via `AI_GATEWAY_API_KEY` ou OIDC sur Vercel. Le GET `/api/radar/rework/prepare` vérifie le service sans génération et ne renvoie qu’une disponibilité ; il ne renvoie ni clé ni solde. Le POST est réservé aux membres du Radar, avec le jeton Supabase de la session. Aucun secret n’est nécessaire dans le navigateur.
+
+Les appels réels sont facturés par le fournisseur connecté. Aucun achat ni rechargement automatique n’est activé par l’application. Un brief et deux images sont produits par dossier retenu, en séquence et avec des points de reprise ; un échec attend une reprise explicite. La file reprend au retour dans le bureau, sans service permanent quand il est fermé. Les références jointes sont utilisées, mais la recherche administrative n’inclut pas encore de capture ni d’audit visuel automatique.
+
+Après `npm run build:vercel`, `node tests/radar-rework-generation-smoke.mjs` vérifie le parcours serveur avec Supabase et le fournisseur simulés, sans données ni appels payants réels.

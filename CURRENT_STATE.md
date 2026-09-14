@@ -1,5 +1,15 @@
 # État actuel
 
+## Radar Rework — validations du 14 septembre 2026
+
+Le parcours par défaut devient un bureau de validation : retenir ou passer une entreprise, puis comparer visuellement deux propositions et en choisir une. Aucun champ obligatoire dans ces deux décisions ; enregistrement immédiat avec contrôle de révision. Les dossiers détaillés, imports, exports, références et versions restent accessibles dans « Tous les dossiers ». Les entreprises déjà retenues sont reprises sans nouvelle validation. Un choix peut être revu ; une consigne courte facultative relance les propositions tout en conservant les versions précédentes.
+
+La préparation appelle désormais des modèles via Vercel AI Gateway : lecture HTML publique protégée, brief et directions structurés avec GPT-5.4 mini, puis deux images avec Gemini 3.1 Flash Image. Les images de référence déjà jointes sont utilisées. Sans référence jointe, le générateur privilégie l’illustration ou la matière et ne présente pas de photo inventée comme une réalisation attestée. Les maquettes sont des images conceptuelles, pas des sites codés. Les images sont enregistrées dans le stockage privé existant ; les projets et leur historique restent soumis aux mêmes droits.
+
+L’accès au fournisseur est contrôlé par une lecture du solde avant tout appel, avec clé serveur ou OIDC Vercel. Un fournisseur absent ou sans crédit produit un état indisponible explicite, jamais une fausse maquette. Chaque étape est sauvegardée séparément. Une réservation par révision empêche les appels concurrents ; un choix humain intervenu pendant une génération prime sur le résultat tardif. Les échecs s’arrêtent sans relance payante automatique, avec un plafond de neuf tentatives par série. La file s’exécute tant que le bureau est ouvert ; après fermeture, les étapes restantes reprennent à la prochaine ouverture. Ce n’est pas un worker permanent. La recherche de nouvelles entreprises reste administrative : elle ne réalise pas encore un audit visuel automatique des sites.
+
+Vérifications réussies : typage, lint, 40 tests, build Vercel et tests du serveur compilé. Le fournisseur simulé vérifie brief, deux images, reprise après échec sans répéter A, absence de relance des dossiers terminés et priorité au choix humain pendant une génération. Disponibilité réelle du fournisseur et déploiement à confirmer. Aucun message n’est envoyé aux entreprises.
+
 ## Radar Rework — 13 septembre 2026
 
 Le mode Refonte devient Radar Rework dans `/radar`, avec un accès direct `/radar/rework`. Il utilise le même compte Supabase que le Radar local et propose des dossiers privés filtrables, l’ajout manuel et la recherche administrative par lots de huit. Les SIREN du carnet local et des dossiers Rework sont exclus des recherches suivantes ; l’import et l’ajout vérifient aussi le domaine et le nom/commune. La recherche relit uniquement les SIREN, sans transférer les briefs et notes. Sans identifiant confirmé, les homonymes et changements de raison sociale demandent encore un contrôle humain.

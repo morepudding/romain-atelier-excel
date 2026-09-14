@@ -71,6 +71,20 @@ export const reworkDataSchema = z.object({
   direction_a: text.default(''),
   direction_b: text.default(''),
   selected_direction: z.enum(['', 'a', 'b']).default(''),
+  automation: z
+    .object({
+      status: z.enum(['queued', 'working', 'ready', 'error']).default('queued'),
+      step: z.enum(['brief', 'a', 'b']).default('brief'),
+      lease: z.string().default(''),
+      lease_until: z.number().default(0),
+      attempts: z.number().int().min(0).max(12).default(0),
+      error: z.string().max(500).default(''),
+      instruction: z.string().max(2000).default(''),
+      context: z.string().max(14000).default(''),
+      model: z.string().max(100).default(''),
+      prepared_at: z.string().default(''),
+    })
+    .optional(),
   images: z
     .object({
       before: z.string().max(500).default(''),

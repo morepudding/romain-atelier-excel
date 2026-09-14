@@ -54,7 +54,10 @@ export default defineConfig(async (): Promise<UserConfig> => {
         config: localBindingConfig,
       });
   const deploymentPlugin: PluginOption = isVercel
-    ? (nitro({ preset: 'vercel' }) as unknown as PluginOption)
+    ? (nitro({
+        preset: 'vercel',
+        vercel: { functions: { maxDuration: 180 } },
+      }) as unknown as PluginOption)
     : cloudflarePlugin!;
 
   return {

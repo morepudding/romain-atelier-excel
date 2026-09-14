@@ -585,11 +585,7 @@ export default function RadarWorkspace({ initialMode = 'local' }: { initialMode?
           </>
         ) : (
           <>
-            <p className="rl-eyebrow">Radar Rework</p>
-            <h1>
-              Des entreprises aux
-              <br />propositions de site.
-            </h1>
+            <h1>Radar Rework<span className="rv-title-note">Votre sélection, vos propositions.</span></h1>
           </>
         )}
       </div>

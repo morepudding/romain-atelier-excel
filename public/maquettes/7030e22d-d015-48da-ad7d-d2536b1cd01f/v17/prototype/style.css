@@ -437,7 +437,7 @@ a,
 
 .distance-control__marker {
   position: absolute;
-  left: calc(62px + (100% - 134px) * var(--route-progress));
+  left: calc(62px + (100% - 174px) * var(--route-progress));
   top: 50%;
   display: grid;
   place-items: center;
@@ -891,7 +891,7 @@ a,
   }
 
   .distance-control__marker {
-    left: calc(55px + (100% - 118px) * var(--route-progress));
+    left: calc(55px + (100% - 148px) * var(--route-progress));
   }
 
   .hero__disclaimer {

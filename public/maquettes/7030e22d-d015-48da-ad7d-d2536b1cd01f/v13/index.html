@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#68a2d0">
+  <title>Les Touristes — Hôtel-restaurant à Sion-sur-l’Océan</title>
+  <meta name="description" content="Hôtel-restaurant à Sion-sur-l’Océan, à 50 mètres de la plage. Tarifs 2026 et réservation par téléphone.">
+  <style>
+    @font-face {
+      font-family: "Manrope";
+      src: url("assets/manrope.woff2") format("woff2");
+      font-display: swap;
+      font-style: normal;
+      font-weight: 200 800;
+    }
+
+    @font-face {
+      font-family: "Yellowtail";
+      src: url("assets/yellowtail.ttf") format("truetype");
+      font-display: swap;
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    :root {
+      --sky: #68a2d0;
+      --sky-dark: #3679b0;
+      --sky-pale: #cfe5f4;
+      --wine: #a91f43;
+      --wine-dark: #78132d;
+      --ink: #17334e;
+      --night: #102a43;
+      --cream: #fffaf0;
+      --white: #ffffff;
+      --sun: #ffd46a;
+      --line: rgba(23, 51, 78, .18);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: "Manrope", Arial, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    body::selection { color: var(--white); background: var(--wine); }
+    a { color: inherit; }
+    button { color: inherit; font: inherit; }
+    h1, h2, h3, p { margin-top: 0; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: -5rem;
+      left: 1rem;
+      padding: .75rem 1rem;
+      color: var(--white);
+      background: var(--wine-dark);
+    }
+
+    .skip-link:focus { top: 1rem; }
+    :focus-visible { outline: 3px solid var(--sun); outline-offset: 4px; }
+
+    .masthead {
+      position: absolute;
+      z-index: 30;
+      inset: 0 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1.5rem;
+      min-height: 6.2rem;
+      padding: 1rem clamp(1.1rem, 4vw, 4.8rem);
+      color: var(--white);
+      border-bottom: 1px solid rgba(255,255,255,.42);
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: .65rem;
+      width: max-content;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .brand-script { font-family: "Yellowtail", "Brush Script MT", cursive; font-size: 2rem; line-height: 1; }
+    .brand-type { font-size: .58rem; font-weight: 800; letter-spacing: .16em; line-height: 1.25; text-transform: uppercase; }
+
+    .nav { display: flex; align-items: center; gap: clamp(1.2rem, 3vw, 3rem); }
+    .nav a { color: var(--white); font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-decoration: none; text-transform: uppercase; }
+    .nav a::after { display: block; width: 0; height: 2px; margin-top: .28rem; background: var(--wine); content: ""; transition: width .2s ease; }
+    .nav a:hover::after, .nav a:focus-visible::after { width: 100%; }
+
+    .header-call {
+      justify-self: end;
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.8rem;
+      padding: .6rem 1rem;
+      color: var(--wine-dark);
+      background: var(--white);
+      text-decoration: none;
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      box-shadow: .32rem .32rem 0 var(--wine);
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(34rem, 1.08fr);
+      min-height: 100svh;
+      color: var(--white);
+      background: var(--sky);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 0 100%, transparent 1.65rem, rgba(255,255,255,.11) 1.7rem, rgba(255,255,255,.11) 1.82rem, transparent 1.87rem),
+        radial-gradient(circle at 3.4rem 100%, transparent 1.65rem, rgba(255,255,255,.11) 1.7rem, rgba(255,255,255,.11) 1.82rem, transparent 1.87rem);
+      background-position: 0 0, 0 0;
+      background-size: 6.8rem 3.4rem;
+      content: "";
+      opacity: .8;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-width: 0;
+      padding: 9rem 2rem clamp(2.2rem, 5vw, 5.5rem) clamp(1.1rem, 4vw, 4.8rem);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      margin-bottom: 1rem;
+      font-size: .67rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before { width: 3.4rem; height: 2px; background: var(--wine); content: ""; }
+
+    h1 {
+      max-width: 7ch;
+      margin: 0;
+      font-family: "Yellowtail", "Brush Script MT", cursive;
+      font-size: clamp(5.2rem, 10vw, 10.5rem);
+      font-weight: 400;
+      letter-spacing: -.035em;
+      line-height: .74;
+      text-shadow: .04em .04em 0 rgba(23,51,78,.12);
+      transform: rotate(-2deg);
+    }
+
+    .hero-lede {
+      max-width: 24rem;
+      margin: 2.2rem 0 1.7rem;
+      font-size: clamp(1.3rem, 2vw, 2rem);
+      font-weight: 500;
+      line-height: 1.25;
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .65rem;
+      min-height: 3.45rem;
+      padding: .8rem 1.25rem;
+      border: 2px solid transparent;
+      text-decoration: none;
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .button:hover, .button:focus-visible { transform: translate(-3px, -3px); box-shadow: .35rem .35rem 0 var(--night); }
+    .button-wine { color: var(--white); background: var(--wine); }
+    .button-white { border-color: var(--white); color: var(--white); }
+
+    .hero-facts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      max-width: 36rem;
+      margin: clamp(2rem, 5vh, 4rem) 0 0;
+      padding: 1rem 0 0;
+      border-top: 1px solid rgba(255,255,255,.48);
+    }
+
+    .hero-facts div { padding-right: 1rem; }
+    .hero-facts strong { display: block; font-size: clamp(1.45rem, 2.4vw, 2.2rem); font-weight: 500; line-height: 1; }
+    .hero-facts span { display: block; margin-top: .4rem; font-size: .57rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+
+    .facade-stage {
+      position: relative;
+      min-height: 100%;
+      background: linear-gradient(180deg, transparent 0 71%, rgba(255,255,255,.18) 71% 72%, transparent 72%);
+      overflow: hidden;
+    }
+
+    .sun {
+      position: absolute;
+      top: 13%;
+      right: 9%;
+      width: clamp(6rem, 10vw, 10rem);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--sun);
+      box-shadow: 0 0 0 1rem rgba(255,255,255,.1), 0 0 0 2rem rgba(255,255,255,.055);
+    }
+
+    .sea {
+      position: absolute;
+      inset: auto 0 0;
+      height: 18%;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 .85rem, rgba(255,255,255,.18) .9rem .98rem),
+        var(--sky-dark);
+    }
+
+    .sea::before {
+      position: absolute;
+      top: -1px;
+      right: 0;
+      left: 0;
+      height: 4px;
+      background: var(--white);
+      content: "";
+      opacity: .9;
+    }
+
+    .hotel-building {
+      position: absolute;
+      right: 3%;
+      bottom: 12%;
+      width: 94%;
+      height: min(66vh, 42rem);
+      filter: drop-shadow(1.2rem 1.5rem 0 rgba(23,51,78,.18));
+    }
+
+    .tower {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-rows: repeat(4, 1fr);
+      width: 78%;
+      height: 100%;
+      padding-top: 1.4rem;
+      border-top: .6rem solid var(--white);
+      border-left: .55rem solid rgba(23,51,78,.13);
+      background: var(--cream);
+    }
+
+    .floor {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(2.8rem, 1fr));
+      align-items: center;
+      gap: clamp(.8rem, 2vw, 1.5rem);
+      padding: .2rem clamp(1rem, 2.2vw, 2rem) 1.4rem;
+      border-bottom: .8rem solid var(--sky-dark);
+    }
+
+    .floor::after {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: -.12rem;
+      left: 0;
+      height: 1.15rem;
+      background: repeating-linear-gradient(90deg, transparent 0 1.2rem, rgba(255,255,255,.78) 1.2rem 1.32rem);
+      content: "";
+      pointer-events: none;
+    }
+
+    .hotel-window {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-width: 3rem;
+      min-height: 3.35rem;
+      padding: 0;
+      border: .32rem solid var(--white);
+      background: var(--night);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.17);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .hotel-window::before, .hotel-window::after {
+      position: absolute;
+      background: rgba(255,255,255,.34);
+      content: "";
+      transition: transform .32s cubic-bezier(.22,1,.36,1);
+    }
+
+    .hotel-window::before { top: 0; bottom: 0; left: 50%; width: 2px; }
+    .hotel-window::after { top: 50%; right: 0; left: 0; height: 2px; }
+    .hotel-window span { position: relative; z-index: 3; width: .55rem; height: .55rem; border-radius: 50%; background: var(--white); opacity: .8; transition: transform .25s ease, background .25s ease; }
+    .hotel-window:hover span, .hotel-window:focus-visible span { transform: scale(1.6); }
+    .hotel-window.is-active { background: var(--sun); }
+    .hotel-window.is-active::before { transform: translateX(-1.1rem); }
+    .hotel-window.is-active::after { transform: translateY(1.1rem); }
+    .hotel-window.is-active span { background: var(--wine); transform: scale(1.5); }
+
+    .old-wing {
+      position: absolute;
+      z-index: 3;
+      bottom: 0;
+      left: 0;
+      width: 34%;
+      height: 54%;
+      border-top: .6rem solid var(--white);
+      background: #f8f4ea;
+    }
+
+    .old-wing::before {
+      position: absolute;
+      inset: 1.4rem 1rem auto;
+      height: 38%;
+      border: .35rem solid var(--sky-dark);
+      background: linear-gradient(90deg, var(--night) 0 44%, var(--cream) 44% 56%, var(--night) 56% 100%);
+      content: "";
+    }
+
+    .hotel-sign {
+      position: absolute;
+      z-index: 4;
+      right: .9rem;
+      bottom: 23%;
+      left: .9rem;
+      padding: .45rem .3rem .25rem;
+      color: var(--white);
+      background: var(--sky);
+      text-align: center;
+      transform: rotate(-1.5deg);
+    }
+
+    .hotel-sign small { display: block; font-size: .48rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .hotel-sign strong { display: block; font-family: "Yellowtail", "Brush Script MT", cursive; font-size: clamp(1.35rem, 2.6vw, 2.4rem); font-weight: 400; line-height: .95; }
+
+    .entrance {
+      position: absolute;
+      right: 14%;
+      bottom: 0;
+      width: 40%;
+      height: 19%;
+      border: .35rem solid var(--white);
+      background: var(--night);
+    }
+
+    .window-story {
+      position: absolute;
+      z-index: 10;
+      top: 15%;
+      left: 0;
+      width: min(18rem, 42%);
+      padding: 1.15rem 1.2rem 1.2rem;
+      color: var(--white);
+      background: var(--wine);
+      box-shadow: .7rem .7rem 0 rgba(23,51,78,.18);
+    }
+
+    .window-story::after {
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      width: 4rem;
+      height: 2px;
+      background: var(--wine);
+      content: "";
+    }
+
+    .window-story-label { margin-bottom: .55rem; font-size: .57rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+    .window-story h2 { margin-bottom: .35rem; font-size: clamp(1.25rem, 2vw, 1.85rem); line-height: 1.05; }
+    .window-story p { margin: 0; font-size: .78rem; line-height: 1.45; }
+
+    .window-hint {
+      position: absolute;
+      z-index: 10;
+      right: 3%;
+      bottom: 4.5%;
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      color: var(--white);
+      font-size: .56rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .window-hint::before { width: 1.8rem; height: 1.8rem; border: 2px solid var(--white); border-radius: 50%; content: "↗"; display: grid; place-items: center; }
+
+    .intro {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, .52fr) minmax(22rem, .48fr);
+      gap: clamp(3rem, 8vw, 9rem);
+      align-items: end;
+      padding: clamp(5.5rem, 10vw, 10rem) clamp(1.1rem, 7vw, 8rem);
+      background-color: var(--cream);
+      background-image:
+        radial-gradient(circle at 0 100%, transparent 1.65rem, rgba(104,162,208,.11) 1.7rem, rgba(104,162,208,.11) 1.82rem, transparent 1.87rem),
+        radial-gradient(circle at 3.4rem 100%, transparent 1.65rem, rgba(104,162,208,.11) 1.7rem, rgba(104,162,208,.11) 1.82rem, transparent 1.87rem);
+      background-size: 6.8rem 3.4rem;
+    }
+
+    .section-label { margin-bottom: 1.2rem; color: var(--wine); font-size: .63rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+
+    .intro h2, .stay h2, .restaurant h2, .location h2 {
+      margin-bottom: 0;
+      font-size: clamp(3rem, 6.5vw, 7rem);
+      font-weight: 500;
+      letter-spacing: -.065em;
+      line-height: .9;
+    }
+
+    .intro h2 em { color: var(--sky-dark); font-family: "Yellowtail", "Brush Script MT", cursive; font-size: 1.12em; font-style: normal; font-weight: 400; }
+
+    .intro-copy { padding: 1.5rem 0 0; border-top: 2px solid var(--wine); }
+    .intro-copy p { max-width: 34rem; margin-bottom: 1.5rem; font-size: clamp(1rem, 1.45vw, 1.25rem); }
+    .plain-list { display: grid; gap: .7rem; margin: 0; padding: 0; list-style: none; }
+    .plain-list li { display: grid; grid-template-columns: 1rem 1fr; gap: .7rem; align-items: start; }
+    .plain-list li::before { color: var(--wine); content: "●"; font-size: .62rem; line-height: 1.8; }
+
+    .stay {
+      display: grid;
+      grid-template-columns: minmax(18rem, .34fr) minmax(0, .66fr);
+      min-height: 44rem;
+      color: var(--white);
+      background: var(--sky-dark);
+    }
+
+    .stay-head {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(4rem, 7vw, 7rem) clamp(1.1rem, 5vw, 6rem);
+      border-right: 1px solid rgba(255,255,255,.3);
+    }
+
+    .stay-head .section-label { color: var(--sun); }
+    .stay-note { max-width: 18rem; margin: 2rem 0 0; font-size: .8rem; opacity: .82; }
+
+    .rates { display: grid; align-content: center; padding: clamp(3rem, 6vw, 6rem); }
+    .rate {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2rem;
+      align-items: center;
+      padding: 1.5rem 0;
+      border-top: 1px solid rgba(255,255,255,.36);
+    }
+    .rate:last-child { border-bottom: 1px solid rgba(255,255,255,.36); }
+    .rate h3 { margin-bottom: .25rem; font-size: clamp(1.1rem, 1.8vw, 1.5rem); }
+    .rate p { max-width: 31rem; margin: 0; font-size: .8rem; opacity: .78; }
+    .rate-price { color: var(--sun); font-size: clamp(2rem, 4vw, 4.8rem); font-weight: 300; letter-spacing: -.06em; line-height: 1; text-align: right; }
+    .rate-price small { display: block; margin-top: .35rem; color: var(--white); font-size: .55rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+
+    .rate-cta { display: flex; justify-content: space-between; gap: 2rem; align-items: center; margin-top: 2rem; }
+    .rate-cta p { max-width: 31rem; margin: 0; font-size: .75rem; opacity: .8; }
+
+    .restaurant {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(19rem, .45fr);
+      gap: clamp(3rem, 8vw, 10rem);
+      align-items: center;
+      min-height: 42rem;
+      padding: clamp(5rem, 9vw, 9rem) clamp(1.1rem, 7vw, 8rem);
+      color: var(--white);
+      background: var(--wine);
+      overflow: hidden;
+    }
+
+    .restaurant::before {
+      position: absolute;
+      right: -8rem;
+      bottom: -8rem;
+      width: clamp(24rem, 45vw, 44rem);
+      aspect-ratio: 1;
+      border: 2px solid rgba(255,255,255,.22);
+      border-radius: 50%;
+      box-shadow: 0 0 0 2.5rem rgba(255,255,255,.06), 0 0 0 5rem rgba(255,255,255,.035);
+      content: "";
+    }
+
+    .restaurant .section-label { color: var(--sun); }
+    .restaurant h2 { max-width: 10ch; }
+    .restaurant h2 span { display: block; color: var(--sun); font-family: "Yellowtail", "Brush Script MT", cursive; font-size: 1.06em; font-weight: 400; transform: rotate(-2deg); }
+    .restaurant-copy { position: relative; z-index: 2; }
+    .restaurant-copy > p { max-width: 37rem; margin: 2rem 0 0; font-size: clamp(1rem, 1.45vw, 1.2rem); }
+
+    .menu-board {
+      position: relative;
+      z-index: 2;
+      padding: 1.5rem;
+      color: var(--ink);
+      background: var(--cream);
+      box-shadow: 1rem 1rem 0 var(--wine-dark);
+      transform: rotate(1.5deg);
+    }
+
+    .menu-board::before { position: absolute; inset: .55rem; border: 1px solid rgba(23,51,78,.22); content: ""; pointer-events: none; }
+    .menu-board strong { position: relative; display: block; color: var(--sky-dark); font-family: "Yellowtail", "Brush Script MT", cursive; font-size: clamp(2.4rem, 4.5vw, 4.2rem); font-weight: 400; line-height: .9; text-align: center; }
+    .menu-board span { position: relative; display: block; margin-top: 1rem; font-size: .62rem; font-weight: 800; letter-spacing: .14em; text-align: center; text-transform: uppercase; }
+
+    .location {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(20rem, .45fr);
+      gap: clamp(3rem, 8vw, 10rem);
+      padding: clamp(5rem, 9vw, 9rem) clamp(1.1rem, 7vw, 8rem);
+      background: var(--cream);
+    }
+
+    .location h2 { max-width: 10ch; }
+    .location h2 em { color: var(--sky-dark); font-family: "Yellowtail", "Brush Script MT", cursive; font-style: normal; font-weight: 400; }
+
+    .distances { display: grid; margin: 3rem 0 0; padding: 0; list-style: none; }
+    .distances li { display: grid; grid-template-columns: 7rem 1fr; gap: 1.5rem; align-items: baseline; padding: 1rem 0; border-top: 1px solid var(--line); }
+    .distances li:last-child { border-bottom: 1px solid var(--line); }
+    .distances strong { color: var(--wine); font-size: 1.7rem; font-weight: 500; }
+    .distances span { font-size: .75rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+
+    .contact {
+      align-self: end;
+      padding: 2rem;
+      color: var(--white);
+      background: var(--sky);
+      box-shadow: .8rem .8rem 0 var(--wine);
+    }
+
+    .contact-kicker { margin-bottom: 1.5rem; font-family: "Yellowtail", "Brush Script MT", cursive; font-size: 2.4rem; line-height: 1; }
+    .contact address { margin-bottom: 1.5rem; font-size: .88rem; font-style: normal; }
+    .contact-links { display: grid; gap: .65rem; }
+    .contact-links a { width: max-content; max-width: 100%; font-weight: 750; overflow-wrap: anywhere; }
+    .map-link { display: inline-flex; margin-top: 1.5rem; padding-bottom: .2rem; border-bottom: 2px solid var(--white); text-decoration: none; font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+
+    .final-cta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 2rem;
+      padding: clamp(3rem, 6vw, 6rem) clamp(1.1rem, 7vw, 8rem);
+      color: var(--white);
+      background: var(--night);
+    }
+
+    .final-cta p { margin: 0; font-size: clamp(1.5rem, 3.2vw, 3.4rem); font-weight: 450; letter-spacing: -.04em; line-height: 1.08; }
+    .footer { display: flex; justify-content: space-between; gap: 2rem; padding: 1.2rem clamp(1.1rem, 4vw, 4.8rem); color: rgba(255,255,255,.72); background: var(--night); border-top: 1px solid rgba(255,255,255,.2); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; }
+
+    @media (max-width: 1100px) {
+      .hero { grid-template-columns: minmax(0, .92fr) minmax(30rem, 1.08fr); }
+      .masthead { grid-template-columns: 1fr auto; }
+      .nav { display: none; }
+      .hotel-building { width: 100%; right: -5%; }
+      .window-story { left: 3%; width: 46%; }
+    }
+
+    @media (max-width: 820px) {
+      .masthead { min-height: 5.4rem; padding-block: .8rem; }
+      .brand-type { display: none; }
+      .brand-script { font-size: 1.8rem; }
+      .header-call { min-height: 2.55rem; padding: .55rem .75rem; font-size: .61rem; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-copy { min-height: 44rem; padding-top: 8rem; }
+      h1 { font-size: clamp(5.4rem, 22vw, 8rem); }
+      .facade-stage { min-height: 39rem; }
+      .hotel-building { right: 3%; bottom: 13%; width: 94%; height: 28rem; }
+      .window-story { top: 6%; left: 4%; width: 52%; }
+      .sun { top: 5%; }
+      .intro, .stay, .restaurant, .location { grid-template-columns: 1fr; }
+      .intro-copy { max-width: 40rem; }
+      .stay-head { min-height: 24rem; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.3); }
+      .restaurant { min-height: 0; }
+      .menu-board { width: min(25rem, 80%); margin-left: auto; }
+      .contact { max-width: 34rem; }
+      .final-cta { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .hero-copy { min-height: 41rem; padding-right: 1.1rem; }
+      .hero-lede { max-width: 20rem; }
+      .hero-facts { gap: .6rem; }
+      .hero-facts strong { font-size: 1.45rem; }
+      .hero-facts span { font-size: .49rem; }
+      .facade-stage { min-height: 34rem; }
+      .hotel-building { right: -7%; width: 107%; height: 24rem; }
+      .tower { width: 75%; }
+      .floor { gap: .45rem; padding-right: .7rem; padding-left: .7rem; }
+      .hotel-window { min-width: 2.2rem; min-height: 2.65rem; border-width: .22rem; }
+      .old-wing { width: 37%; }
+      .window-story { top: 3%; width: 68%; padding: .9rem; }
+      .window-story::after { width: 2rem; }
+      .window-hint { display: none; }
+      .intro h2, .stay h2, .restaurant h2, .location h2 { font-size: clamp(2.8rem, 15vw, 4.5rem); }
+      .stay-head, .rates { padding-right: 1.1rem; padding-left: 1.1rem; }
+      .rate { grid-template-columns: 1fr auto; gap: 1rem; }
+      .rate-price { font-size: 2.25rem; }
+      .rate-cta { align-items: flex-start; flex-direction: column; }
+      .menu-board { width: 92%; }
+      .distances li { grid-template-columns: 5rem 1fr; gap: 1rem; }
+      .footer { flex-direction: column; gap: .5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="masthead">
+    <a class="brand" href="#accueil" aria-label="Les Touristes, accueil">
+      <span class="brand-script">Les Touristes</span>
+      <span class="brand-type">Hôtel<br>Restaurant</span>
+    </a>
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="#hotel">L’hôtel</a>
+      <a href="#tarifs">Les tarifs</a>
+      <a href="#restaurant">Le restaurant</a>
+      <a href="#venir">Venir</a>
+    </nav>
+    <a class="header-call" href="tel:+33251543386">02 51 54 33 86</a>
+  </header>
+
+  <main id="contenu">
+    <section class="hero" id="accueil" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Sion-sur-l’Océan · Vendée</p>
+        <h1 id="hero-title">Les Touristes</h1>
+        <p class="hero-lede">Un hôtel simple, la mer au bout de la rue.</p>
+        <div class="hero-actions">
+          <a class="button button-wine" href="tel:+33251543386">Appeler pour réserver</a>
+          <a class="button button-white" href="#tarifs">Voir les tarifs 2026</a>
+        </div>
+        <div class="hero-facts" aria-label="Repères principaux">
+          <div><strong>50 m</strong><span>de la plage</span></div>
+          <div><strong>21</strong><span>chambres</span></div>
+          <div><strong>300 m</strong><span>des pins</span></div>
+        </div>
+      </div>
+
+      <div class="facade-stage" aria-label="Illustration graphique de l’hôtel, inspirée de sa façade réelle">
+        <div class="sun" aria-hidden="true"></div>
+        <div class="sea" aria-hidden="true"></div>
+
+        <div class="window-story" aria-live="polite">
+          <div class="window-story-label">Une fenêtre sur l’adresse</div>
+          <h2 id="story-title">Dormir tout près de l’océan</h2>
+          <p id="story-copy">21 chambres avec douche et WC, certaines avec balcon latéral et vue sur mer.</p>
+        </div>
+
+        <div class="hotel-building" aria-hidden="false">
+          <div class="tower">
+            <div class="floor">
+              <button class="hotel-window is-active" type="button" aria-pressed="true" data-title="Dormir tout près de l’océan" data-copy="21 chambres avec douche et WC, certaines avec balcon latéral et vue sur mer." aria-label="Afficher les informations sur les chambres"><span></span></button>
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="La plage à 50 mètres" data-copy="La rue descend directement vers la plage de Sion-sur-l’Océan et sa corniche." aria-label="Afficher les informations sur la plage"><span></span></button>
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="Le restaurant sur place" data-copy="Cuisine traditionnelle, pension, demi-pension et soirée étape selon les conditions de l’hôtel." aria-label="Afficher les informations sur le restaurant"><span></span></button>
+            </div>
+            <div class="floor">
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="Une réservation directe" data-copy="Les disponibilités et conditions sont confirmées par téléphone au 02 51 54 33 86." aria-label="Afficher les informations sur la réservation"><span></span></button>
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="La forêt de pins à 300 mètres" data-copy="Pour changer de l’océan, la forêt de pins est accessible à pied depuis l’hôtel." aria-label="Afficher les informations sur la forêt"><span></span></button>
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="Saint-Gilles à 3 kilomètres" data-copy="Saint-Gilles-Croix-de-Vie et sa gare SNCF se trouvent à environ trois kilomètres." aria-label="Afficher les informations sur Saint-Gilles"><span></span></button>
+            </div>
+            <div class="floor">
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="Chambre à partir de 59 €" data-copy="Tarif 2026 affiché pour une chambre de une ou deux personnes, taxe de séjour en supplément." aria-label="Afficher le premier tarif de chambre"><span></span></button>
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="Vue sur mer à 69 €" data-copy="Tarif 2026 affiché pour une chambre avec balcon latéral, télévision et vue sur mer." aria-label="Afficher le tarif vue sur mer"><span></span></button>
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="Petit déjeuner à 9,50 €" data-copy="Prix 2026 affiché par personne. À confirmer avec la disponibilité de la chambre." aria-label="Afficher le tarif du petit déjeuner"><span></span></button>
+            </div>
+            <div class="floor">
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="Pension et demi-pension" data-copy="Des formules sont proposées par l’hôtel, avec repas du soir obligatoire pour la demi-pension." aria-label="Afficher les informations sur les formules"><span></span></button>
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="Soirée étape" data-copy="Une formule soirée étape est annoncée pour les voyageurs professionnels." aria-label="Afficher les informations sur la soirée étape"><span></span></button>
+              <button class="hotel-window" type="button" aria-pressed="false" data-title="Une adresse sans détour" data-copy="Ici, pas de faux moteur de réservation : un appel permet de vérifier directement la chambre et la formule." aria-label="Afficher les modalités de réservation"><span></span></button>
+            </div>
+          </div>
+
+          <div class="old-wing">
+            <div class="hotel-sign"><small>Hôtel · Restaurant</small><strong>Les Touristes</strong></div>
+            <div class="entrance"></div>
+          </div>
+        </div>
+        <div class="window-hint">Touchez une fenêtre</div>
+      </div>
+    </section>
+
+    <section class="intro" id="hotel" aria-labelledby="intro-title">
+      <div>
+        <p class="section-label">01 · L’adresse</p>
+        <h2 id="intro-title">Tout ce qu’il faut. <em>Tout près.</em></h2>
+      </div>
+      <div class="intro-copy">
+        <p>Les Touristes est un hôtel-restaurant de Sion-sur-l’Océan. On vient ici pour dormir près de la plage, retrouver la côte à pied et pouvoir dîner sur place sans compliquer le séjour.</p>
+        <ul class="plain-list">
+          <li>21 chambres avec douche et WC, avec balcon selon la chambre.</li>
+          <li>Pension, demi-pension et soirée étape annoncées par l’établissement.</li>
+          <li>Cartes bancaires et chèques-vacances acceptés.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="stay" id="tarifs" aria-labelledby="stay-title">
+      <div class="stay-head">
+        <div>
+          <p class="section-label">02 · Dormir</p>
+          <h2 id="stay-title">Les tarifs, sans détour.</h2>
+        </div>
+        <p class="stay-note">Tarifs affichés pour 2026. La disponibilité, la taxe de séjour et les conditions exactes sont confirmées par l’hôtel.</p>
+      </div>
+      <div class="rates">
+        <article class="rate">
+          <div><h3>Chambre pour 1 ou 2 personnes</h3><p>Cabinet de toilette, douche et WC.</p></div>
+          <div class="rate-price">59 €<small>la chambre</small></div>
+        </article>
+        <article class="rate">
+          <div><h3>Chambre avec vue sur mer</h3><p>Balcon latéral, télévision, douche et WC.</p></div>
+          <div class="rate-price">69 €<small>la chambre</small></div>
+        </article>
+        <article class="rate">
+          <div><h3>Petit déjeuner</h3><p>Prix affiché par personne.</p></div>
+          <div class="rate-price">9,50 €<small>par personne</small></div>
+        </article>
+        <div class="rate-cta">
+          <p>Lit supplémentaire : 12 €. Les formules de demi-pension sont détaillées et confirmées directement par l’établissement.</p>
+          <a class="button button-wine" href="tel:+33251543386">Vérifier une disponibilité</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="restaurant" id="restaurant" aria-labelledby="restaurant-title">
+      <div class="restaurant-copy">
+        <p class="section-label">03 · À table</p>
+        <h2 id="restaurant-title">Une cuisine <span>traditionnelle.</span></h2>
+        <p>Le restaurant prolonge l’esprit de l’adresse : une table sur place, des menus annoncés à prix accessibles et la possibilité d’organiser pension ou demi-pension avec l’hôtel.</p>
+      </div>
+      <div class="menu-board" aria-label="Menus affichés entre 9 et 25 euros">
+        <strong>9 à 25 €</strong>
+        <span>Menus affichés</span>
+      </div>
+    </section>
+
+    <section class="location" id="venir" aria-labelledby="location-title">
+      <div>
+        <p class="section-label">04 · Venir</p>
+        <h2 id="location-title">Sion, entre <em>mer et pins.</em></h2>
+        <ul class="distances">
+          <li><strong>50 m</strong><span>La plage</span></li>
+          <li><strong>300 m</strong><span>La forêt de pins</span></li>
+          <li><strong>3 km</strong><span>Saint-Gilles-Croix-de-Vie</span></li>
+        </ul>
+      </div>
+      <aside class="contact" aria-label="Coordonnées de l’hôtel">
+        <div class="contact-kicker">Les Touristes</div>
+        <address>2, rue des Estivants<br>Sion-sur-l’Océan<br>85270 Saint-Hilaire-de-Riez</address>
+        <div class="contact-links">
+          <a href="tel:+33251543386">02 51 54 33 86</a>
+          <a href="mailto:hotel.lestouristes@wanadoo.fr">hotel.lestouristes@wanadoo.fr</a>
+        </div>
+        <a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=2%20rue%20des%20Estivants%2085270%20Saint-Hilaire-de-Riez" target="_blank" rel="noopener">Ouvrir l’itinéraire</a>
+      </aside>
+    </section>
+
+    <section class="final-cta" aria-label="Réservation">
+      <p>Une chambre, une formule, une question&nbsp;? Appelez directement l’hôtel.</p>
+      <a class="button button-wine" href="tel:+33251543386">02 51 54 33 86</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Les Touristes · Hôtel & restaurant</span>
+    <span>Maquette de refonte · Aucun formulaire n’est envoyé</span>
+  </footer>
+
+  <script>
+    (() => {
+      const windows = [...document.querySelectorAll('.hotel-window')];
+      const title = document.getElementById('story-title');
+      const copy = document.getElementById('story-copy');
+
+      const activate = (button) => {
+        windows.forEach((item) => {
+          const active = item === button;
+          item.classList.toggle('is-active', active);
+          item.setAttribute('aria-pressed', String(active));
+        });
+        title.textContent = button.dataset.title;
+        copy.textContent = button.dataset.copy;
+      };
+
+      windows.forEach((button) => {
+        button.addEventListener('click', () => activate(button));
+        button.addEventListener('mouseenter', () => activate(button));
+      });
+    })();
+  </script>
+</body>
+</html>

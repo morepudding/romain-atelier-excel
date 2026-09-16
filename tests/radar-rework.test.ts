@@ -93,9 +93,13 @@ void test('the refonte chat prompt transfers context without pretending to creat
   assert.match(prompt, /https:\/\/atelier\.example\//);
   assert.match(prompt, /une seule maquette interactive/);
   assert.match(prompt, /source documentaire/);
+  assert.match(prompt, /matrice « préserver \/ moderniser \/ abandonner »/);
+  assert.match(prompt, /au moins trois ancrages réellement conservés/);
   assert.match(prompt, /Une image authentique mais médiocre doit être refusée/);
+  assert.match(prompt, /belle image générique du secteur ou de la destination est un échec/);
   assert.match(prompt, /trois premières secondes/);
   assert.match(prompt, /simple remise au propre du site actuel ne suffit pas/);
+  assert.match(prompt, /Sans le logo, le dirigeant doit encore pouvoir reconnaître son établissement/);
   assert.match(prompt, /Aucun prospect ne doit être contacté/);
   assert.match(prompt, /Décembre 2026 ne constitue pas une autorisation automatique/);
 });

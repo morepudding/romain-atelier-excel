@@ -1,10 +1,16 @@
 # État actuel
 
+## Radar Rework — cohérence de marque obligatoire, 16 septembre 2026
+
+Le workflow distingue désormais les ressources à jeter de l’identité à préserver. Avant toute direction, le lancement impose une matrice « préserver / moderniser / abandonner » couvrant palette, mot-symbole, ton typographique, formes, motifs et signes physiques du lieu. Refuser les photos faibles ne permet plus de remplacer l’entreprise par une belle image générique de son secteur ou de sa destination. Une stratégie sans photo doit reprendre au moins trois ancrages de marque et justifier toute rupture.
+
+La revue visuelle compare maintenant la proposition au site source, sur ordinateur et mobile. La porte de sortie exige que le dirigeant puisse encore reconnaître son établissement sans dépendre du logo. La première correction des Touristes, fondée sur une affiche atlantique bleu nuit, est explicitement rejetée : elle racontait la Vendée mais pas l’hôtel. La nouvelle série reprend le bleu ciel, le blanc, le bordeaux, la signature manuscrite et les lignes de balcons dans une façade graphique HTML/CSS, sans réutiliser les photos du site.
+
 ## Radar Rework — barre de qualité visuelle renforcée, 16 septembre 2026
 
 Le lancement d’une refonte demande désormais explicitement un saut de perception, pas une simple remise au propre du site existant. Le site source reste une preuve documentaire mais n’impose plus ses photos : chaque asset est trié et une image authentique mais trop faible doit être refusée. En l’absence de visuel réel assez fort, la maquette peut s’appuyer sur une composition HTML/CSS ou une illustration d’ambiance clairement signalée, sans inventer de façade, chambre, équipe ou réalisation présentée comme réelle.
 
-Le prompt de lancement et le protocole imposent une thèse de design avant le code, un effet lisible dans les trois premières secondes, une interaction liée au métier, des clichés interdits et une revue visuelle ordinateur/mobile. Une proposition générique, trop sage, interchangeable avec un concurrent ou dominée par des ressources faibles doit être reprise avant publication. La correction des Touristes sert de premier cas : aucune photo de l’ancien site n’est réutilisée ; la direction repose sur une affiche atlantique illustrative et un geste de marée.
+Le prompt de lancement et le protocole imposent une thèse de design avant le code, un effet lisible dans les trois premières secondes, une interaction liée au métier, des clichés interdits et une revue visuelle ordinateur/mobile. Une proposition générique, trop sage, interchangeable avec un concurrent ou dominée par des ressources faibles doit être reprise avant publication. La première correction des Touristes a montré la limite de ce garde-fou : aucune photo faible n’était reprise, mais l’affiche atlantique et le geste de marée avaient effacé l’identité propre de l’hôtel. La porte de cohérence de marque ajoutée ensuite corrige précisément cette dérive.
 
 ## Radar Rework — triage sur demande, 16 septembre 2026
 

@@ -15,6 +15,8 @@ NOW = '(extract(epoch from now()) * 1000)::bigint'
 TTL = 90 * 60 * 1000
 MAX_ATTEMPTS = 6
 APPROVAL_ACTIONS = {'approve-direction', 'approve-opening'}
+PRODUCTION_HOST = 'romain-atelier-excel.vercel.app'
+PREVIEW_HOST_SUFFIX = '-bottero-romains-projects.vercel.app'
 
 
 def quote(value):
@@ -23,6 +25,13 @@ def quote(value):
 
 def obj(value):
     return quote(json.dumps(value, ensure_ascii=False)) + '::jsonb'
+
+
+def valid_prototype_host(host):
+    return host == PRODUCTION_HOST or (
+        host.startswith('romain-atelier-excel-') and
+        host.endswith(PREVIEW_HOST_SUFFIX)
+    )
 
 
 def base_scope(owner):
@@ -176,7 +185,8 @@ end $$;""")
             raise ValueError('prototype_url is required before opening review')
         u = urlsplit(prototype)
         pattern = rf'/maquettes/{project}/v[1-9][0-9]*/prototype/index\.html'
-        if (u.netloc != 'romain-atelier-excel.vercel.app' or u.query or u.fragment or
+        if (u.scheme != 'https' or not valid_prototype_host(u.netloc) or
+                u.query or u.fragment or
                 not re.fullmatch(pattern, u.path)):
             raise ValueError('prototype_url must match the reserved Radar prototype folder')
         extra_guard = f" and p.data#>>'{{automation,artifact_path}}'={quote('public'+u.path.removesuffix('/prototype/index.html'))}"
@@ -196,7 +206,7 @@ end $$;""")
             raise ValueError('preview and url are required for completion')
         u = urlsplit(args.url)
         pattern = rf'/maquettes/{project}/v[1-9][0-9]*/index\.html'
-        if (u.scheme != 'https' or u.netloc != 'romain-atelier-excel.vercel.app'
+        if (u.scheme != 'https' or u.netloc != PRODUCTION_HOST
                 or u.query or u.fragment or not re.fullmatch(pattern, u.path)):
             raise ValueError('url must match the immutable dossier folder on Radar Vercel')
         payload = args.preview.read_bytes()

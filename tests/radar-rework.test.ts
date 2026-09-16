@@ -92,6 +92,10 @@ void test('the refonte chat prompt transfers context without pretending to creat
   assert.match(prompt, /Atelier témoin/);
   assert.match(prompt, /https:\/\/atelier\.example\//);
   assert.match(prompt, /une seule maquette interactive/);
+  assert.match(prompt, /source documentaire/);
+  assert.match(prompt, /Une image authentique mais médiocre doit être refusée/);
+  assert.match(prompt, /trois premières secondes/);
+  assert.match(prompt, /simple remise au propre du site actuel ne suffit pas/);
   assert.match(prompt, /Aucun prospect ne doit être contacté/);
   assert.match(prompt, /Décembre 2026 ne constitue pas une autorisation automatique/);
 });

@@ -36,6 +36,13 @@ CONTEXTE DU RADAR
 WORKFLOW VALIDÉ
 - Commencer par comprendre l’entreprise, ses contenus réels et l’action prioritaire du visiteur.
 - Préparer une seule maquette interactive très travaillée, dans l’esprit du niveau validé après Coif’Hommes.
+- Traiter le site existant comme une source documentaire, jamais comme une direction artistique imposée.
+- Trier chaque image d’origine avant de l’utiliser : conserver seulement un visuel assez net, crédible et bien composé pour soutenir une vitrine exigeante. Une image authentique mais médiocre doit être refusée.
+- Si aucune image réelle n’atteint ce niveau, construire une composition forte en HTML/CSS ou créer une illustration d’ambiance clairement signalée comme telle. Ne jamais inventer en photo réaliste la façade, les chambres, l’équipe ou les réalisations de l’entreprise.
+- Écrire avant le code une thèse de design, l’effet recherché dans les trois premières secondes, une interaction signature liée au métier et les clichés visuels explicitement interdits.
+- Exiger un premier écran immédiatement impressionnant, même sans interaction : composition identifiable, typographie assumée, contraste et action utile. Si le résultat ressemble à un gabarit auquel on pourrait substituer le logo d’un concurrent, le refaire.
+- Une simple remise au propre du site actuel ne suffit pas. La proposition doit montrer un saut de perception évident tout en conservant uniquement des faits vérifiés.
+- Contrôler le rendu réel sur ordinateur et mobile avant publication. Refaire la direction si les captures restent sages, génériques ou dominées par des ressources faibles.
 - La maquette ne doit être créée que lorsque je le demande explicitement dans ce chat.
 - La vérification automatique et toute génération payante restent désactivées.
 - Toute information non sourcée doit rester présentée comme une hypothèse à confirmer.

@@ -1,5 +1,11 @@
 # État actuel
 
+## Radar Rework — barre de qualité visuelle renforcée, 16 septembre 2026
+
+Le lancement d’une refonte demande désormais explicitement un saut de perception, pas une simple remise au propre du site existant. Le site source reste une preuve documentaire mais n’impose plus ses photos : chaque asset est trié et une image authentique mais trop faible doit être refusée. En l’absence de visuel réel assez fort, la maquette peut s’appuyer sur une composition HTML/CSS ou une illustration d’ambiance clairement signalée, sans inventer de façade, chambre, équipe ou réalisation présentée comme réelle.
+
+Le prompt de lancement et le protocole imposent une thèse de design avant le code, un effet lisible dans les trois premières secondes, une interaction liée au métier, des clichés interdits et une revue visuelle ordinateur/mobile. Une proposition générique, trop sage, interchangeable avec un concurrent ou dominée par des ressources faibles doit être reprise avant publication. La correction des Touristes sert de premier cas : aucune photo de l’ancien site n’est réutilisée ; la direction repose sur une affiche atlantique illustrative et un geste de marée.
+
 ## Radar Rework — triage sur demande, 16 septembre 2026
 
 Radar Rework est désormais un écran de tri rapide : une seule entreprise à la fois, aperçu du site quand il existe, identité, activité/localisation et jusqu’à trois signaux observés. Les décisions visibles sont « Non, écarter », « Revoir plus tard » et « Oui, à refaire », avec boutons persistants, flèches clavier et swipe tactile en complément. Le report persiste dans le JSONB sous `triage_snoozed_at` et repousse la fiche en fin de pile ; les mises à jour restent protégées par propriétaire et révision.

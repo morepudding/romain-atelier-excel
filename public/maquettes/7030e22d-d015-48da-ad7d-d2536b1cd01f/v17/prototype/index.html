@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#006fba" />
+    <meta
+      name="description"
+      content="Prototype d’ouverture pour l’Hôtel-Restaurant Les Touristes à Sion-sur-l’Océan."
+    />
+    <title>Les Touristes — Prototype d’ouverture</title>
+    <link
+      rel="preload"
+      href="./assets/manrope.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="./assets/barlow-condensed.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="./assets/hero-les-touristes.webp"
+      as="image"
+      type="image/webp"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+    <div class="brand-intro" aria-hidden="true">
+      <div class="brand-intro__inner">
+        <p>Hôtel — Restaurant</p>
+        <img
+          src="./assets/les-touristes-wordmark.png"
+          alt=""
+          width="701"
+          height="207"
+        />
+        <span class="brand-intro__line"></span>
+        <span class="brand-intro__distance">50 m</span>
+      </div>
+    </div>
+
+    <main id="contenu">
+      <section class="hero" aria-labelledby="hero-title">
+        <img
+          class="hero__art"
+          src="./assets/hero-les-touristes.webp"
+          alt=""
+          width="1672"
+          height="941"
+          fetchpriority="high"
+        />
+        <div class="hero__shade"></div>
+
+        <header class="topbar">
+          <a class="topbar__place" href="#chambres">
+            <span>Sion-sur-l’Océan</span>
+            <small>Saint-Hilaire-de-Riez</small>
+          </a>
+          <a
+            class="topbar__call"
+            href="tel:+33251543386"
+            aria-label="Appeler le 02 51 54 33 86"
+          >
+            <span>Réserver</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M7.2 3.8 9.7 8 8 9.8c1.2 2.4 3 4.2 5.4 5.4l1.8-1.7 4.2 2.5-.8 3.2c-.2.8-.9 1.3-1.7 1.3C9.5 20.5 3.5 14.5 3.5 7.1c0-.8.5-1.5 1.3-1.7l2.4-.6Z"
+              />
+            </svg>
+          </a>
+        </header>
+
+        <div class="hero__content">
+          <p class="hero__eyebrow">Hôtel — Restaurant</p>
+          <img
+            class="hero__logo"
+            src="./assets/les-touristes-wordmark.png"
+            alt="Les Touristes"
+            width="701"
+            height="207"
+          />
+          <p class="hero__meta">
+            21 chambres <i></i> restaurant <i></i> Sion-sur-l’Océan
+          </p>
+          <h1 id="hero-title">À 50 m de la mer.</h1>
+          <div class="hero__actions">
+            <p class="price">Chambres dès <strong>59 €</strong></p>
+            <a class="phone" href="tel:+33251543386">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M7.2 3.8 9.7 8 8 9.8c1.2 2.4 3 4.2 5.4 5.4l1.8-1.7 4.2 2.5-.8 3.2c-.2.8-.9 1.3-1.7 1.3C9.5 20.5 3.5 14.5 3.5 7.1c0-.8.5-1.5 1.3-1.7l2.4-.6Z"
+                />
+              </svg>
+              <span>
+                <small>Appeler pour réserver</small>
+                <strong>02 51 54 33 86</strong>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div
+          class="distance-control"
+          role="slider"
+          tabindex="0"
+          aria-label="Distance entre l’hôtel et la plage"
+          aria-valuemin="0"
+          aria-valuemax="50"
+          aria-valuenow="50"
+          aria-valuetext="50 mètres jusqu’à la plage"
+        >
+          <span class="distance-control__start">L’hôtel</span>
+          <span class="distance-control__rail"><i></i></span>
+          <span class="distance-control__marker">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"
+              />
+            </svg>
+            <b>50 m</b>
+          </span>
+          <span class="distance-control__end">La plage</span>
+        </div>
+
+        <p class="hero__disclaimer">Illustration d’ambiance</p>
+        <a class="hero__scroll" href="#chambres">
+          <span>Découvrir</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m5 9 7 7 7-7" />
+          </svg>
+        </a>
+      </section>
+
+      <section class="rooms" id="chambres" aria-labelledby="rooms-title">
+        <div class="rooms__wave" aria-hidden="true"></div>
+        <div class="rooms__heading">
+          <p class="section-kicker">Choisir sans chercher</p>
+          <h2 id="rooms-title">Deux chambres.<br />Une décision immédiate.</h2>
+          <p>
+            Le prototype s’arrête ici : il montre la première transition et la
+            façon dont les chambres seront comparées sans galerie à parcourir.
+          </p>
+        </div>
+
+        <div
+          class="room-compare"
+          aria-label="Aperçu de la comparaison des chambres"
+        >
+          <article class="room-card room-card--blue">
+            <div>
+              <p>Simple et directe</p>
+              <h3>Chambre double</h3>
+            </div>
+            <strong>59 €</strong>
+            <span>la nuit</span>
+          </article>
+          <article class="room-card room-card--red">
+            <div>
+              <p>Le balcon en plus</p>
+              <h3>Vue mer latérale</h3>
+            </div>
+            <strong>69 €</strong>
+            <span>la nuit</span>
+          </article>
+        </div>
+
+        <p class="prototype-note">
+          Prototype d’ouverture · Le reste du site sera construit après
+          validation.
+        </p>
+      </section>
+    </main>
+
+    <script src="./main.js" defer></script>
+  </body>
+</html>

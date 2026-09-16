@@ -26,6 +26,16 @@ export const sectors = {
   retail: 'Boutique',
   association: 'Association',
 } as const;
+export const signatureStages = {
+  legacy: 'Ancien workflow',
+  research: 'Audit et direction',
+  direction_review: 'Direction à valider',
+  opening_build: 'Ouverture à construire',
+  opening_review: 'Ouverture à valider',
+  production: 'Production autorisée',
+  quality_review: 'Contrôle final',
+  ready: 'Proposition prête',
+} as const;
 const text = z.string().max(12000);
 const url = z
   .string()
@@ -90,12 +100,36 @@ export const reworkDataSchema = z.object({
     .default({ a: '', b: '' }),
   automation: z
     .object({
-      workflow: z.enum(['legacy', 'interactive-v1']).default('legacy'),
+      workflow: z
+        .enum(['legacy', 'interactive-v1', 'signature-v1'])
+        .default('legacy'),
       artifact_path: z.string().max(500).default(''),
       source_commit: z.string().max(100).default(''),
       deployment_id: z.string().max(100).default(''),
       deployment_url: url.default(''),
-      status: z.enum(['queued', 'working', 'ready', 'error']).default('queued'),
+      prototype_url: url.default(''),
+      status: z
+        .enum([
+          'queued',
+          'working',
+          'awaiting_direction',
+          'awaiting_opening',
+          'ready',
+          'error',
+        ])
+        .default('queued'),
+      stage: z
+        .enum([
+          'legacy',
+          'research',
+          'direction_review',
+          'opening_build',
+          'opening_review',
+          'production',
+          'quality_review',
+          'ready',
+        ])
+        .default('legacy'),
       step: z.enum(['brief', 'a', 'b']).default('brief'),
       lease: z.string().default(''),
       lease_until: z.number().default(0),
@@ -105,6 +139,8 @@ export const reworkDataSchema = z.object({
       context: z.string().max(14000).default(''),
       model: z.string().max(100).default(''),
       prepared_at: z.string().default(''),
+      direction_approved_at: z.string().max(100).default(''),
+      opening_approved_at: z.string().max(100).default(''),
     })
     .optional(),
   images: z

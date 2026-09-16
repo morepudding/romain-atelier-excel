@@ -83,6 +83,8 @@ test('interactive worker claims once, resumes, protects human revisions and atom
     let row = await read();
     assert.equal(row.revision, 2);
     assert.equal(row.data.automation.lease, lease);
+    assert.equal(row.data.automation.workflow, 'signature-v1');
+    assert.equal(row.data.automation.stage, 'research');
     const path = row.data.automation.artifact_path;
     assert.equal(path, `public/maquettes/${p.id}/v2`);
     await run(sql('claim', ['--lease', lease2]));
@@ -100,24 +102,25 @@ test('interactive worker claims once, resumes, protects human revisions and atom
       '--lease',
       token,
     ];
+    const approvalOpts = (revision) => [
+      '--project',
+      p.id,
+      '--revision',
+      String(revision),
+    ];
     await assert.rejects(
       run(sql('checkpoint', opts(2, lease2))),
       /réservation expirée/,
     );
-    const metadata = join(dir, 'meta.json');
+    const metadata = join(dir, 'direction.json');
     writeFileSync(
       metadata,
       JSON.stringify({
         brief: "L'idée vérifiée",
         direction_a: 'Reflets',
-        source_commit: 'a'.repeat(40),
-        deployment_id: 'dpl_test',
-        deployment_url: 'https://build.vercel.app/',
+        context: 'Direction présentée avant tout code.',
       }),
     );
-    await run(sql('checkpoint', [...opts(2), '--metadata', metadata]));
-    row = await read();
-    assert.equal(row.revision, 3);
     const preview = join(dir, 'preview.html');
     writeFileSync(
       preview,
@@ -125,9 +128,88 @@ test('interactive worker claims once, resumes, protects human revisions and atom
     );
     const url = `https://romain-atelier-excel.vercel.app/maquettes/${p.id}/v2/index.html`;
     await assert.rejects(
+      run(sql('complete', [...opts(2), '--preview', preview, '--url', url])),
+      /deux validations humaines/,
+    );
+    await run(sql('await-direction', [...opts(2), '--metadata', metadata]));
+    row = await read();
+    assert.equal(row.revision, 3);
+    assert.equal(row.data.automation.status, 'awaiting_direction');
+    assert.equal(row.data.automation.stage, 'direction_review');
+    assert.equal(row.data.automation.lease, '');
+    await assert.rejects(
+      run(sql('approve-direction', approvalOpts(2))),
+      /Étape modifiée/,
+    );
+    await run(sql('approve-direction', approvalOpts(3)));
+    row = await read();
+    assert.equal(row.revision, 4);
+    assert.equal(row.data.automation.status, 'queued');
+    assert.equal(row.data.automation.stage, 'opening_build');
+    assert.ok(row.data.automation.direction_approved_at);
+
+    await run(sql('claim', ['--lease', lease2]));
+    row = await read();
+    assert.equal(row.revision, 5);
+    assert.equal(row.data.automation.stage, 'opening_build');
+    const openingMetadata = join(dir, 'opening.json');
+    writeFileSync(
+      openingMetadata,
+      JSON.stringify({
+        prototype_url: `https://romain-atelier-excel.vercel.app/maquettes/${p.id}/v2/prototype/index.html`,
+        source_commit: 'a'.repeat(40),
+        deployment_id: 'dpl_opening',
+        deployment_url: 'https://opening.vercel.app/',
+      }),
+    );
+    await run(
+      sql('await-opening', [
+        ...opts(5, lease2),
+        '--metadata',
+        openingMetadata,
+      ]),
+    );
+    row = await read();
+    assert.equal(row.revision, 6);
+    assert.equal(row.data.automation.status, 'awaiting_opening');
+    assert.equal(row.data.automation.stage, 'opening_review');
+    assert.equal(
+      row.data.automation.prototype_url,
+      `https://romain-atelier-excel.vercel.app/maquettes/${p.id}/v2/prototype/index.html`,
+    );
+    await run(sql('approve-opening', approvalOpts(6)));
+    row = await read();
+    assert.equal(row.revision, 7);
+    assert.equal(row.data.automation.status, 'queued');
+    assert.equal(row.data.automation.stage, 'production');
+    assert.ok(row.data.automation.opening_approved_at);
+
+    await run(sql('claim', ['--lease', lease]));
+    row = await read();
+    assert.equal(row.revision, 8);
+    assert.equal(row.data.automation.stage, 'production');
+    const finalMetadata = join(dir, 'final.json');
+    writeFileSync(
+      finalMetadata,
+      JSON.stringify({
+        source_commit: 'b'.repeat(40),
+        deployment_id: 'dpl_final',
+        deployment_url: 'https://final.vercel.app/',
+      }),
+    );
+    await run(
+      sql('checkpoint', [
+        ...opts(8),
+        '--metadata',
+        finalMetadata,
+      ]),
+    );
+    row = await read();
+    assert.equal(row.revision, 9);
+    await assert.rejects(
       run(
         sql('complete', [
-          ...opts(3),
+          ...opts(9),
           '--preview',
           preview,
           '--url',
@@ -146,7 +228,7 @@ test('interactive worker claims once, resumes, protects human revisions and atom
       [p.id],
     );
     await assert.rejects(
-      run(sql('complete', [...opts(3), '--preview', preview, '--url', url])),
+      run(sql('complete', [...opts(9), '--preview', preview, '--url', url])),
       /Dossier modifié/,
     );
     assert.equal(
@@ -166,6 +248,7 @@ test('interactive worker claims once, resumes, protects human revisions and atom
     );
     row = await read();
     assert.equal(row.data.automation.status, 'ready');
+    assert.equal(row.data.automation.stage, 'ready');
     assert.equal(row.data.selected_direction, '');
     assert.equal(row.data.user_reason, 'Dernier avis humain');
     assert.equal(row.data.observations, 'Source privée');
@@ -207,7 +290,7 @@ test('interactive worker claims once, resumes, protects human revisions and atom
     assert.equal(next.data.automation.attempts, 2);
     assert.equal(next.data.automation.artifact_path, savedPath);
     await db.query(
-      "update public.radar_rework_projects set data=jsonb_set(jsonb_set(data,'{automation,lease_until}','0'),'{automation,attempts}','3') where id=$1",
+      "update public.radar_rework_projects set data=jsonb_set(jsonb_set(data,'{automation,lease_until}','0'),'{automation,attempts}','6') where id=$1",
       [second.id],
     );
     await run(sql('claim', ['--lease', lease2]));

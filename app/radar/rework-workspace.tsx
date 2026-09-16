@@ -890,7 +890,9 @@ function ReworkDesk({
                   </p>
                 )}
                 {data.decision === 'retained' &&
-                  data.automation?.workflow !== 'interactive-v1' &&
+                  !['interactive-v1', 'signature-v1'].includes(
+                    data.automation?.workflow || '',
+                  ) &&
                   !(data.brief || data.direction_a || data.direction_b) && (
                     <div className="rw-start">
                       <h3>Préparer le chat de refonte</h3>

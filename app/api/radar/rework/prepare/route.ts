@@ -59,7 +59,9 @@ export async function POST(request: Request) {
     data: reworkDataSchema.parse(read.data.data),
   } as ReworkProject;
   if (
-    current.data.automation?.workflow === 'interactive-v1' ||
+    ['interactive-v1', 'signature-v1'].includes(
+      current.data.automation?.workflow || '',
+    ) ||
     !canPrepare(current.data)
   )
     return respond({ project: current, idle: true });

@@ -7,6 +7,7 @@ import {
   decide,
   choose,
   revise,
+  snooze,
 } from '../lib/radar/rework-flow.ts';
 
 void test('the two human decisions gate generation and selection without replacing previous observations', () => {
@@ -18,15 +19,14 @@ void test('the two human decisions gate generation and selection without replaci
   });
   assert.equal(canPrepare(review), false);
   const retained = decide(review, 'retained');
-  assert.equal(canPrepare(retained), true);
+  assert.equal(canPrepare(retained), false);
   assert.equal(preparationStep(retained), 'brief');
   assert.equal(retained.observations, review.observations);
   assert.equal(retained.initial_assessment, 'Écarter');
   assert.equal(retained.user_reason, 'Garder les photos');
   assert.throws(() => choose(retained, 'a'));
-  assert.equal(retained.presentation, 'single');
-  assert.equal(retained.automation?.workflow, 'interactive-v1');
-  assert.equal(retained.automation?.status, 'queued');
+  assert.equal(retained.presentation, 'pair');
+  assert.equal(retained.automation, undefined);
   const withBrief = {
     ...retained,
     presentation: 'pair' as const,
@@ -49,11 +49,32 @@ void test('the two human decisions gate generation and selection without replaci
   assert.equal(canPrepare(decide(withA, 'discarded')), false);
 });
 
+void test('triage decisions are persistent without enqueueing work, and snooze moves a review to the end', () => {
+  const first = reworkDataSchema.parse({ name: 'Première entreprise' });
+  const second = reworkDataSchema.parse({ name: 'Deuxième entreprise' });
+  const later = snooze(first, '2026-09-16T18:00:00.000Z');
+  assert.equal(later.decision, 'review');
+  assert.equal(later.triage_snoozed_at, '2026-09-16T18:00:00.000Z');
+  assert.equal(decide(later, 'retained').triage_snoozed_at, '');
+  assert.equal(decide(second, 'discarded').automation, undefined);
+  const queued = reworkDataSchema.parse({
+    name: 'File historique',
+    automation: { workflow: 'interactive-v1', status: 'queued' },
+  });
+  assert.equal(decide(queued, 'retained').automation?.status, 'error');
+  assert.equal(canPrepare(decide(queued, 'retained')), false);
+});
+
 void test('live leases and failed attempts cannot silently start duplicate paid calls', () => {
   const data = reworkDataSchema.parse({
     name: 'Entreprise témoin',
     decision: 'retained',
-    automation: { status: 'working', lease_until: 1000, attempts: 1 },
+    automation: {
+      workflow: 'interactive-v1',
+      status: 'working',
+      lease_until: 1000,
+      attempts: 1,
+    },
   });
   assert.equal(canPrepare(data, 999), false);
   assert.equal(canPrepare(data, 1001), true);

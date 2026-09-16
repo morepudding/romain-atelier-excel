@@ -1,5 +1,13 @@
 # État actuel
 
+## Radar Rework — triage sur demande, 16 septembre 2026
+
+Radar Rework est désormais un écran de tri rapide : une seule entreprise à la fois, aperçu du site quand il existe, identité, activité/localisation et jusqu’à trois signaux observés. Les décisions visibles sont « Non, écarter », « Revoir plus tard » et « Oui, à refaire », avec boutons persistants, flèches clavier et swipe tactile en complément. Le report persiste dans le JSONB sous `triage_snoozed_at` et repousse la fiche en fin de pile ; les mises à jour restent protégées par propriétaire et révision.
+
+L’onglet « Retenues » ne montre que les entreprises retenues et une prochaine action : « Lancer la refonte ». Cette action prépare et copie un prompt structuré puis ouvre `https://chatgpt.com/` si le navigateur l’autorise ; elle ne prétend pas créer un chat, ne joint pas automatiquement les captures privées et n’appelle aucune génération. Un fallback visible permet de copier le prompt manuellement si le presse-papiers ou l’ouverture est bloqué. Le prompt reprend identité, URL, sources, observations, raison de sélection, workflow Coif’Hommes et garde-fou sans envoi avant décembre 2026.
+
+Les dossiers détaillés, anciennes propositions et maquettes restent accessibles via « Tous les dossiers ». La décision de tri n’enqueue plus de production automatique ; les files antérieures et leurs artefacts sont conservés. Tests de flux, persistance, conflit de révision, prompt et protections existantes passés ; typecheck, lint ciblé et build de production passent. Le parcours connecté n’est pas vérifié localement faute de variables Supabase dans ce checkout.
+
 ## Radar Rework — workflow interactif officiel, 14 septembre 2026
 
 Romain a validé Coif’Hommes comme nouveau niveau de qualité et autorisé l’automatisation après chaque entreprise retenue. Le standard est une seule maquette interactive, une direction artistique adaptée au métier, des contrôles ordinateur/mobile/mouvement réduit, un lien Vercel public et un aperçu privé rattaché dans Radar. Le protocole officiel est `scripts/REWORK_DELIVERY.md`.

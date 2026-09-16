@@ -8,6 +8,7 @@ import {
   reworkDataSchema,
   safeUrl,
 } from '../lib/radar/rework.ts';
+import { reworkChatPrompt } from '../lib/radar/rework-chat.ts';
 
 void test('reimport preserves human decisions, assistant assessment and unavailable sites', () => {
   const a = reworkDataSchema.parse({
@@ -67,4 +68,30 @@ void test('imports reject unsafe links and incompatible shapes', () => {
     }),
   );
   assert.throws(() => parseReworkImport('{"version":2,"projects":[]}'));
+});
+
+void test('the refonte chat prompt transfers context without pretending to create a chat or contact a prospect', () => {
+  const project = {
+    id: '00000000-0000-4000-8000-000000000001',
+    user_id: '00000000-0000-4000-8000-000000000002',
+    identity_key: 'name:atelier:vaire',
+    revision: 2,
+    created_at: '2026-09-16T10:00:00.000Z',
+    updated_at: '2026-09-16T10:00:00.000Z',
+    data: reworkDataSchema.parse({
+      name: 'Atelier témoin',
+      locality: 'Vairé',
+      website: 'https://atelier.example/',
+      source_url: 'https://annuaire.example/atelier',
+      observations: 'Navigation peu lisible. Réservation difficile.',
+      user_reason: 'À reprendre avec une entrée plus claire',
+      decision: 'retained',
+    }),
+  };
+  const prompt = reworkChatPrompt(project);
+  assert.match(prompt, /Atelier témoin/);
+  assert.match(prompt, /https:\/\/atelier\.example\//);
+  assert.match(prompt, /une seule maquette interactive/);
+  assert.match(prompt, /Aucun prospect ne doit être contacté/);
+  assert.match(prompt, /Décembre 2026 ne constitue pas une autorisation automatique/);
 });

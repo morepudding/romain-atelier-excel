@@ -38,6 +38,7 @@ import {
   type ReworkVersion,
 } from '@/lib/radar/rework';
 import type { RadarRefonteResult } from '@/lib/radar/types';
+import { reworkChatPrompt } from '@/lib/radar/rework-chat';
 
 type Props = {
   supabase: SupabaseClient | null;
@@ -554,6 +555,24 @@ function ReworkDesk({
       await persist(updated);
     });
   }
+  async function launchChat(value: ReworkProject) {
+    const prompt = reworkChatPrompt(value);
+    const chat = window.open('https://chatgpt.com/', '_blank', 'noopener,noreferrer');
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setNotice(
+        chat
+          ? 'Le prompt est copié dans un nouveau chat. La maquette ne sera créée que sur votre demande explicite.'
+          : 'Le prompt est copié. Ouvrez ChatGPT manuellement pour poursuivre la refonte.',
+      );
+    } catch {
+      setNotice(
+        chat
+          ? 'Le nouveau chat est ouvert, mais le prompt n’a pas pu être copié. Utilisez le texte du dossier pour le transférer.'
+          : 'Le prompt n’a pas pu être copié et le nouveau chat est bloqué. Ouvrez ChatGPT manuellement.',
+      );
+    }
+  }
   function download(
     filename: string,
     content: string,
@@ -874,19 +893,13 @@ function ReworkDesk({
                   data.automation?.workflow !== 'interactive-v1' &&
                   !(data.brief || data.direction_a || data.direction_b) && (
                     <div className="rw-start">
-                      <h3>Préparer une proposition qui lui ressemble</h3>
+                      <h3>Préparer le chat de refonte</h3>
+                      <p>Le prompt reprend les faits, les sources et le cadre validé. Aucune maquette n’est créée automatiquement.</p>
                       <button
                         className="rl-primary"
-                        onClick={() =>
-                          void run('Enregistrement…', () =>
-                            persist({
-                              ...draft!,
-                              data: decide(data, 'retained'),
-                            }),
-                          )
-                        }
+                        onClick={() => void launchChat(draft!)}
                       >
-                        Créer la maquette interactive
+                        Lancer la refonte <ArrowUpRight size={16} />
                       </button>
                     </div>
                   )}

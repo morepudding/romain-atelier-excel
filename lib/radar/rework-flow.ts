@@ -30,6 +30,7 @@ export function preparationStep(data: ReworkData): PreparationStep | null {
 }
 export function canPrepare(data: ReworkData, now = Date.now()) {
   return (
+    data.automation?.workflow === 'interactive-v1' &&
     preparationStep(data) !== null &&
     data.automation?.status !== 'error' &&
     (data.automation?.lease_until || 0) <= now &&
@@ -37,35 +38,35 @@ export function canPrepare(data: ReworkData, now = Date.now()) {
   );
 }
 export function decide(data: ReworkData, decision: ReworkData['decision']) {
-  const enqueue =
-    decision === 'retained' &&
-    !data.selected_direction &&
-    !comparisonReady(data);
-  // A human action cancels any in-flight lease. Its eventual result cannot overwrite this revision.
+  // Triage is intentionally separate from production. Retaining a company
+  // must never enqueue paid work; the user launches a dedicated chat later.
+  // A human action still cancels any in-flight lease so a late result cannot
+  // overwrite this revision.
   return reworkDataSchema.parse({
     ...data,
     decision,
-    presentation: enqueue ? 'single' : data.presentation,
-    automation: enqueue
+    triage_snoozed_at: '',
+    automation: data.automation
       ? {
           ...data.automation,
-          workflow: 'interactive-v1',
-          status: 'queued',
-          step: 'brief',
           lease: '',
           lease_until: 0,
-          attempts: 0,
-          error: '',
+          status: data.automation.status === 'ready' ? 'ready' : 'error',
+          error:
+            data.automation.status === 'ready'
+              ? ''
+              : 'Préparation automatique suspendue : la suite se prépare dans ChatGPT, sans génération automatique.',
         }
-      : data.automation
-        ? {
-            ...data.automation,
-            lease: '',
-            lease_until: 0,
-            status: comparisonReady(data) ? 'ready' : 'queued',
-            error: '',
-          }
-        : undefined,
+      : undefined,
+  });
+}
+
+export function snooze(data: ReworkData, at = new Date().toISOString()) {
+  if (data.decision !== 'review')
+    throw new Error('Seules les entreprises à décider peuvent être reportées.');
+  return reworkDataSchema.parse({
+    ...data,
+    triage_snoozed_at: at,
   });
 }
 export function choose(data: ReworkData, direction: 'a' | 'b') {

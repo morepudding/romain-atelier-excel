@@ -54,6 +54,15 @@ export const reworkDataSchema = z.object({
     ])
     .default('other'),
   decision: z.enum(['review', 'retained', 'discarded']).default('review'),
+  // Used only to keep the human triage queue stable across reloads. An empty
+  // value means the company has not been snoozed.
+  triage_snoozed_at: z
+    .string()
+    .refine(
+      (value) => value === '' || !Number.isNaN(Date.parse(value)),
+      'Utilisez une date ISO valide.',
+    )
+    .default(''),
   site_state: z
     .enum(['unknown', 'existing', 'not_found', 'unavailable'])
     .default('unknown'),

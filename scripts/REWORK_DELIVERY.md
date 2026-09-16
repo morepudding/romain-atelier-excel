@@ -1,14 +1,14 @@
-# Workflow officiel : une maquette interactive par validation
+# Workflow de livraison : une maquette interactive sur demande
 
 Validé par Romain le 14 septembre 2026 après le pilote Coif’Hommes : https://coif-hommes-experience.vercel.app/. Le résultat attendu est une seule maquette codée, vivante, adaptée au métier, consultable sur Vercel sans compte ChatGPT, puis rattachée au dossier privé Radar. Coif’Hommes est une référence de qualité, pas un gabarit à recolorer.
 
 ## Déclenchement et décisions humaines
 
-« Retenir cette entreprise » enregistre `decision=retained`, `presentation=single` et `automation.workflow=interactive-v1,status=queued`. Une demande de correction produit une nouvelle série avec sa consigne et conserve les versions précédentes. Le bureau n’appelle plus le générateur d’images par API. La création continue sans laisser Radar ouvert.
+« Oui, à refaire » enregistre uniquement `decision=retained`. Le tri ne met plus aucun dossier en file et ne déclenche aucune génération. « Lancer la refonte » prépare un nouveau chat ChatGPT en copiant un prompt structuré ; la plateforme ne fournit pas de création de chat fiable depuis l’application web, et l’utilisateur doit donc piloter explicitement la suite. Une demande de correction produit une nouvelle série avec sa consigne et conserve les versions précédentes. Le bureau n’appelle plus le générateur d’images par API.
 
-Une tâche ChatGPT relève cette file chaque heure, un dossier à la fois. Il s’agit d’une relève périodique, pas d’un webhook Supabase ni d’une promesse de livraison en une heure. Le temps de création s’ajoute au délai de relève. Les tâches de découverte restent séparées.
+Les séries déjà explicitement engagées dans l’ancien workflow restent conservées pour consultation et reprise contrôlée. Cette refonte n’en crée aucune nouvelle. Les tâches de découverte restent séparées.
 
-Les dossiers anciens A/B restent consultables. Ne pas les régénérer automatiquement. Les anciens dossiers retenus mais non inscrits à cette file peuvent y entrer avec « Créer la maquette ». Ne jamais réactiver une ancienne suspension à partir du seul statut retained. Ne jamais choisir la maquette, écarter un dossier ou contacter une entreprise à la place de Romain.
+Les dossiers anciens A/B restent consultables. Ne pas les régénérer automatiquement et ne pas transformer un ancien statut retained en nouvelle file. Ne jamais choisir la maquette, écarter un dossier ou contacter une entreprise à la place de Romain.
 
 ## Accès et périmètre
 

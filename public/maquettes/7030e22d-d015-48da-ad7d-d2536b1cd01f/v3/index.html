@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Les Touristes — Hôtel-restaurant à Sion-sur-l’Océan</title>
+  <meta name="description" content="Hôtel-restaurant Les Touristes, à 50 m de la plage à Sion-sur-l’Océan, Saint-Hilaire-de-Riez.">
+  <style>
+    :root {
+      --ink: #193238;
+      --ink-soft: #506267;
+      --sea: #dcebe7;
+      --sea-deep: #b9d5d0;
+      --cream: #f7f3eb;
+      --sand: #e8d5b9;
+      --coral: #cf735e;
+      --coral-dark: #ae5546;
+      --line: rgba(25, 50, 56, .18);
+      --shadow: 0 24px 70px rgba(25, 50, 56, .14);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    img { display: block; max-width: 100%; }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: absolute;
+      z-index: 10;
+      top: -4rem;
+      left: 1rem;
+      padding: .7rem 1rem;
+      color: var(--cream);
+      background: var(--ink);
+      text-decoration: none;
+    }
+
+    .skip-link:focus { top: 1rem; }
+
+    .site-header {
+      position: absolute;
+      z-index: 4;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1.6rem clamp(1.25rem, 4vw, 4.75rem);
+      color: var(--cream);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: .8rem;
+      color: inherit;
+      text-decoration: none;
+      letter-spacing: .12em;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      border: 1px solid rgba(247, 243, 235, .7);
+      border-radius: 50%;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(1rem, 2.6vw, 2.6rem);
+      font-size: .76rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .main-nav a { text-decoration: none; opacity: .84; }
+    .main-nav a:hover, .main-nav a:focus-visible { opacity: 1; }
+
+    .header-call {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.65rem;
+      padding: .4rem .9rem;
+      border: 1px solid rgba(247, 243, 235, .6);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: .74rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+      align-items: center;
+      min-height: 760px;
+      padding: 9.5rem clamp(1.25rem, 7vw, 8.5rem) 5.5rem clamp(1.25rem, 7vw, 8.5rem);
+      overflow: hidden;
+      color: var(--cream);
+      background:
+        radial-gradient(circle at 16% 26%, rgba(220, 235, 231, .2), transparent 30%),
+        linear-gradient(117deg, #193238 0%, #254b52 62%, #2c5e64 100%);
+    }
+
+    .hero::before {
+      position: absolute;
+      top: -8rem;
+      right: -6rem;
+      width: 28rem;
+      height: 28rem;
+      border: 1px solid rgba(220, 235, 231, .2);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .hero::after {
+      position: absolute;
+      right: 10%;
+      bottom: -9rem;
+      width: 30rem;
+      height: 30rem;
+      border: 1px solid rgba(220, 235, 231, .14);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .hero-copy, .hero-art { position: relative; z-index: 1; }
+
+    .hero-copy { max-width: 34rem; padding-right: clamp(0rem, 3vw, 3.5rem); }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .65rem;
+      margin: 0 0 1.5rem;
+      color: var(--sand);
+      font-size: .73rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 2.7rem;
+      height: 1px;
+      background: currentColor;
+      content: "";
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1, h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      letter-spacing: -.045em;
+    }
+
+    h1 {
+      max-width: 11ch;
+      margin-bottom: 1.5rem;
+      font-size: clamp(3.9rem, 7.2vw, 7.6rem);
+      line-height: .9;
+    }
+
+    .hero-lede {
+      max-width: 28rem;
+      margin-bottom: 2rem;
+      color: rgba(247, 243, 235, .83);
+      font-size: 1.08rem;
+    }
+
+    .actions { display: flex; flex-wrap: wrap; gap: .8rem; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3.05rem;
+      padding: .72rem 1.15rem;
+      border: 1px solid transparent;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background-color .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+    }
+
+    .button:hover, .button:focus-visible { transform: translateY(-2px); }
+
+    .button-primary { color: var(--ink); background: var(--cream); }
+    .button-primary:hover, .button-primary:focus-visible { background: var(--sand); }
+    .button-ghost { border-color: rgba(247, 243, 235, .52); color: var(--cream); }
+    .button-ghost:hover, .button-ghost:focus-visible { border-color: var(--cream); background: rgba(247, 243, 235, .1); }
+    .pricing .button-ghost { border-color: var(--ink); color: var(--ink); }
+    .pricing .button-ghost:hover, .pricing .button-ghost:focus-visible { border-color: var(--coral-dark); color: var(--coral-dark); background: transparent; }
+
+    .hero-facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.4rem;
+      margin: 3.3rem 0 0;
+      padding: 1.25rem 0 0;
+      border-top: 1px solid rgba(247, 243, 235, .23);
+    }
+
+    .hero-facts div { min-width: 5.4rem; }
+    .hero-facts dt { margin: 0 0 .15rem; color: var(--sand); font-family: Georgia, serif; font-size: 1.3rem; }
+    .hero-facts dd { margin: 0; color: rgba(247, 243, 235, .68); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; }
+
+    .hero-art { padding-left: clamp(1rem, 4vw, 4rem); }
+
+    .view-stage {
+      --reveal: 63%;
+      position: relative;
+      width: min(100%, 670px);
+      margin-left: auto;
+      aspect-ratio: 1.08 / 1;
+      box-shadow: var(--shadow);
+      background: #8aa7a3;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .view-stage img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 58% center;
+    }
+
+    .view-stage::after {
+      position: absolute;
+      inset: 1rem;
+      border: 1px solid rgba(247, 243, 235, .65);
+      pointer-events: none;
+      content: "";
+    }
+
+    .view-shutter {
+      position: absolute;
+      z-index: 2;
+      inset: 0 auto 0 0;
+      width: calc(100% - var(--reveal));
+      min-width: 0;
+      background:
+        repeating-linear-gradient(90deg, rgba(247, 243, 235, .055) 0 2px, transparent 2px 29px),
+        linear-gradient(135deg, rgba(20, 49, 56, .96), rgba(20, 49, 56, .84));
+      pointer-events: none;
+      transition: width .52s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .view-shutter::before {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1px;
+      height: 70%;
+      background: rgba(247, 243, 235, .36);
+      content: "";
+      transform: translate(-50%, -50%);
+    }
+
+    .view-shutter span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10rem;
+      color: rgba(247, 243, 235, .82);
+      font-size: .7rem;
+      letter-spacing: .12em;
+      text-align: center;
+      text-transform: uppercase;
+      transform: translate(-50%, -50%) rotate(-90deg);
+    }
+
+    .view-handle {
+      position: absolute;
+      z-index: 3;
+      top: 50%;
+      left: var(--reveal);
+      display: grid;
+      place-items: center;
+      width: 3.3rem;
+      height: 3.3rem;
+      border: 1px solid var(--cream);
+      border-radius: 50%;
+      color: var(--ink);
+      background: var(--cream);
+      cursor: ew-resize;
+      box-shadow: 0 8px 20px rgba(15, 35, 40, .18);
+      transform: translate(-50%, -50%);
+      transition: left .52s cubic-bezier(.2, .8, .2, 1), background-color .2s ease;
+      touch-action: none;
+    }
+
+    .view-handle:hover, .view-handle:focus-visible { background: var(--sand); }
+    .view-handle svg { width: 1.3rem; height: 1.3rem; }
+
+    .view-caption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: .75rem;
+      color: rgba(247, 243, 235, .68);
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .view-caption span:last-child { color: var(--sand); }
+
+    .scroll-note {
+      position: absolute;
+      right: clamp(1.25rem, 3vw, 3.5rem);
+      bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      color: rgba(247, 243, 235, .58);
+      font-size: .68rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+
+    .scroll-note::before { width: 1px; height: 2.8rem; background: currentColor; content: ""; }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(11rem, .65fr) minmax(0, 1.35fr);
+      gap: clamp(2rem, 8vw, 9rem);
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: clamp(5rem, 10vw, 9rem) clamp(1.25rem, 4vw, 3rem) clamp(4rem, 8vw, 7rem);
+    }
+
+    .section-kicker {
+      margin: 0;
+      color: var(--coral-dark);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .intro-mark {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      color: var(--ink-soft);
+      font-size: .75rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .intro-mark::before { width: 3rem; height: 1px; margin-top: .6rem; background: var(--coral); content: ""; }
+
+    .intro h2 {
+      max-width: 13ch;
+      margin-bottom: 1.5rem;
+      font-size: clamp(2.7rem, 5vw, 5.2rem);
+      line-height: .96;
+    }
+
+    .intro p { max-width: 38rem; margin-bottom: 0; color: var(--ink-soft); font-size: 1.12rem; }
+
+    .lodging {
+      display: grid;
+      grid-template-columns: minmax(13rem, .8fr) minmax(0, 1.2fr);
+      gap: clamp(2.4rem, 8vw, 8rem);
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.25rem, 7vw, 8.5rem);
+      background: var(--sea);
+    }
+
+    .lodging-aside { position: relative; min-height: 25rem; }
+
+    .section-number {
+      display: block;
+      margin-bottom: 2rem;
+      color: var(--coral-dark);
+      font-family: Georgia, serif;
+      font-size: 1.1rem;
+    }
+
+    .lodging-aside p { max-width: 12rem; color: var(--ink-soft); font-size: .84rem; }
+
+    .circle-image {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: clamp(8.5rem, 14vw, 12rem);
+      height: clamp(8.5rem, 14vw, 12rem);
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 15px 40px rgba(25, 50, 56, .13);
+    }
+
+    .lodging-content h2, .restaurant-copy h2, .access h2 {
+      max-width: 12ch;
+      margin-bottom: 1.35rem;
+      font-size: clamp(2.6rem, 5vw, 5.3rem);
+      line-height: .94;
+    }
+
+    .lodging-content > p { max-width: 38rem; margin-bottom: 2.4rem; color: var(--ink-soft); font-size: 1.04rem; }
+
+    .fact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .fact-grid div { padding: 1.2rem 1rem 1.2rem 0; }
+    .fact-grid div:nth-child(2n) { padding-left: 1rem; border-left: 1px solid var(--line); }
+    .fact-grid dt { margin-bottom: .28rem; color: var(--coral-dark); font-family: Georgia, serif; font-size: 1.7rem; }
+    .fact-grid dd { margin: 0; color: var(--ink-soft); font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+
+    .pricing {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, .72fr);
+      gap: clamp(2.5rem, 8vw, 8rem);
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: clamp(5rem, 9vw, 9rem) clamp(1.25rem, 4vw, 3rem);
+    }
+
+    .pricing h2 { max-width: 9ch; margin-bottom: 1.35rem; font-size: clamp(3rem, 6vw, 6rem); line-height: .88; }
+    .pricing-intro { max-width: 26rem; margin-bottom: 2rem; color: var(--ink-soft); }
+
+    .price-panel { align-self: start; padding: clamp(1.5rem, 4vw, 2.75rem); background: var(--ink); color: var(--cream); }
+    .price-panel h3 { margin-bottom: .45rem; font-size: .75rem; letter-spacing: .13em; text-transform: uppercase; }
+    .price-note { margin-bottom: 1.5rem; color: rgba(247, 243, 235, .58); font-size: .78rem; }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-top: 1px solid rgba(247, 243, 235, .2);
+    }
+
+    .price-row span:first-child { max-width: 16rem; color: rgba(247, 243, 235, .82); font-size: .92rem; }
+    .price-row strong { white-space: nowrap; color: var(--sand); font-family: Georgia, serif; font-size: 1.65rem; font-weight: 400; }
+    .price-panel .button { width: 100%; margin-top: 1.2rem; }
+
+    .restaurant {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+      min-height: 600px;
+      background: var(--coral);
+      color: var(--cream);
+    }
+
+    .restaurant-copy { padding: clamp(4rem, 9vw, 9rem) clamp(1.25rem, 7vw, 8.5rem); }
+    .restaurant-copy .section-number { color: var(--sand); }
+    .restaurant-copy h2 { max-width: 9ch; }
+    .restaurant-copy p { max-width: 32rem; color: rgba(247, 243, 235, .82); font-size: 1.06rem; }
+    .restaurant-copy .section-kicker { color: var(--sand); }
+
+    .menu-callout {
+      display: flex;
+      align-items: baseline;
+      gap: .7rem;
+      margin: 2.6rem 0 2rem;
+      padding-top: 1.3rem;
+      border-top: 1px solid rgba(247, 243, 235, .36);
+    }
+
+    .menu-callout strong { font-family: Georgia, serif; font-size: 3.2rem; font-weight: 400; letter-spacing: -.05em; }
+    .menu-callout span { color: rgba(247, 243, 235, .78); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; }
+
+    .restaurant-image { position: relative; min-height: 27rem; overflow: hidden; background: var(--sand); }
+    .restaurant-image::before { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 45%, rgba(25, 50, 56, .35)); content: ""; }
+    .restaurant-image img { width: 100%; height: 100%; object-fit: cover; image-rendering: auto; }
+    .restaurant-label { position: absolute; z-index: 2; right: 1.5rem; bottom: 1.35rem; color: var(--cream); font-size: .72rem; letter-spacing: .13em; text-transform: uppercase; }
+
+    .access {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      gap: clamp(2.5rem, 8vw, 8rem);
+      padding: clamp(5rem, 9vw, 9rem) clamp(1.25rem, 7vw, 8.5rem);
+      background: var(--sand);
+    }
+
+    .access h2 { max-width: 10ch; }
+    .access-copy > p { max-width: 30rem; color: var(--ink-soft); font-size: 1.05rem; }
+
+    .distance-list { margin: 2.5rem 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .distance-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+    .distance-list strong { color: var(--coral-dark); font-family: Georgia, serif; font-size: 1.55rem; font-weight: 400; }
+    .distance-list span { color: var(--ink-soft); font-size: .83rem; text-align: right; }
+
+    .map-card { position: relative; align-self: center; min-height: 23rem; padding: clamp(1.4rem, 3vw, 2.5rem); overflow: hidden; background: var(--sea); }
+    .map-card::before, .map-card::after { position: absolute; border: 1px solid rgba(25, 50, 56, .16); border-radius: 50%; content: ""; }
+    .map-card::before { top: -8rem; right: -6rem; width: 28rem; height: 28rem; }
+    .map-card::after { right: 10%; bottom: -11rem; width: 24rem; height: 24rem; }
+    .map-card > * { position: relative; z-index: 1; }
+    .map-card h3 { max-width: 11ch; margin-bottom: 1.1rem; font-family: Georgia, serif; font-size: 2.6rem; font-weight: 400; line-height: .96; }
+    .address { max-width: 15rem; margin-bottom: 2.2rem; color: var(--ink-soft); font-size: .94rem; }
+    .map-link { color: var(--coral-dark); font-size: .76rem; font-weight: 700; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+    .map-link::after { margin-left: .45rem; content: "↗"; font-size: 1rem; }
+
+    footer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: end;
+      padding: 2.5rem clamp(1.25rem, 7vw, 8.5rem);
+      color: var(--cream);
+      background: var(--ink);
+    }
+
+    footer .brand { margin-bottom: 1.2rem; }
+    .footer-address { margin: 0; color: rgba(247, 243, 235, .68); font-size: .85rem; }
+    .footer-contact { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .7rem 1.3rem; font-size: .82rem; }
+    .footer-contact a { color: var(--sand); text-decoration: none; }
+    .footer-contact a:hover, .footer-contact a:focus-visible { text-decoration: underline; }
+
+    :focus-visible { outline: 3px solid var(--coral); outline-offset: 4px; }
+
+    @media (max-width: 900px) {
+      .main-nav { display: none; }
+      .hero { grid-template-columns: 1fr; gap: 3rem; min-height: auto; padding-top: 8.5rem; }
+      .hero-copy { max-width: 40rem; padding-right: 0; }
+      .hero-art { padding-left: 0; }
+      .view-stage { margin: 0; }
+      .intro { gap: 3rem; }
+      .lodging, .pricing, .access { gap: 3rem; }
+    }
+
+    @media (max-width: 650px) {
+      .site-header { padding: 1.1rem 1.25rem; }
+      .brand { font-size: .67rem; }
+      .brand-mark { width: 2rem; height: 2rem; }
+      .header-call { min-height: 2.3rem; padding: .3rem .65rem; font-size: .64rem; }
+      .hero { padding: 7.5rem 1.25rem 4.5rem; }
+      h1 { font-size: clamp(3.65rem, 18vw, 6rem); }
+      .hero-facts { gap: .75rem 1.15rem; }
+      .hero-facts dt { font-size: 1.1rem; }
+      .hero-facts dd { font-size: .64rem; }
+      .view-caption { font-size: .62rem; }
+      .scroll-note { display: none; }
+      .intro, .lodging, .pricing, .access, .restaurant { grid-template-columns: 1fr; }
+      .intro { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+      .intro h2, .lodging-content h2, .restaurant-copy h2, .access h2 { font-size: clamp(2.8rem, 15vw, 4.7rem); }
+      .lodging { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+      .lodging-aside { min-height: 12rem; }
+      .circle-image { right: 0; width: 9rem; height: 9rem; }
+      .pricing { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+      .restaurant { min-height: 0; }
+      .restaurant-copy { padding: 4.5rem 1.25rem; }
+      .restaurant-image { min-height: 17rem; }
+      .access { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+      footer { grid-template-columns: 1fr; align-items: start; padding: 2.2rem 1.25rem; }
+      .footer-contact { justify-content: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .001ms !important; animation-duration: .001ms !important; }
+      .view-shutter, .view-handle { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Les Touristes, accueil">
+      <span class="brand-mark" aria-hidden="true">L</span>
+      <span>Hôtel · Restaurant<br>Les Touristes</span>
+    </a>
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a href="#hotel">L’hôtel</a>
+      <a href="#restaurant">Le restaurant</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#acces">Accès</a>
+    </nav>
+    <a class="header-call" href="tel:+33251543386">Réserver</a>
+  </header>
+
+  <main id="contenu">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Sion-sur-l’Océan · Vendée</p>
+        <h1 id="hero-title">La mer à deux pas.</h1>
+        <p class="hero-lede">Un hôtel-restaurant posé à 50 m de la plage, pour dormir, manger et prendre l’air sans détour.</p>
+        <div class="actions">
+          <a class="button button-primary" href="#hotel">Voir les chambres</a>
+          <a class="button button-ghost" href="tel:+33251543386">Réserver par téléphone</a>
+        </div>
+        <dl class="hero-facts" aria-label="Repères de l’hôtel">
+          <div><dt>21</dt><dd>Chambres</dd></div>
+          <div><dt>50 m</dt><dd>De la plage</dd></div>
+          <div><dt>Sur place</dt><dd>Restaurant</dd></div>
+        </dl>
+      </div>
+
+      <div class="hero-art">
+        <div class="view-stage" id="viewStage">
+          <img src="assets/hotel-facade.jpg" alt="Façade de l’hôtel Les Touristes à Sion-sur-l’Océan">
+          <div class="view-shutter" aria-hidden="true"><span>Tirez pour ouvrir la vue</span></div>
+          <button class="view-handle" id="viewHandle" type="button" aria-label="Ouvrir la vue sur l’hôtel" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="view-caption"><span>La maison, côté océan</span><span>Déplacez le volet</span></div>
+      </div>
+
+      <div class="scroll-note" aria-hidden="true">Découvrir l’hôtel</div>
+    </section>
+
+    <section class="intro" aria-labelledby="intro-title">
+      <div class="intro-mark"><span>Depuis Sion</span></div>
+      <div>
+        <h2 id="intro-title">Un séjour sans détours.</h2>
+        <p>Les Touristes, c’est le point de départ simple pour profiter de Sion-sur-l’Océan : la plage à pied, la forêt de pins à quelques minutes et une table sur place quand la journée se termine.</p>
+      </div>
+    </section>
+
+    <section class="lodging" id="hotel" aria-labelledby="hotel-title">
+      <div class="lodging-aside">
+        <span class="section-number">01 / L’hôtel</span>
+        <p>Le nécessaire bien placé, avec l’océan comme premier repère.</p>
+        <img class="circle-image" src="assets/chambre.gif" alt="Aperçu d’une chambre de l’hôtel" loading="lazy">
+      </div>
+      <div class="lodging-content">
+        <h2 id="hotel-title">Le bon niveau de simplicité.</h2>
+        <p>Vingt et une chambres pour une halte en bord de mer, un week-end ou un séjour avec pension. Les informations essentielles sont ici, puis l’équipe vous répond directement pour choisir la formule adaptée.</p>
+        <dl class="fact-grid">
+          <div><dt>50 m</dt><dd>Plage</dd></div>
+          <div><dt>300 m</dt><dd>Forêt de pins</dd></div>
+          <div><dt>3 km</dt><dd>Saint-Gilles-Croix-de-Vie</dd></div>
+          <div><dt>21</dt><dd>Chambres</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="pricing" id="tarifs" aria-labelledby="tarifs-title">
+      <div>
+        <p class="section-kicker">02 / Dormir</p>
+        <h2 id="tarifs-title">Des repères clairs.</h2>
+        <p class="pricing-intro">Les tarifs affichés sur le site pour 2026 donnent un premier aperçu. Pour réserver, appelez directement l’hôtel : c’est le moyen prévu aujourd’hui.</p>
+        <a class="button button-ghost" href="tel:+33251543386">Parler à l’hôtel</a>
+      </div>
+      <div class="price-panel">
+        <h3>Tarifs 2026</h3>
+        <p class="price-note">Prix indicatifs à confirmer auprès de l’hôtel.</p>
+        <div class="price-row"><span>Chambre 2 personnes · douche / WC</span><strong>59 €</strong></div>
+        <div class="price-row"><span>Chambre avec balcon latéral · vue mer · TV</span><strong>69 €</strong></div>
+        <div class="price-row"><span>Petit-déjeuner</span><strong>9,50 €</strong></div>
+        <div class="price-row"><span>Lit supplémentaire</span><strong>12 €</strong></div>
+        <a class="button button-primary" href="tel:+33251543386">Réserver au 02 51 54 33 86</a>
+      </div>
+    </section>
+
+    <section class="restaurant" id="restaurant" aria-labelledby="restaurant-title">
+      <div class="restaurant-copy">
+        <p class="section-kicker">03 / À table</p>
+        <span class="section-number">Le restaurant</span>
+        <h2 id="restaurant-title">La journée finit bien.</h2>
+        <p>Une cuisine traditionnelle, à la même adresse que la chambre. Menus ou carte : vous choisissez le rythme, l’équipe s’occupe du reste.</p>
+        <div class="menu-callout"><strong>9–25 €</strong><span>Menus annoncés sur le site</span></div>
+        <a class="button button-primary" href="tel:+33251543386">Demander une table</a>
+      </div>
+      <div class="restaurant-image">
+        <img src="assets/restaurant.gif" alt="Illustration du restaurant Les Touristes" loading="lazy">
+        <span class="restaurant-label">Cuisine traditionnelle</span>
+      </div>
+    </section>
+
+    <section class="access" id="acces" aria-labelledby="access-title">
+      <div class="access-copy">
+        <p class="section-kicker">04 / Venir</p>
+        <h2 id="access-title">Ici, tout se fait à pied.</h2>
+        <p>Arrivez à Sion-sur-l’Océan, posez vos valises et partez vers la côte. L’adresse se trouve entre plage, pins et Saint-Gilles-Croix-de-Vie.</p>
+        <ul class="distance-list">
+          <li><strong>50 m</strong><span>La plage</span></li>
+          <li><strong>300 m</strong><span>La forêt de pins</span></li>
+          <li><strong>3 km</strong><span>Saint-Gilles-Croix-de-Vie</span></li>
+        </ul>
+      </div>
+      <div class="map-card">
+        <p class="section-kicker">L’adresse</p>
+        <h3>Retrouvez la maison.</h3>
+        <p class="address">2 rue des Estivants<br>85270 Saint-Hilaire-de-Riez<br>Sion-sur-l’Océan</p>
+        <a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=2%20rue%20des%20Estivants%2085270%20Saint-Hilaire-de-Riez" target="_blank" rel="noopener">Ouvrir dans Maps</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <a class="brand" href="#top" aria-label="Retour en haut">
+        <span class="brand-mark" aria-hidden="true">L</span>
+        <span>Les Touristes</span>
+      </a>
+      <p class="footer-address">Hôtel · Restaurant · Sion-sur-l’Océan</p>
+    </div>
+    <div class="footer-contact">
+      <a href="tel:+33251543386">02 51 54 33 86</a>
+      <a href="mailto:hotel.lestouristes@wanadoo.fr">hotel.lestouristes@wanadoo.fr</a>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const stage = document.querySelector('#viewStage');
+      const handle = document.querySelector('#viewHandle');
+      if (!stage || !handle) return;
+
+      const setReveal = (value) => {
+        const reveal = Math.max(38, Math.min(100, value));
+        stage.style.setProperty('--reveal', `${reveal}%`);
+        stage.classList.toggle('is-open', reveal > 94);
+        handle.setAttribute('aria-expanded', String(reveal > 94));
+      };
+
+      handle.addEventListener('click', () => {
+        const isOpen = stage.classList.contains('is-open');
+        setReveal(isOpen ? 63 : 100);
+      });
+
+      handle.addEventListener('pointerdown', (event) => {
+        handle.setPointerCapture(event.pointerId);
+        stage.classList.add('is-dragging');
+      });
+
+      handle.addEventListener('pointermove', (event) => {
+        if (!stage.classList.contains('is-dragging')) return;
+        const bounds = stage.getBoundingClientRect();
+        setReveal(((event.clientX - bounds.left) / bounds.width) * 100);
+      });
+
+      const stopDragging = () => {
+        if (!stage.classList.contains('is-dragging')) return;
+        stage.classList.remove('is-dragging');
+        const reveal = parseFloat(getComputedStyle(stage).getPropertyValue('--reveal'));
+        setReveal(reveal > 80 ? 100 : 63);
+      };
+
+      handle.addEventListener('pointerup', stopDragging);
+      handle.addEventListener('pointercancel', stopDragging);
+    })();
+  </script>
+</body>
+</html>

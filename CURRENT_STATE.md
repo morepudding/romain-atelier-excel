@@ -1,5 +1,13 @@
 # État actuel
 
+## Radar Rework — skill signature et validations bloquantes, 16 septembre 2026
+
+Le workflow de vitrine utilise désormais le skill personnel `$rework-vitrine-signature`. Coif’Hommes devient un plancher de finition technique à dépasser et non un style à recopier. Le skill impose une direction unique, une apparition réelle du logo ou mot-symbole lorsque disponible, une interaction signature non bloquante et l’accès direct aux informations essentielles sans chasse aux clics.
+
+Deux arrêts humains sont obligatoires. Le premier intervient après l’audit et la direction artistique, avant tout code. Le second intervient après un prototype limité à l’introduction, au premier écran, à la première transition et à l’interaction signature. Le générateur SQL enregistre `awaiting_direction / direction_review`, puis `awaiting_opening / opening_review`. Chaque accord explicite date la validation et remet le dossier en file pour l’étape suivante. La livraison finale exige techniquement les deux accords ; une autorisation ancienne, le lancement du chat ou une correction ne les remplace pas.
+
+Les nouvelles corrections utilisent `signature-v1`. Une ancienne série `interactive-v1` encore en file est reprise dans ce protocole au prochain claim. Le prompt Radar invoque explicitement le skill, transmet les identifiants du dossier et du propriétaire, expose l’étape enregistrée et reprend au bon jalon. Les Touristes ne doivent plus recevoir de nouvelle version complète avant validation de leur direction puis de leur ouverture.
+
 ## Radar Rework — cohérence de marque obligatoire, 16 septembre 2026
 
 Le workflow distingue désormais les ressources à jeter de l’identité à préserver. Avant toute direction, le lancement impose une matrice « préserver / moderniser / abandonner » couvrant palette, mot-symbole, ton typographique, formes, motifs et signes physiques du lieu. Refuser les photos faibles ne permet plus de remplacer l’entreprise par une belle image générique de son secteur ou de sa destination. Une stratégie sans photo doit reprendre au moins trois ancrages de marque et justifier toute rupture.

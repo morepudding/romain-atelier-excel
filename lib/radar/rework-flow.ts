@@ -96,9 +96,13 @@ export function revise(data: ReworkData, instruction: string) {
     interactive_url: '',
     presentation: 'single',
     automation: {
-      workflow: 'interactive-v1',
+      workflow: 'signature-v1',
       instruction: instruction.trim(),
       status: 'queued',
+      stage: 'research',
+      prototype_url: '',
+      direction_approved_at: '',
+      opening_approved_at: '',
     },
   });
 }

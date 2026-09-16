@@ -25,6 +25,7 @@ import {
 import {
   reworkDataSchema,
   sectors,
+  signatureStages,
   siteStates,
   safeUrl,
   fromTarget,
@@ -454,7 +455,7 @@ function RetainedList({
           {projects.map((project) => (
             <article className="rv-retained-row" key={project.id}>
               <div className="rv-retained-icon" aria-hidden="true">{project.data.name.slice(0, 1).toUpperCase()}</div>
-              <div className="rv-retained-copy"><h3>{project.data.name}</h3><p>{sectors[project.data.sector]} · {project.data.locality || 'Localisation non renseignée'}</p></div>
+              <div className="rv-retained-copy"><h3>{project.data.name}</h3><p>{sectors[project.data.sector]} · {project.data.locality || 'Localisation non renseignée'}{project.data.automation?.workflow === 'signature-v1' ? ` · ${signatureStages[project.data.automation.stage]}` : ''}</p></div>
               <button className="rv-launch-button" disabled={busy} onClick={() => onLaunch(project)}>Lancer la refonte <ArrowUpRight size={16} /></button>
               {launch?.id === project.id && (
                 <output className="rv-chat-result">

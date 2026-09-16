@@ -181,7 +181,10 @@ void test('the official workflow preserves finished pairs, requires link and pre
   assert.equal(decide(old, 'retained').automation, undefined);
   const queued = revise(old, 'Une entrée plus forte');
   assert.equal(queued.presentation, 'single');
-  assert.equal(queued.automation?.workflow, 'interactive-v1');
+  assert.equal(queued.automation?.workflow, 'signature-v1');
+  assert.equal(queued.automation?.stage, 'research');
+  assert.equal(queued.automation?.direction_approved_at, '');
+  assert.equal(queued.automation?.opening_approved_at, '');
   assert.equal(queued.automation?.artifact_path, '');
   const cover = {
     ...queued,

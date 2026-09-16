@@ -92,6 +92,14 @@ void test('the refonte chat prompt transfers context without pretending to creat
   assert.match(prompt, /Atelier témoin/);
   assert.match(prompt, /https:\/\/atelier\.example\//);
   assert.match(prompt, /une seule maquette interactive/);
+  assert.match(prompt, /\$rework-vitrine-signature/);
+  assert.match(prompt, /Identifiant du dossier/);
+  assert.match(prompt, /Premier arrêt/);
+  assert.match(prompt, /Deuxième arrêt/);
+  assert.match(prompt, /Ne coder aucun prototype dans ce même tour/);
+  assert.match(prompt, /Ne pas développer le reste du site dans ce même tour/);
+  assert.match(prompt, /logo réellement visible est un échec/);
+  assert.match(prompt, /sans parcourir une série de gadgets/);
   assert.match(prompt, /source documentaire/);
   assert.match(prompt, /matrice « préserver \/ moderniser \/ abandonner »/);
   assert.match(prompt, /au moins trois ancrages réellement conservés/);
@@ -102,4 +110,49 @@ void test('the refonte chat prompt transfers context without pretending to creat
   assert.match(prompt, /Sans le logo, le dirigeant doit encore pouvoir reconnaître son établissement/);
   assert.match(prompt, /Aucun prospect ne doit être contacté/);
   assert.match(prompt, /Décembre 2026 ne constitue pas une autorisation automatique/);
+});
+
+void test('the refonte chat resumes the recorded signature gate instead of restarting production', () => {
+  const project = {
+    id: '00000000-0000-4000-8000-000000000010',
+    user_id: '00000000-0000-4000-8000-000000000011',
+    identity_key: 'name:hotel-test',
+    revision: 4,
+    created_at: '2026-09-16T10:00:00.000Z',
+    updated_at: '2026-09-16T10:00:00.000Z',
+    data: reworkDataSchema.parse({
+      name: 'Hôtel test',
+      decision: 'retained',
+      presentation: 'single',
+      brief: 'Brief enregistré',
+      direction_a: 'Direction enregistrée',
+      automation: {
+        workflow: 'signature-v1',
+        status: 'awaiting_direction',
+        stage: 'direction_review',
+      },
+    }),
+  };
+  const directionPrompt = reworkChatPrompt(project);
+  assert.match(directionPrompt, /Étape : direction_review/);
+  assert.match(directionPrompt, /Direction enregistrée/);
+  assert.match(directionPrompt, /attend ma validation/);
+  assert.match(directionPrompt, /arrête-toi sans coder/);
+
+  const openingPrompt = reworkChatPrompt({
+    ...project,
+    data: reworkDataSchema.parse({
+      ...project.data,
+      automation: {
+        ...project.data.automation,
+        status: 'awaiting_opening',
+        stage: 'opening_review',
+        prototype_url: 'https://prototype.vercel.app/',
+        direction_approved_at: '2026-09-16T11:00:00.000Z',
+      },
+    }),
+  });
+  assert.match(openingPrompt, /Étape : opening_review/);
+  assert.match(openingPrompt, /https:\/\/prototype\.vercel\.app\//);
+  assert.match(openingPrompt, /arrête-toi sans développer le site complet/);
 });

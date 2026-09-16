@@ -439,9 +439,8 @@ a,
   position: absolute;
   left: calc(62px + (100% - 134px) * var(--route-progress));
   top: 50%;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  display: grid;
+  place-items: center;
   transform: translate(-50%, -50%);
   transition: left 100ms linear;
 }
@@ -456,6 +455,9 @@ a,
 }
 
 .distance-control__marker b {
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
   min-width: 38px;
   padding: 3px 6px;
   border-radius: 5px;
@@ -464,6 +466,7 @@ a,
   font-size: 0.75rem;
   letter-spacing: 0.05em;
   white-space: nowrap;
+  transform: translateX(-50%);
 }
 
 .hero__disclaimer {

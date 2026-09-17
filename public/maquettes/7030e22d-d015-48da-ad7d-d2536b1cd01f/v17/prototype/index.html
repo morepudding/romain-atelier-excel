@@ -60,6 +60,14 @@
           fetchpriority="high"
         />
         <div class="hero__shade"></div>
+        <div class="hero__atmosphere" aria-hidden="true">
+          <span class="ambient-cloud ambient-cloud--one"></span>
+          <span class="ambient-cloud ambient-cloud--two"></span>
+          <span class="ambient-birds ambient-birds--one">⌁⌁</span>
+          <span class="ambient-birds ambient-birds--two">⌁</span>
+          <span class="ambient-sea ambient-sea--one"></span>
+          <span class="ambient-sea ambient-sea--two"></span>
+        </div>
 
         <header class="topbar">
           <a class="topbar__place" href="#chambres">
@@ -107,29 +115,6 @@
               </span>
             </a>
           </div>
-        </div>
-
-        <div
-          class="distance-control"
-          role="slider"
-          tabindex="0"
-          aria-label="Distance entre l’hôtel et la plage"
-          aria-valuemin="0"
-          aria-valuemax="50"
-          aria-valuenow="50"
-          aria-valuetext="50 mètres jusqu’à la plage"
-        >
-          <span class="distance-control__start">L’hôtel</span>
-          <span class="distance-control__rail"><i></i></span>
-          <span class="distance-control__marker">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"
-              />
-            </svg>
-            <b>50 m</b>
-          </span>
-          <span class="distance-control__end">La plage</span>
         </div>
 
         <p class="hero__disclaimer">Illustration d’ambiance</p>

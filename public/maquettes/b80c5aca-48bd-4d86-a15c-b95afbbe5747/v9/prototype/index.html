@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#0d293c" />
+    <meta
+      name="description"
+      content="Prototype de direction pour l’Hôtel du Commerce aux Sables-d’Olonne."
+    />
+    <title>Hôtel du Commerce — Les Sables-d’Olonne</title>
+    <link rel="preload" href="./assets/manrope.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./assets/logo-hotel-du-commerce-blanc.png" as="image" type="image/png" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+    <div class="intro" aria-hidden="true">
+      <div class="intro__field"></div>
+      <div class="intro__content">
+        <p class="intro__eyebrow">Les Sables-d’Olonne · Vendée</p>
+        <img
+          class="intro__logo"
+          src="./assets/logo-hotel-du-commerce-blanc.png"
+          alt=""
+          width="261"
+          height="71"
+        />
+        <span class="intro__rule"></span>
+        <p class="intro__place">Rue Hoche <i></i> port <i></i> plage</p>
+      </div>
+    </div>
+
+    <main id="contenu">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__grid" aria-hidden="true"></div>
+        <div class="hero__wash" aria-hidden="true"></div>
+
+        <header class="topbar">
+          <a class="topbar__brand" href="#contenu" aria-label="Hôtel du Commerce, accueil">
+            <img
+              src="./assets/logo-hotel-du-commerce-blanc.png"
+              alt="Hôtel du Commerce"
+              width="261"
+              height="71"
+            />
+          </a>
+          <div class="topbar__right">
+            <span class="topbar__index">01 <b>/</b> 03</span>
+            <a class="topbar__phone" href="tel:+33251320280">02 51 32 02 80</a>
+            <a class="button button--light button--small" href="https://www.lhotelducommerce.fr/reservation-en-ligne/">
+              Réserver en ligne
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" /></svg>
+            </a>
+          </div>
+        </header>
+
+        <div class="hero__layout">
+          <div class="hero__copy">
+            <p class="eyebrow hero__eyebrow"><span></span> Hôtel deux étoiles · centre-ville</p>
+            <h1 id="hero-title">Tout à pied.</h1>
+            <p class="hero__lead">L’Hôtel du Commerce vous place entre le port et la grande plage des Sables-d’Olonne.</p>
+            <div class="hero__facts" aria-label="Informations principales">
+              <div><strong>24</strong><span>chambres</span></div>
+              <div><strong>200<span> m</span></strong><span>de la plage</span></div>
+              <div><strong>400<span> m</span></strong><span>de la gare</span></div>
+            </div>
+            <div class="hero__actions">
+              <a class="button button--coral" href="https://www.lhotelducommerce.fr/reservation-en-ligne/">
+                Préparer mon séjour
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" /></svg>
+              </a>
+              <a class="text-link" href="#proximite">Voir l’emplacement <span>↓</span></a>
+            </div>
+          </div>
+
+          <div class="route-scene" aria-label="Schéma de l’emplacement de l’hôtel entre la rue Hoche, le port et la plage">
+            <div class="route-scene__topline"><span>Une adresse centrale</span><span>Les Sables-d’Olonne</span></div>
+            <div class="route-scene__map">
+              <div class="map-grid" aria-hidden="true"></div>
+              <div class="map-ring map-ring--one" aria-hidden="true"></div>
+              <div class="map-ring map-ring--two" aria-hidden="true"></div>
+              <div class="map-label map-label--hotel"><span class="map-dot map-dot--coral"></span><b>Hôtel du Commerce</b><small>8 rue Hoche</small></div>
+              <div class="map-label map-label--port"><span class="map-dot map-dot--navy"></span><b>Port</b><small>à quelques minutes</small></div>
+              <div class="map-label map-label--beach"><span class="map-dot map-dot--coral"></span><b>Grande plage</b><small>200 m</small></div>
+              <svg class="route-line" viewBox="0 0 620 470" role="img" aria-label="Itinéraire graphique de l’hôtel vers le port puis la plage">
+                <path class="route-line__ghost" d="M112 350 C185 323 188 246 271 258 S376 204 409 153 S481 124 548 88" />
+                <path class="route-line__main" d="M112 350 C185 323 188 246 271 258 S376 204 409 153 S481 124 548 88" />
+                <circle class="route-line__pulse" cx="112" cy="350" r="11" />
+                <circle class="route-line__port" cx="409" cy="153" r="7" />
+                <circle class="route-line__beach" cx="548" cy="88" r="7" />
+              </svg>
+              <div class="map-distance map-distance--beach"><strong>200</strong><span>m</span></div>
+              <div class="map-distance map-distance--port"><strong>01</strong><span>trajet</span></div>
+              <div class="map-axis map-axis--vertical" aria-hidden="true"></div>
+              <div class="map-axis map-axis--horizontal" aria-hidden="true"></div>
+            </div>
+            <div class="route-scene__bottomline"><span><i></i> Rue Hoche</span><span>Port <i></i> Plage</span></div>
+          </div>
+        </div>
+
+        <div class="hero__bottom">
+          <span>Une chambre en ville</span>
+          <span>Le port à pied</span>
+          <span>La plage à pied</span>
+          <a href="#proximite" aria-label="Descendre vers la suite"><span>Défiler</span><b>↓</b></a>
+        </div>
+      </section>
+
+      <section class="proximity" id="proximite" aria-labelledby="proximity-title">
+        <div class="proximity__line" aria-hidden="true"><span></span></div>
+        <div class="proximity__top">
+          <p class="eyebrow eyebrow--dark"><span></span> La première transition</p>
+          <p class="proximity__counter">02 <b>/</b> 03</p>
+        </div>
+        <div class="proximity__layout">
+          <div class="proximity__heading">
+            <p class="proximity__overline">La ville commence devant la porte</p>
+            <h2 id="proximity-title">Une adresse<br /><em>qui simplifie</em><br />le séjour.</h2>
+          </div>
+          <div class="proximity__copy">
+            <p>Le tracé de l’ouverture quitte la scène et devient le fil conducteur de la page. Il mène aux chambres, aux tarifs puis à la réservation, sans vous faire chercher l’essentiel.</p>
+            <a class="button button--navy" href="https://www.lhotelducommerce.fr/reservation-en-ligne/">
+              Accéder à la réservation
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" /></svg>
+            </a>
+          </div>
+        </div>
+        <div class="proximity__markers" aria-hidden="true">
+          <span><b>01</b> Hôtel</span><i></i><span><b>02</b> Port</span><i></i><span><b>03</b> Plage</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="./main.js" defer></script>
+  </body>
+</html>

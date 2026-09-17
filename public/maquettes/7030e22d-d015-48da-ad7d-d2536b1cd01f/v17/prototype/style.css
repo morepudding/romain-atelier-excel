@@ -389,75 +389,15 @@ a,
   pointer-events: none;
 }
 
-.ambient-cloud {
+.ambient-sailboats {
   position: absolute;
-  width: clamp(140px, 18vw, 290px);
-  height: clamp(35px, 5vw, 74px);
-  border-radius: 50%;
-  background: rgb(255 255 255 / 0.09);
-  filter: blur(12px);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
   will-change: transform;
-}
-
-.ambient-cloud--one {
-  top: 15%;
-  left: -22%;
-  animation: cloud-drift 34s linear infinite;
-}
-
-.ambient-cloud--two {
-  top: 27%;
-  left: -30%;
-  width: clamp(100px, 13vw, 210px);
-  opacity: 0.65;
-  animation: cloud-drift 46s 9s linear infinite;
-}
-
-.ambient-birds {
-  position: absolute;
-  top: 30%;
-  left: -10%;
-  color: rgb(3 65 101 / 0.64);
-  font-family: Georgia, serif;
-  font-size: clamp(1rem, 1.5vw, 1.5rem);
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  transform: rotate(-8deg);
-  will-change: transform;
-}
-
-.ambient-birds--one {
-  animation: birds-cross 19s 3s linear infinite;
-}
-
-.ambient-birds--two {
-  top: 37%;
-  font-size: 0.9rem;
-  opacity: 0.72;
-  animation: birds-cross 27s 13s linear infinite;
-}
-
-.ambient-sea {
-  position: absolute;
-  right: -8%;
-  bottom: 18.5%;
-  width: 62%;
-  height: 9px;
-  border-top: 2px solid rgb(255 255 255 / 0.26);
-  border-radius: 50%;
-  transform-origin: center;
-  will-change: transform, opacity;
-}
-
-.ambient-sea--one {
-  animation: sea-breathe 5.5s ease-in-out infinite;
-}
-
-.ambient-sea--two {
-  bottom: 16.8%;
-  width: 48%;
-  opacity: 0.55;
-  animation: sea-breathe 7s 1.4s ease-in-out infinite reverse;
+  animation: sailboats-drift 18s ease-in-out infinite alternate;
 }
 
 .hero__disclaimer {
@@ -729,21 +669,13 @@ a,
   }
 }
 
-@keyframes cloud-drift {
-  from { transform: translateX(0) scale(0.9); }
-  to { transform: translateX(145vw) scale(1.08); }
-}
-
-@keyframes birds-cross {
-  0%, 8% { transform: translate(-12vw, 0) rotate(-8deg); opacity: 0; }
-  15% { opacity: 0.7; }
-  70% { opacity: 0.7; }
-  82%, 100% { transform: translate(120vw, -9vh) rotate(-3deg); opacity: 0; }
-}
-
-@keyframes sea-breathe {
-  0%, 100% { transform: translateX(-1.5%) scaleX(0.96); opacity: 0.42; }
-  50% { transform: translateX(2%) scaleX(1.04); opacity: 0.78; }
+@keyframes sailboats-drift {
+  from {
+    transform: translateX(-0.35%);
+  }
+  to {
+    transform: translateX(0.7%);
+  }
 }
 
 @keyframes scroll-cue {
@@ -891,16 +823,6 @@ a,
     min-width: min(320px, 86vw);
   }
 
-
-  .ambient-cloud {
-    filter: blur(8px);
-  }
-
-  .ambient-sea {
-    right: -18%;
-    bottom: 16%;
-    width: 82%;
-  }
 
   .hero__disclaimer {
     bottom: 20px;

@@ -1,35 +1,40 @@
 # État du projet — Hôtel Les Touristes
 
 ## Phase actuelle
-Production complète après validation de l'ouverture le 17 septembre 2026.
+Kit visuel Imagen intégré en prévisualisation ; validation humaine de la nouvelle direction visuelle encore requise avant publication finale.
 
 ## Direction artistique
 Statut : VALIDÉE
 Référence : adresse balnéaire populaire et directe, bleu océan, rouge cerise, rose coquillage, illustration graphique sans photos faibles.
 
 ## Visuel principal
-Statut : VALIDÉ
-Référence : hôtel à gauche, accès plage central, village à droite, horizon marin.
+Statut : nouvelle proposition à valider
+Référence : scène balnéaire illustrée générée par Imagen ; façade et terrasse à gauche, accès plage central, mer et pins, ciel dégagé.
 
 ## Mouvement ambiant
-Statut : VALIDÉ
-Élément source : les quatre voiliers présents dans l'illustration.
-Mouvement : dérive horizontale lente sur un calque transparent ; état fixe avec mouvement réduit.
+Statut : nouvelle proposition à valider
+Élément source : les voiliers isolés depuis la scène Imagen approuvée.
+Mouvement : dérive horizontale perceptible et respiration très lente du fond ; état fixe avec mouvement réduit.
 
 ## Interaction active
 Statut : REFUSÉE
 Interaction : aucune. Le contrôle interactif des 50 m a été explicitement refusé.
 
+## Kit d'assets
+Statut : généré, intégré en prévisualisation
+Assets : scène principale, fond propre pour animation, voiliers dérivés, chambre et restaurant.
+Marquage : les images de chambre et de restaurant portent `Visuel d’intention — non réel`.
+
 ## Prototype d'ouverture
-Statut : VALIDÉ
-Référence : commit 5a4851c2d0b7c7d4b4336e30a51eadce1917bcff.
+Statut : correction visuelle à valider
+Référence : nouvelle version en prévisualisation, sans changement d'interaction active.
 
 ## Publication
-Statut : AUTORISÉE
+Statut : prévisualisation autorisée ; publication finale en attente de validation visuelle.
 Périmètre autorisé : dépôt public morepudding/romain-atelier-excel et projet Vercel associé.
 
 ## Dernière demande utilisateur
-Avancer sur la suite du site après validation de l'ouverture.
+Créer plusieurs assets visuels avec Imagen et animer certains éléments réellement présents dans ces images.
 
 ## Décisions encore ouvertes
-Aucune décision bloquante. Les informations non vérifiées restent omises.
+Valider ou corriger le kit d’assets Imagen et la chorégraphie ambiante avant de poursuivre la publication finale.

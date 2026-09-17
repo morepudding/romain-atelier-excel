@@ -6,6 +6,49 @@ import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { PGlite } from '@electric-sql/pglite';
 
+test('opening previews stay restricted to the Radar Vercel project', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'rework-preview-host-'));
+  const metadata = join(dir, 'opening.json');
+  const output = join(dir, 'action.sql');
+  const project = '00000000-0000-4000-8000-000000000020';
+  const args = [
+    'scripts/rework-interactive.py',
+    'await-opening',
+    '--owner',
+    '00000000-0000-4000-8000-000000000001',
+    '--project',
+    project,
+    '--revision',
+    '1',
+    '--lease',
+    '00000000-0000-4000-8000-000000000003',
+    '--metadata',
+    metadata,
+    '--output',
+    output,
+  ];
+
+  try {
+    writeFileSync(
+      metadata,
+      JSON.stringify({
+        prototype_url: `https://romain-atelier-excel-preview-bottero-romains-projects.vercel.app/maquettes/${project}/v2/prototype/index.html`,
+      }),
+    );
+    execFileSync('python', args);
+
+    writeFileSync(
+      metadata,
+      JSON.stringify({
+        prototype_url: `https://romain-atelier-excel-phishing.vercel.app/maquettes/${project}/v2/prototype/index.html`,
+      }),
+    );
+    assert.throws(() => execFileSync('python', args));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 // Execute the actual generated SQL against the production schema, with no remote writes.
 test('interactive worker claims once, resumes, protects human revisions and atomically attaches an immutable delivery', async () => {
   const db = new PGlite();
@@ -156,18 +199,14 @@ test('interactive worker claims once, resumes, protects human revisions and atom
     writeFileSync(
       openingMetadata,
       JSON.stringify({
-        prototype_url: `https://romain-atelier-excel.vercel.app/maquettes/${p.id}/v2/prototype/index.html`,
+        prototype_url: `https://romain-atelier-excel-opening-bottero-romains-projects.vercel.app/maquettes/${p.id}/v2/prototype/index.html`,
         source_commit: 'a'.repeat(40),
         deployment_id: 'dpl_opening',
         deployment_url: 'https://opening.vercel.app/',
       }),
     );
     await run(
-      sql('await-opening', [
-        ...opts(5, lease2),
-        '--metadata',
-        openingMetadata,
-      ]),
+      sql('await-opening', [...opts(5, lease2), '--metadata', openingMetadata]),
     );
     row = await read();
     assert.equal(row.revision, 6);
@@ -175,7 +214,7 @@ test('interactive worker claims once, resumes, protects human revisions and atom
     assert.equal(row.data.automation.stage, 'opening_review');
     assert.equal(
       row.data.automation.prototype_url,
-      `https://romain-atelier-excel.vercel.app/maquettes/${p.id}/v2/prototype/index.html`,
+      `https://romain-atelier-excel-opening-bottero-romains-projects.vercel.app/maquettes/${p.id}/v2/prototype/index.html`,
     );
     await run(sql('approve-opening', approvalOpts(6)));
     row = await read();
@@ -197,13 +236,7 @@ test('interactive worker claims once, resumes, protects human revisions and atom
         deployment_url: 'https://final.vercel.app/',
       }),
     );
-    await run(
-      sql('checkpoint', [
-        ...opts(8),
-        '--metadata',
-        finalMetadata,
-      ]),
-    );
+    await run(sql('checkpoint', [...opts(8), '--metadata', finalMetadata]));
     row = await read();
     assert.equal(row.revision, 9);
     await assert.rejects(

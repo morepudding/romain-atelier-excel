@@ -345,74 +345,93 @@ h1, h2, p { margin-top: 0; }
 
 .route-scene__map {
   position: relative;
-  height: clamp(390px, 48vw, 560px);
+  height: clamp(390px, 42vw, 500px);
   margin-block: 14px;
   overflow: hidden;
-  border: 1px solid rgb(244 239 228 / 0.22);
-  background: var(--cream);
+  border: 1px solid rgb(244 239 228 / 0.32);
+  background: #eae2d2;
   color: var(--navy);
-  clip-path: polygon(3% 0, 100% 0, 97% 100%, 0 96%);
+  clip-path: polygon(2% 0, 100% 0, 98% 97%, 0 100%);
 }
 
-.map-grid {
+.route-board__sea {
   position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(27deg, transparent 49.6%, rgb(13 41 60 / 0.1) 49.8% 50.2%, transparent 50.4%),
-    linear-gradient(117deg, transparent 49.6%, rgb(13 41 60 / 0.1) 49.8% 50.2%, transparent 50.4%),
-    linear-gradient(90deg, transparent 49.6%, rgb(13 41 60 / 0.08) 49.8% 50.2%, transparent 50.4%);
-  background-size: 146px 112px, 156px 128px, 72px 72px;
-  opacity: 0.58;
+  z-index: 0;
+  inset: 0 auto 0 -13%;
+  width: 31%;
+  background: var(--navy);
+  clip-path: polygon(0 0, 79% 0, 91% 12%, 83% 25%, 94% 39%, 80% 54%, 91% 68%, 78% 82%, 88% 100%, 0 100%);
 }
 
-.map-grid::after {
+.route-board__coast {
   position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(0deg, transparent 0 26px, rgb(13 41 60 / 0.08) 27px, transparent 28px 54px);
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 17%;
+  width: 5px;
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 10px 0 0 rgb(239 91 79 / 0.13), 20px 0 0 rgb(239 91 79 / 0.07);
+  transform: rotate(4deg) scaleY(1.08);
   content: '';
 }
 
-.map-ring {
+.route-board__header {
   position: absolute;
-  border: 1px solid rgb(239 91 79 / 0.35);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
+  z-index: 3;
+  top: 23px;
+  right: 28px;
+  left: 30%;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 11px;
+  border-bottom: 1px solid rgb(13 41 60 / 0.2);
+  color: rgb(13 41 60 / 0.62);
+  font-size: 0.57rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
-.map-ring--one { top: 75%; left: 18%; width: 210px; height: 210px; }
-.map-ring--two { top: 75%; left: 18%; width: 360px; height: 360px; border-color: rgb(239 91 79 / 0.15); }
+.route-board__header b { color: var(--coral); }
 
-.route-line { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.route-line__ghost { fill: none; stroke: rgb(13 41 60 / 0.16); stroke-width: 7; }
-.route-line__main { fill: none; stroke: var(--coral); stroke-width: 3; stroke-dasharray: 720; stroke-dashoffset: 720; animation: route-draw 1300ms 2.08s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
+.route-line { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.street-plan path { fill: none; stroke: rgb(13 41 60 / 0.13); stroke-width: 1.4; }
+.route-line__ghost { fill: none; stroke: #f7f1e5; stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
+.route-line__main { fill: none; stroke: var(--coral); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 650; stroke-dashoffset: 650; animation: route-draw 1300ms 2.08s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
 .route-line__pulse { fill: var(--coral); transform-box: fill-box; transform-origin: center; opacity: 0; animation: pulse-in 600ms 2.9s ease-out forwards, beacon 2.6s 3.5s ease-in-out infinite; }
-.route-line__port, .route-line__beach { fill: var(--navy); opacity: 0; animation: dot-in 400ms 3.04s ease-out forwards; }
+.route-line__port, .route-line__beach { fill: var(--navy); stroke: #f7f1e5; stroke-width: 4; opacity: 0; animation: dot-in 400ms 3.04s ease-out forwards; }
 .route-line__beach { animation-delay: 3.26s; }
 
-.map-dot { position: absolute; display: block; width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 0 5px rgb(13 41 60 / 0.08); }
+.map-dot { position: absolute; display: block; width: 9px; height: 9px; border: 2px solid var(--paper); border-radius: 50%; box-shadow: 0 0 0 4px rgb(13 41 60 / 0.1); }
 .map-dot--coral { background: var(--coral); }
 .map-dot--navy { background: var(--navy); }
 
-.map-label { position: absolute; z-index: 2; display: grid; gap: 4px; font-size: 0.7rem; opacity: 0; animation: label-in 480ms 3.02s ease-out forwards; }
-.map-label b { font-size: 0.73rem; letter-spacing: 0.03em; }
-.map-label small { color: rgb(13 41 60 / 0.55); font-size: 0.57rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.map-label { position: absolute; z-index: 4; display: grid; gap: 4px; font-size: 0.7rem; opacity: 0; animation: label-in 480ms 3.02s ease-out forwards; }
+.map-label b { font-size: 0.72rem; letter-spacing: 0.02em; }
+.map-label small { color: rgb(13 41 60 / 0.55); font-size: 0.54rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
 .map-label .map-dot { position: absolute; top: 5px; }
-.map-label--hotel { bottom: 23%; left: 8%; padding-left: 23px; }
-.map-label--port { top: 26%; left: 61%; padding-left: 21px; animation-delay: 3.18s; }
-.map-label--beach { top: 7%; right: 5%; padding-right: 21px; text-align: right; animation-delay: 3.34s; }
+.map-label--hotel { bottom: 14%; left: 62%; padding-left: 22px; }
+.map-label--port { top: 43%; left: 71%; padding-left: 21px; animation-delay: 3.18s; }
+.map-label--beach { top: 17%; left: 23%; padding-left: 21px; color: var(--cream); animation-delay: 3.34s; }
+.map-label--beach small { color: rgb(244 239 228 / 0.63); }
 .map-label--hotel .map-dot, .map-label--port .map-dot { left: 0; }
-.map-label--beach .map-dot { right: 0; }
+.map-label--beach .map-dot { left: 0; }
 
-.map-distance { position: absolute; z-index: 2; display: flex; align-items: baseline; gap: 3px; color: var(--coral); opacity: 0; animation: label-in 460ms 3.46s ease-out forwards; }
-.map-distance strong { font-size: 2.6rem; letter-spacing: -0.09em; line-height: 0.8; }
-.map-distance span { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
-.map-distance--beach { top: 32%; right: 13%; }
-.map-distance--port { bottom: 36%; left: 53%; color: var(--navy); animation-delay: 3.62s; }
-.map-distance--port strong { font-size: 1.7rem; }
+.map-distance { position: absolute; z-index: 4; display: flex; align-items: baseline; gap: 5px; color: var(--coral); opacity: 0; animation: label-in 460ms 3.46s ease-out forwards; }
+.map-distance strong { font-size: clamp(2.7rem, 4vw, 4.2rem); letter-spacing: -0.12em; line-height: 0.8; }
+.map-distance span { margin-right: 2px; font-size: 0.55rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.map-distance b { font-size: 0.7rem; letter-spacing: 0.1em; }
+.map-distance--beach { top: 64%; left: 25%; align-items: end; flex-wrap: wrap; width: 124px; }
+.map-distance--beach span { width: 100%; margin: 0 0 8px; color: rgb(13 41 60 / 0.57); }
+.map-distance--port { right: 9%; bottom: 14%; color: var(--navy); animation-delay: 3.62s; }
+.map-distance--port strong { font-size: 1.65rem; }
+.map-distance--port span { color: rgb(13 41 60 / 0.57); }
 
-.map-axis { position: absolute; background: rgb(13 41 60 / 0.16); }
-.map-axis--vertical { top: 0; bottom: 0; left: 37%; width: 1px; transform: rotate(17deg); }
-.map-axis--horizontal { top: 49%; right: 0; left: 31%; height: 1px; transform: rotate(-10deg); }
+.route-board__street { position: absolute; z-index: 4; right: 28px; bottom: 24px; color: rgb(13 41 60 / 0.48); font-size: 0.53rem; font-weight: 800; letter-spacing: 0.2em; transform: rotate(-5deg); }
+.route-board__compass { position: absolute; z-index: 4; top: 73px; right: 29px; display: grid; justify-items: center; gap: 5px; color: rgb(13 41 60 / 0.55); font-size: 0.53rem; font-weight: 800; }
+.route-board__compass span { display: block; width: 1px; height: 22px; background: var(--coral); }
 
 .route-scene__bottomline i { display: inline-block; width: 5px; height: 5px; margin: 0 8px 1px 0; border-radius: 50%; background: var(--coral); }
 
@@ -504,8 +523,8 @@ h1, h2, p { margin-top: 0; }
   .hero__actions { align-items: flex-start; flex-direction: column; gap: 18px; margin-top: 26px; }
   .route-scene { width: calc(100% + 12px); margin: 64px -6px 0; }
   .route-scene__map { height: 385px; }
-  .map-label--beach { right: 4%; }
-  .map-distance--beach { right: 10%; }
+  .map-label--beach { right: auto; left: 23%; }
+  .map-distance--beach { right: auto; left: 25%; }
   .hero__bottom { gap: 12px; padding-block: 17px; font-size: 0.48rem; }
   .hero__bottom span:nth-child(2) { display: none; }
   .hero__bottom span::before { width: 3px; height: 3px; margin: 0 4px 1px 0; }

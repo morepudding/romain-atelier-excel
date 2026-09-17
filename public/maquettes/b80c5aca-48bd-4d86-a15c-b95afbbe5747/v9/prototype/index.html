@@ -79,23 +79,31 @@
           <div class="route-scene" aria-label="Schéma de l’emplacement de l’hôtel entre la rue Hoche, le port et la plage">
             <div class="route-scene__topline"><span>Une adresse centrale</span><span>Les Sables-d’Olonne</span></div>
             <div class="route-scene__map">
-              <div class="map-grid" aria-hidden="true"></div>
-              <div class="map-ring map-ring--one" aria-hidden="true"></div>
-              <div class="map-ring map-ring--two" aria-hidden="true"></div>
+              <div class="route-board__sea" aria-hidden="true"></div>
+              <div class="route-board__coast" aria-hidden="true"></div>
+              <div class="route-board__header"><span>Plan de séjour</span><b>01</b></div>
+              <svg class="route-line" viewBox="0 0 620 470" role="img" aria-label="Itinéraire graphique de l’hôtel vers le port puis la plage">
+                <g class="street-plan" aria-hidden="true">
+                  <path d="M168 26 C220 90 236 137 214 192 S210 327 272 452" />
+                  <path d="M247 0 C280 85 328 125 315 191 S360 324 410 470" />
+                  <path d="M330 0 C377 75 395 127 383 194 S456 328 522 430" />
+                  <path d="M420 32 C452 103 503 152 490 215 S520 320 594 373" />
+                  <path d="M97 233 C202 218 273 226 355 212 S503 203 620 230" />
+                  <path d="M83 302 C194 288 286 297 382 275 S510 271 620 300" />
+                </g>
+                <path class="route-line__ghost" d="M420 370 C424 316 508 298 465 225 C420 145 294 194 150 117" />
+                <path class="route-line__main" d="M420 370 C424 316 508 298 465 225 C420 145 294 194 150 117" />
+                <circle class="route-line__pulse" cx="420" cy="370" r="11" />
+                <circle class="route-line__port" cx="465" cy="225" r="7" />
+                <circle class="route-line__beach" cx="150" cy="117" r="7" />
+              </svg>
               <div class="map-label map-label--hotel"><span class="map-dot map-dot--coral"></span><b>Hôtel du Commerce</b><small>8 rue Hoche</small></div>
               <div class="map-label map-label--port"><span class="map-dot map-dot--navy"></span><b>Port</b><small>à quelques minutes</small></div>
               <div class="map-label map-label--beach"><span class="map-dot map-dot--coral"></span><b>Grande plage</b><small>200 m</small></div>
-              <svg class="route-line" viewBox="0 0 620 470" role="img" aria-label="Itinéraire graphique de l’hôtel vers le port puis la plage">
-                <path class="route-line__ghost" d="M112 350 C185 323 188 246 271 258 S376 204 409 153 S481 124 548 88" />
-                <path class="route-line__main" d="M112 350 C185 323 188 246 271 258 S376 204 409 153 S481 124 548 88" />
-                <circle class="route-line__pulse" cx="112" cy="350" r="11" />
-                <circle class="route-line__port" cx="409" cy="153" r="7" />
-                <circle class="route-line__beach" cx="548" cy="88" r="7" />
-              </svg>
-              <div class="map-distance map-distance--beach"><strong>200</strong><span>m</span></div>
-              <div class="map-distance map-distance--port"><strong>01</strong><span>trajet</span></div>
-              <div class="map-axis map-axis--vertical" aria-hidden="true"></div>
-              <div class="map-axis map-axis--horizontal" aria-hidden="true"></div>
+              <div class="map-distance map-distance--beach"><span>La plage</span><strong>200</strong><b>m</b></div>
+              <div class="map-distance map-distance--port"><strong>01</strong><span>trajet à pied</span></div>
+              <div class="route-board__street">RUE HOCHE</div>
+              <div class="route-board__compass" aria-hidden="true"><b>N</b><span></span></div>
             </div>
             <div class="route-scene__bottomline"><span><i></i> Rue Hoche</span><span>Port <i></i> Plage</span></div>
           </div>

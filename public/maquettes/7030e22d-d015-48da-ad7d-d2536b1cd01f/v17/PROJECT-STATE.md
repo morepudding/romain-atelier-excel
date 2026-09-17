@@ -37,7 +37,7 @@ Statut : REFUSÉE
 Interaction : aucune. Le contrôle interactif des 50 m a été explicitement refusé.
 
 ## Prototype d'ouverture
-Statut : EN COURS — À SOUMETTRE À LA SECONDE VALIDATION
+Statut : À VALIDER — PRÉVISUALISATION DÉPLOYÉE
 Périmètre : introduction de marque, hero animé, transition vers la demande de séjour, module non connecté et deux chambres distinctes.
 
 ## Publication

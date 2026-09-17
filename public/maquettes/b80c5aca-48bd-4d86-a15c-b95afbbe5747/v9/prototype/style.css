@@ -414,10 +414,10 @@ h1, h2, p { margin-top: 0; }
 .map-label .map-dot { position: absolute; top: 5px; }
 .map-label--hotel { bottom: 14%; left: 62%; padding-left: 22px; }
 .map-label--port { top: 43%; left: 71%; padding-left: 21px; animation-delay: 3.18s; }
-.map-label--beach { top: 17%; left: 23%; padding-left: 21px; color: var(--cream); animation-delay: 3.34s; }
+.map-label--beach { top: 17%; left: 2%; width: 150px; padding-right: 21px; color: var(--cream); text-align: right; animation-delay: 3.34s; }
 .map-label--beach small { color: rgb(244 239 228 / 0.63); }
 .map-label--hotel .map-dot, .map-label--port .map-dot { left: 0; }
-.map-label--beach .map-dot { left: 0; }
+.map-label--beach .map-dot { right: 0; }
 
 .map-distance { position: absolute; z-index: 4; display: flex; align-items: baseline; gap: 5px; color: var(--coral); opacity: 0; animation: label-in 460ms 3.46s ease-out forwards; }
 .map-distance strong { font-size: clamp(2.7rem, 4vw, 4.2rem); letter-spacing: -0.12em; line-height: 0.8; }
@@ -425,7 +425,7 @@ h1, h2, p { margin-top: 0; }
 .map-distance b { font-size: 0.7rem; letter-spacing: 0.1em; }
 .map-distance--beach { top: 64%; left: 25%; align-items: end; flex-wrap: wrap; width: 124px; }
 .map-distance--beach span { width: 100%; margin: 0 0 8px; color: rgb(13 41 60 / 0.57); }
-.map-distance--port { right: 9%; bottom: 14%; color: var(--navy); animation-delay: 3.62s; }
+.map-distance--port { top: 57%; right: 10%; color: var(--navy); animation-delay: 3.62s; }
 .map-distance--port strong { font-size: 1.65rem; }
 .map-distance--port span { color: rgb(13 41 60 / 0.57); }
 
@@ -523,7 +523,7 @@ h1, h2, p { margin-top: 0; }
   .hero__actions { align-items: flex-start; flex-direction: column; gap: 18px; margin-top: 26px; }
   .route-scene { width: calc(100% + 12px); margin: 64px -6px 0; }
   .route-scene__map { height: 385px; }
-  .map-label--beach { right: auto; left: 23%; }
+  .map-label--beach { right: auto; left: 2%; }
   .map-distance--beach { right: auto; left: 25%; }
   .hero__bottom { gap: 12px; padding-block: 17px; font-size: 0.48rem; }
   .hero__bottom span:nth-child(2) { display: none; }

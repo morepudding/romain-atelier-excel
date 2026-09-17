@@ -1,34 +1,34 @@
 # État du projet — Hôtel Les Touristes
 
 ## Phase actuelle
-Retour à l'étape 2 après rejet de l'intégration des images, absence du module de réservation et faiblesse du parcours au défilement. Direction corrigée en préparation ; aucun nouveau site complet ne doit être codé avant validation.
+Étape 3 : prototype d'ouverture autorisé après validation de la direction 02. Le périmètre s'arrête à l'ouverture, au module de demande de séjour et aux deux chambres ; la suite reste bloquée jusqu'à la seconde validation.
 
 ## Direction artistique
 Statut : VALIDÉE
 Référence : adresse balnéaire populaire et directe, bleu océan, rouge cerise, rose coquillage, illustration graphique sans photos faibles.
 
 ## Visuel principal
-Statut : À VALIDER
-Référence : scène balnéaire Imagen complète, sans calques de bateaux ajoutés arbitrairement. Les couches animées devront être préparées depuis cette même scène après validation.
+Statut : VALIDÉ
+Référence : scène balnéaire Imagen complète. La base, les nuages, les oiseaux et les voiliers sont préparés depuis cette même direction visuelle.
 
 ## Parcours complet
-Statut : À VALIDER
+Statut : VALIDÉ POUR PROTOTYPE D'OUVERTURE
 Planche : `direction-v2/index.html`
 Séquences : ouverture, demande de séjour, deux chambres distinctes, restaurant, situation, tarifs et décision finale.
 
 ## Carte des assets
-Statut : À VALIDER
+Statut : VALIDÉE POUR PROTOTYPE D'OUVERTURE
 Référence : scène hero, chambre standard, chambre balcon distincte, restaurant et tracé SVG fonctionnel.
 Remplacements nécessaires : tous les visuels d'établissement sont des intentions non réelles à remplacer avant publication commerciale.
 
 ## Registre fonctionnel
-Statut : À VALIDER
+Statut : VALIDÉ POUR PROTOTYPE D'OUVERTURE
 Fonctions existantes : appel téléphonique, tarifs et coordonnées.
 Fonctions proposées : module de demande de séjour non connecté, sans confirmation de disponibilité.
 Fonctions validées, refusées ou bloquées : interaction signature refusée ; moteur de réservation connecté bloqué tant que le logiciel hôtelier et son API sont inconnus.
 
 ## Mouvement ambiant
-Statut : À VALIDER
+Statut : VALIDÉ
 Élément source : bateaux, oiseaux, nuages et mer présents dans la scène Imagen complète.
 Mouvement : bateaux affirmés, oiseaux plus rapides, nuages lents et différenciés, mer respirée ; état fixe avec mouvement réduit.
 
@@ -37,15 +37,18 @@ Statut : REFUSÉE
 Interaction : aucune. Le contrôle interactif des 50 m a été explicitement refusé.
 
 ## Prototype d'ouverture
-Statut : BLOQUÉ JUSQU'À VALIDATION DE LA DIRECTION 02
-Référence : aucune nouvelle intégration autorisée.
+Statut : EN COURS — À SOUMETTRE À LA SECONDE VALIDATION
+Périmètre : introduction de marque, hero animé, transition vers la demande de séjour, module non connecté et deux chambres distinctes.
 
 ## Publication
 Statut : prévisualisation autorisée ; publication finale en attente de validation visuelle.
 Périmètre autorisé : dépôt public morepudding/romain-atelier-excel et projet Vercel associé.
 
 ## Dernière demande utilisateur
-Corriger le workflow et corriger le site après constat d'images mal intégrées, d'absence de module de réservation et d'un scroll sans rythme.
+Direction validée avec une correction impérative : réduire fortement le texte et supprimer les sous-textes explicatifs de type « AI slop » dans le prototype.
 
 ## Décisions encore ouvertes
-Valider ou corriger ensemble la planche du parcours complet, la carte des assets, le module de demande de séjour et la chorégraphie ambiante avant de coder le nouveau prototype d'ouverture.
+Valider ou corriger le prototype d'ouverture avant toute construction du restaurant, de la situation, des tarifs et de la décision finale.
+
+## Règle de copie
+Garder uniquement les informations utiles au choix, au prix et à l'action. Toute phrase qui explique le design, commente l'expérience ou invente une promesse est exclue du site visiteur.

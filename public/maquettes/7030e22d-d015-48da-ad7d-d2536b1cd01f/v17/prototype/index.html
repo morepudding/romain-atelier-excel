@@ -4,257 +4,148 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <meta name="theme-color" content="#006fba" />
-    <meta
-      name="description"
-      content="Hôtel-restaurant de 21 chambres à Sion-sur-l’Océan, à 50 m de la plage. Chambres dès 59 € et réservation par téléphone."
-    />
-    <title>Hôtel-Restaurant Les Touristes — Sion-sur-l’Océan</title>
-    <link
-      rel="preload"
-      href="./assets/manrope.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="./assets/barlow-condensed.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="./assets/hero-les-touristes-v2.webp"
-      as="image"
-      type="image/webp"
-    />
+    <meta name="theme-color" content="#087abe" />
+    <meta name="description" content="Hôtel-restaurant Les Touristes à Sion-sur-l’Océan. 21 chambres à 50 m de la mer, dès 59 €." />
+    <title>Les Touristes — Hôtel-restaurant à Sion-sur-l’Océan</title>
+    <link rel="preload" href="./assets/manrope.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./assets/barlow-condensed.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./assets/generated/hero-base-v3.webp" as="image" type="image/webp" />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
 
     <div class="brand-intro" aria-hidden="true">
-      <div class="brand-intro__inner">
-        <p>Hôtel — Restaurant</p>
-        <img
-          src="./assets/les-touristes-wordmark.png"
-          alt=""
-          width="701"
-          height="207"
-        />
-        <span class="brand-intro__line"></span>
-        <span class="brand-intro__distance">50 m</span>
-      </div>
+      <img src="./assets/les-touristes-wordmark.png" alt="" width="701" height="207" />
+      <span></span>
     </div>
 
     <main id="contenu">
       <section class="hero" aria-labelledby="hero-title">
-        <img
-          class="hero__art"
-          src="./assets/hero-les-touristes-v2.webp"
-          alt=""
-          width="1672"
-          height="941"
-          fetchpriority="high"
-        />
-        <div class="hero__shade"></div>
-        <div class="hero__atmosphere" aria-hidden="true">
-          <img
-            class="ambient-sailboats"
-            src="./assets/hero-sailboats.png"
-            alt=""
-            width="1672"
-            height="941"
-          />
+        <div class="scene" aria-hidden="true">
+          <img class="scene__base" src="./assets/generated/hero-base-v3.webp" alt="" width="1672" height="941" fetchpriority="high" />
+
+          <div class="scene__layer scene__cloud scene__cloud--west">
+            <img src="./assets/generated/hero-clouds-v3.webp" alt="" />
+          </div>
+          <div class="scene__layer scene__cloud scene__cloud--east">
+            <img src="./assets/generated/hero-clouds-v3.webp" alt="" />
+          </div>
+
+          <div class="scene__layer scene__birds scene__birds--near">
+            <img src="./assets/generated/hero-birds-v3.webp" alt="" />
+          </div>
+          <div class="scene__layer scene__birds scene__birds--far">
+            <img src="./assets/generated/hero-birds-v3.webp" alt="" />
+          </div>
+
+          <div class="scene__layer scene__boat scene__boat--one">
+            <img src="./assets/generated/hero-boats-v3.webp" alt="" />
+          </div>
+          <div class="scene__layer scene__boat scene__boat--two">
+            <img src="./assets/generated/hero-boats-v3.webp" alt="" />
+          </div>
+          <div class="scene__layer scene__boat scene__boat--three">
+            <img src="./assets/generated/hero-boats-v3.webp" alt="" />
+          </div>
+
+          <div class="scene__sea"></div>
         </div>
 
+        <div class="hero__veil" aria-hidden="true"></div>
+
         <header class="topbar">
-          <a class="topbar__place" href="#chambres">
-            <span>Sion-sur-l’Océan</span>
-            <small>Saint-Hilaire-de-Riez</small>
-          </a>
-          <a
-            class="topbar__call"
-            href="tel:+33251543386"
-            aria-label="Appeler le 02 51 54 33 86"
-          >
-            <span>Réserver</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M7.2 3.8 9.7 8 8 9.8c1.2 2.4 3 4.2 5.4 5.4l1.8-1.7 4.2 2.5-.8 3.2c-.2.8-.9 1.3-1.7 1.3C9.5 20.5 3.5 14.5 3.5 7.1c0-.8.5-1.5 1.3-1.7l2.4-.6Z"
-              />
-            </svg>
-          </a>
+          <span>Sion-sur-l’Océan</span>
+          <a href="#sejour">Demander un séjour</a>
         </header>
 
         <div class="hero__content">
-          <p class="hero__eyebrow">Hôtel — Restaurant</p>
-          <img
-            class="hero__logo"
-            src="./assets/les-touristes-wordmark.png"
-            alt="Les Touristes"
-            width="701"
-            height="207"
-          />
-          <p class="hero__meta">
-            21 chambres <i></i> restaurant <i></i> Sion-sur-l’Océan
-          </p>
+          <p>Hôtel — Restaurant</p>
+          <img class="hero__logo" src="./assets/les-touristes-wordmark.png" alt="Les Touristes" width="701" height="207" />
           <h1 id="hero-title">À 50 m de la mer.</h1>
-          <div class="hero__actions">
-            <p class="price">Chambres dès <strong>59 €</strong></p>
-            <a class="phone" href="tel:+33251543386">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M7.2 3.8 9.7 8 8 9.8c1.2 2.4 3 4.2 5.4 5.4l1.8-1.7 4.2 2.5-.8 3.2c-.2.8-.9 1.3-1.7 1.3C9.5 20.5 3.5 14.5 3.5 7.1c0-.8.5-1.5 1.3-1.7l2.4-.6Z"
-                />
-              </svg>
-              <span>
-                <small>Appeler pour réserver</small>
-                <strong>02 51 54 33 86</strong>
-              </span>
-            </a>
+          <div class="hero__facts">
+            <strong>Dès 59 €</strong>
+            <span>21 chambres</span>
           </div>
         </div>
 
-        <p class="hero__disclaimer">Illustration d’ambiance</p>
-        <a class="hero__scroll" href="#chambres">
-          <span>Découvrir</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="m5 9 7 7 7-7" />
-          </svg>
-        </a>
+        <p class="hero__asset-note">Visuel d’intention — non réel</p>
+        <a class="hero__next" href="#sejour" aria-label="Voir la demande de séjour"><span></span></a>
+      </section>
+
+      <section class="stay" id="sejour" aria-labelledby="stay-title">
+        <div class="stay__wash" aria-hidden="true"></div>
+        <div class="stay__intro">
+          <p>Demande de séjour</p>
+          <h2 id="stay-title">Vos<br />dates.</h2>
+          <a href="tel:+33251543386">02 51 54 33 86</a>
+        </div>
+
+        <form class="stay-form" id="stay-form">
+          <label>
+            <span>Arrivée</span>
+            <input type="date" name="arrival" required />
+          </label>
+          <label>
+            <span>Départ</span>
+            <input type="date" name="departure" required />
+          </label>
+          <label>
+            <span>Voyageurs</span>
+            <select name="guests">
+              <option>1 adulte</option>
+              <option selected>2 adultes</option>
+              <option>2 adultes · 1 enfant</option>
+              <option>3 adultes</option>
+            </select>
+          </label>
+          <label>
+            <span>Chambre</span>
+            <select name="room">
+              <option selected>À choisir</option>
+              <option>Double standard · 59 €</option>
+              <option>Balcon, vue latérale · 69 €</option>
+            </select>
+          </label>
+          <button type="submit">Préparer ma demande <b aria-hidden="true">↗</b></button>
+          <p class="stay-form__note">Réponse de l’hôtel sous réserve de disponibilité.</p>
+          <p class="stay-form__status" role="status" aria-live="polite"></p>
+        </form>
       </section>
 
       <section class="rooms" id="chambres" aria-labelledby="rooms-title">
-        <div class="rooms__wave" aria-hidden="true"></div>
-        <div class="rooms__heading">
-          <p class="section-kicker">Choisir sans chercher</p>
-          <h2 id="rooms-title">Deux chambres.<br />Une décision immédiate.</h2>
-          <p>
-            Pas de galerie interminable : les deux catégories et leurs prix
-            sont visibles d’un seul regard. Tarifs nets pour une ou deux
-            personnes, taxe de séjour en supplément.
-          </p>
-        </div>
+        <header class="rooms__head">
+          <p>21 chambres</p>
+          <h2 id="rooms-title">Chambres</h2>
+        </header>
 
-        <div
-          class="room-compare"
-          aria-label="Aperçu de la comparaison des chambres"
-        >
-          <article class="room-card room-card--blue">
-            <div>
-              <p>Simple et directe</p>
-              <h3>Chambre double</h3>
+        <div class="rooms__grid">
+          <article class="room room--standard">
+            <figure>
+              <img src="../direction-v2/assets/chambre-standard-v2.webp" alt="Exemple non réel d’une chambre double standard" width="1122" height="1402" loading="lazy" />
+              <figcaption>Photo exemple — non réelle</figcaption>
+            </figure>
+            <div class="room__copy">
+              <p>Double standard</p>
+              <strong>59 €</strong>
+              <span>Douche · WC · 1–2 pers.</span>
             </div>
-            <strong>59 €</strong>
-            <span>Douche et WC · 1 ou 2 personnes</span>
           </article>
-          <article class="room-card room-card--red">
-            <div>
-              <p>Le balcon en plus</p>
-              <h3>Vue mer latérale</h3>
+
+          <article class="room room--balcony">
+            <figure>
+              <img src="../direction-v2/assets/chambre-balcon-v2.webp" alt="Exemple non réel d’une chambre avec balcon et vue latérale" width="1122" height="1402" loading="lazy" />
+              <figcaption>Photo exemple — non réelle</figcaption>
+            </figure>
+            <div class="room__copy">
+              <p>Balcon · vue latérale</p>
+              <strong>69 €</strong>
+              <span>Balcon · TV · 1–2 pers.</span>
             </div>
-            <strong>69 €</strong>
-            <span>Balcon latéral · TV · vue mer</span>
           </article>
-        </div>
-      </section>
-
-      <section class="restaurant" id="restaurant" aria-labelledby="restaurant-title">
-        <div class="restaurant__number" aria-hidden="true">21</div>
-        <div class="restaurant__copy">
-          <p class="section-kicker section-kicker--cream">À table</p>
-          <h2 id="restaurant-title">Dormir ici.<br />Dîner ici.</h2>
-          <p>
-            Le restaurant sert une cuisine traditionnelle. L’hôtel propose
-            également la pension, la demi-pension et la soirée étape.
-          </p>
-        </div>
-        <div class="restaurant__service" aria-label="Services de restauration">
-          <p><span>01</span> Cuisine traditionnelle</p>
-          <p><span>02</span> Demi-pension</p>
-          <p><span>03</span> Pension</p>
-          <p><span>04</span> Soirée étape</p>
-        </div>
-      </section>
-
-      <section class="location" id="situation" aria-labelledby="location-title">
-        <div class="location__heading">
-          <p class="section-kicker">Tout près, vraiment</p>
-          <h2 id="location-title">La plage devant.<br />Les pins derrière.</h2>
-        </div>
-        <div class="location__route" aria-label="Distances autour de l’hôtel">
-          <article>
-            <strong>50<span>m</span></strong>
-            <h3>La plage</h3>
-            <p>Quelques pas séparent l’hôtel du sable.</p>
-          </article>
-          <i aria-hidden="true"></i>
-          <article>
-            <strong>300<span>m</span></strong>
-            <h3>La forêt de pins</h3>
-            <p>Une autre respiration, juste derrière Sion.</p>
-          </article>
-          <i aria-hidden="true"></i>
-          <article>
-            <strong>3<span>km</span></strong>
-            <h3>Saint-Gilles</h3>
-            <p>La gare SNCF et le port à proximité.</p>
-          </article>
-        </div>
-        <p class="location__coast">
-          12 km de plages de sable fin, une corniche et des criques à découvrir.
-        </p>
-      </section>
-
-      <section class="rates" id="tarifs" aria-labelledby="rates-title">
-        <div class="rates__heading">
-          <p class="section-kicker section-kicker--cream">Tarifs 2026</p>
-          <h2 id="rates-title">Tout est posé.<br />Rien à deviner.</h2>
-          <p>Prix nets. Taxe de séjour en supplément du 1er janvier au 31 décembre.</p>
-        </div>
-        <div class="rates__tables">
-          <div class="rate-table">
-            <h3>La chambre</h3>
-            <p><span>Double standard</span><strong>59 €</strong></p>
-            <p><span>Balcon latéral · vue mer</span><strong>69 €</strong></p>
-            <p><span>Lit supplémentaire</span><strong>12 €</strong></p>
-            <p><span>Petit déjeuner</span><strong>9,50 €</strong></p>
-          </div>
-          <div class="rate-table rate-table--light">
-            <h3>La demi-pension</h3>
-            <p><span>Chambre standard</span><strong>58,50 €</strong></p>
-            <p><span>Balcon · vue mer</span><strong>63,50 €</strong></p>
-            <p><span>Enfant de moins de 7 ans</span><strong>40 €</strong></p>
-            <small>Par personne et par jour, sur la base de deux personnes. Le repas du soir est inclus.</small>
-          </div>
-        </div>
-      </section>
-
-      <section class="contact" id="contact" aria-labelledby="contact-title">
-        <div class="contact__stamp" aria-hidden="true">SION<br />SUR<br />L’OCÉAN</div>
-        <div class="contact__content">
-          <p class="section-kicker">Réserver simplement</p>
-          <h2 id="contact-title">Une date en tête ?<br />Appelez-nous.</h2>
-          <a class="contact__phone" href="tel:+33251543386">02 51 54 33 86</a>
-          <address>
-            2, rue des Estivants<br />
-            Sion-sur-l’Océan<br />
-            85270 Saint-Hilaire-de-Riez
-          </address>
-          <a class="contact__mail" href="mailto:hotel.lestouristes@wanadoo.fr">hotel.lestouristes@wanadoo.fr</a>
-          <p class="contact__payments">Cartes bancaires et chèques-vacances acceptés.</p>
         </div>
       </section>
     </main>
-
-    <footer>
-      <img src="./assets/les-touristes-wordmark.png" alt="Les Touristes" width="701" height="207" />
-      <p>Hôtel · Restaurant · Sion-sur-l’Océan</p>
-      <a href="#contenu">Retour en haut</a>
-    </footer>
 
     <script src="./main.js" defer></script>
   </body>

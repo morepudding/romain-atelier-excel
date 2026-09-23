@@ -1,5 +1,11 @@
 # État actuel
 
+## Avis Jev dans Radar Rework — 23 septembre 2026
+
+Le tri peut demander un avis Jev sur le dossier affiché. L’appel est explicite et envoie à OpenRouter uniquement le nom, le secteur, la commune, l’état du site, le type de piste et les observations enregistrées. Jev renvoie une recommandation typée avec probabilités ; il ne rédige pas d’explication, n’écrit rien dans Supabase et ne prend jamais la décision à la place de Romain. Le coût retourné par OpenRouter est montré après chaque appel.
+
+L’API est réservée aux membres du Radar, vérifie la révision du dossier, borne la taille des observations et conserve `OPENROUTER_API_KEY` côté serveur. La clé n’est pas dans le dépôt. Un appel de test avec des données fictives a répondu : 604 jetons d’entrée, coût retourné de 0,000025368 $. Le code et les tests sont prêts, mais la variable reste à ajouter aux environnements Preview et Production du projet Vercel avant l’essai connecté.
+
 ## Radar Rework — skill signature et validations bloquantes, 16 septembre 2026
 
 Le workflow de vitrine utilise désormais le skill personnel `$rework-vitrine-signature`. Coif’Hommes devient un plancher de finition technique à dépasser et non un style à recopier. Le skill impose une direction unique, une apparition réelle du logo ou mot-symbole lorsque disponible, une interaction signature non bloquante et l’accès direct aux informations essentielles sans chasse aux clics.

@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  Brain,
   Check,
   Clipboard,
   Clock3,
@@ -36,6 +37,7 @@ import {
 } from '@/lib/radar/rework';
 import { decide, snooze } from '@/lib/radar/rework-flow';
 import { reworkChatPrompt } from '@/lib/radar/rework-chat';
+import type { JevAssessment } from '@/lib/radar/jev';
 import type { RadarRefonteResult } from '@/lib/radar/types';
 
 type Props = {
@@ -50,6 +52,14 @@ type LaunchState = {
   copied: boolean;
   opened: boolean;
 };
+
+type JevResultState = JevAssessment & { id: string; revision: number };
+
+const jevLabels = {
+  retain: 'Oui, à refaire',
+  review: 'À revoir',
+  discard: 'Non, écarter',
+} as const;
 
 const errorMessage = (error: unknown) =>
   error instanceof Error
@@ -96,6 +106,9 @@ export default function ReworkValidation({
   const [busy, setBusy] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [launch, setLaunch] = useState<LaunchState | null>(null);
+  const [jevBusy, setJevBusy] = useState(false);
+  const [jevError, setJevError] = useState('');
+  const [jevResult, setJevResult] = useState<JevResultState | null>(null);
   const mutationLock = useRef(false);
   const touchStart = useRef<number | null>(null);
   const owner = session.user.id;
@@ -222,6 +235,9 @@ export default function ReworkValidation({
   const progress = projects.length
     ? Math.round((decidedCount / projects.length) * 100)
     : 0;
+  const currentJev = current && jevResult?.id === current.id && jevResult.revision === current.revision
+    ? jevResult
+    : null;
 
   async function decideProject(
     project: ReworkProject,
@@ -240,6 +256,34 @@ export default function ReworkValidation({
             : `${project.data.name} remise à la fin de la pile.`,
       );
     });
+  }
+
+  async function askJev(project: ReworkProject) {
+    setJevBusy(true);
+    setJevError('');
+    setJevResult(null);
+    try {
+      const response = await fetch('/api/radar/rework/jev', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await token()}`,
+        },
+        body: JSON.stringify({ id: project.id, revision: project.revision }),
+        signal: AbortSignal.timeout(20000),
+      });
+      const result = (await response.json()) as {
+        assessment?: JevAssessment;
+        error?: string;
+      };
+      if (!response.ok || !result.assessment)
+        throw new Error(result.error || 'L’avis de Jev n’a pas abouti.');
+      setJevResult({ ...result.assessment, id: project.id, revision: project.revision });
+    } catch (err) {
+      setJevError(errorMessage(err));
+    } finally {
+      setJevBusy(false);
+    }
   }
 
   useEffect(() => {
@@ -405,6 +449,23 @@ export default function ReworkValidation({
               <div className="rv-signals">
                 <p className="rv-eyebrow">Ce qui a été observé</p>
                 {signals(current.data).length ? <ul>{signals(current.data).map((signal) => <li key={signal}>{signal}</li>)}</ul> : <p className="rv-muted">Aucun signal détaillé n’est enregistré.</p>}
+              </div>
+              <div className="rv-jev">
+                <div className="rv-jev-controls">
+                  <button className="rv-jev-button" type="button" disabled={jevBusy || busy} onClick={() => void askJev(current)}>
+                    {jevBusy ? <LoaderCircle size={16} className="rv-spinner" /> : <Brain size={16} />}
+                    {jevBusy ? 'Évaluation…' : currentJev ? 'Relancer Jev' : 'Avis de Jev'}
+                  </button>
+                  <span>Les éléments de la fiche sont envoyés à OpenRouter. Le tri reste le vôtre.</span>
+                </div>
+                {jevError && <p className="rv-jev-error" role="alert">{jevError}</p>}
+                {currentJev && (
+                  <output className="rv-jev-result">
+                    <strong>Avis de Jev : {jevLabels[currentJev.choice]}</strong>
+                    <span>Probabilités : {Math.round(currentJev.probabilities.retain * 100)} % oui · {Math.round(currentJev.probabilities.review * 100)} % à revoir · {Math.round(currentJev.probabilities.discard * 100)} % non</span>
+                    {currentJev.costUsd !== null && <small>Coût de cet appel : {currentJev.costUsd.toLocaleString('fr-FR', { minimumFractionDigits: 6, maximumFractionDigits: 6 })} $</small>}
+                  </output>
+                )}
               </div>
               <p className="rv-question">Est-ce que ce site mérite une refonte ?</p>
               <div className="rv-decision-actions" aria-label="Décider du sort de cette entreprise">

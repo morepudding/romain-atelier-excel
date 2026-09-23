@@ -1022,6 +1022,16 @@
 .rv-signals li { position: relative; padding-left: 15px; }
 .rv-signals li::before { content: ''; position: absolute; left: 0; top: .55em; width: 6px; height: 6px; border-radius: 50%; background: #d49d25; }
 .rv-muted { color: var(--rv-muted); font-size: 13px; }
+.rv-jev { grid-column: 1 / -1; display: grid; gap: 8px; padding: 11px 13px; border: 1px solid var(--rv-line); border-radius: 11px; background: #fbfaf6; }
+.rv-jev-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.rv-jev-controls > span { color: var(--rv-muted); font-size: 11px; }
+.rv-jev-button { display: inline-flex; align-items: center; gap: 7px; min-height: 35px; padding: 7px 10px; color: var(--rv-green); background: var(--rv-green-soft); border: 1px solid #c5e1cf; border-radius: 8px; font-size: 12px; font-weight: 700; }
+.rv-jev-button:hover:enabled { background: #d9eadf; }
+.rv-jev-button:disabled { cursor: wait; opacity: .72; }
+.rv-jev-result { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; color: var(--rv-ink); font-size: 12px; }
+.rv-jev-result strong { color: var(--rv-green); }
+.rv-jev-result span, .rv-jev-result small { color: var(--rv-muted); font-size: 11px; }
+.rv-jev-error { margin: 0; color: var(--rv-red); font-size: 12px; }
 .rv-question { grid-column: 1 / -1; margin: 3px 0 0; color: var(--rv-muted); font-size: 14px; text-align: center; }
 .rv-decision-actions { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 .rv-decision { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 57px; padding: 12px 14px; border: 1px solid transparent; border-radius: 12px; font-size: 13px; font-weight: 700; transition: transform .18s ease, box-shadow .18s ease; }
@@ -1059,7 +1069,7 @@
   .rv-session-progress { width: 100%; text-align: left; }
   .rv-card-body { grid-template-columns: 1fr; gap: 21px; padding: 22px 17px 17px; }
   .rv-signals { padding: 18px 0 0; border-top: 1px solid var(--rv-line); border-left: 0; }
-  .rv-question, .rv-decision-actions, .rv-swipe-hint { grid-column: 1; }
+  .rv-jev, .rv-question, .rv-decision-actions, .rv-swipe-hint { grid-column: 1; }
   .rv-decision-actions { grid-template-columns: 1fr; }
   .rv-decision { justify-content: flex-start; padding-left: 17px; }
   .rv-decision kbd { margin-left: auto; }

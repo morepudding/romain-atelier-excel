@@ -2,7 +2,7 @@
 
 ## Sites réalisés — Radar Rework, 24 septembre 2026
 
-Radar Rework comporte désormais les onglets « Validations », « Dossiers » et « Sites réalisés ». Cette dernière vue lit uniquement les dossiers privés du compte connecté qui ont une adresse de site interactive enregistrée. Chaque carte affiche l’aperçu HTML isolé sauvegardé avec le dossier et ouvre le site public dans un nouvel onglet. Le changement d’onglet depuis un dossier prévient avant de perdre des modifications non enregistrées.
+Radar Rework comporte désormais les onglets « Validations », « Dossiers » et « Sites réalisés ». Cette dernière vue lit uniquement les dossiers privés du compte connecté qui ont une adresse de site public ou de prototype d’ouverture enregistrée. Les sites terminés affichent l’aperçu HTML isolé sauvegardé avec le dossier ; les prototypes restent explicitement étiquetés. Chaque carte ouvre son lien public dans un nouvel onglet. Le changement d’onglet depuis un dossier prévient avant de perdre des modifications non enregistrées.
 
 ## Avis Jev dans Radar Rework — 23 septembre 2026
 

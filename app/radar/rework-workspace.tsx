@@ -50,6 +50,11 @@ type Props = {
   onDirty: (dirty: boolean) => void;
 };
 type ImageSlot = 'before' | 'a' | 'b';
+type ReworkSiteEntry = {
+  project: ReworkProject;
+  url: string;
+  kind: 'Site réalisé' | 'Prototype d’ouverture';
+};
 const labels: Record<ImageSlot, string> = {
   before: 'Site actuel / référence',
   a: 'Proposition A',
@@ -179,7 +184,7 @@ function ReworkSiteGallery({
   supabase: SupabaseClient;
   session: Session;
 }) {
-  const [sites, setSites] = useState<ReworkProject[]>([]);
+  const [sites, setSites] = useState<ReworkSiteEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [refresh, setRefresh] = useState(0);
@@ -212,7 +217,25 @@ function ReworkSiteGallery({
           if (result.data.length < 200) break;
         }
         if (active)
-          setSites(rows.filter((project) => !!safeUrl(project.data.interactive_url)));
+          setSites(
+            rows.flatMap((project) => {
+              const siteUrl = safeUrl(project.data.interactive_url);
+              if (siteUrl)
+                return [{ project, url: siteUrl, kind: 'Site réalisé' as const }];
+              const prototypeUrl = safeUrl(
+                project.data.automation?.prototype_url || '',
+              );
+              return prototypeUrl
+                ? [
+                    {
+                      project,
+                      url: prototypeUrl,
+                      kind: 'Prototype d’ouverture' as const,
+                    },
+                  ]
+                : [];
+            }),
+          );
       } catch {
         if (active) setError('Impossible de charger les sites réalisés.');
       } finally {
@@ -233,7 +256,7 @@ function ReworkSiteGallery({
           <h1 id="rw-sites-title">Sites réalisés</h1>
           {!loading && !error && (
             <p>
-              {sites.length} site{sites.length === 1 ? '' : 's'}
+              {sites.length} aperçu{sites.length === 1 ? '' : 's'}
             </p>
           )}
         </div>
@@ -257,13 +280,11 @@ function ReworkSiteGallery({
         </div>
       ) : sites.length ? (
         <div className="rw-site-grid">
-          {sites.map((project) => {
-            const url = safeUrl(project.data.interactive_url);
-            if (!url) return null;
+          {sites.map(({ project, url, kind }) => {
             return (
               <article className="rw-site-card" key={project.id}>
                 <div className="rw-site-preview">
-                  {project.data.pages.a ? (
+                  {kind === 'Site réalisé' && project.data.pages.a ? (
                     <ReworkPage
                       supabase={supabase}
                       project={project}
@@ -271,11 +292,14 @@ function ReworkSiteGallery({
                     />
                   ) : (
                     <div className="rw-site-preview-empty">
-                      Aperçu enregistré indisponible
+                      {kind === 'Prototype d’ouverture'
+                        ? 'Prototype d’ouverture en ligne'
+                        : 'Aperçu enregistré indisponible'}
                     </div>
                   )}
                 </div>
                 <div className="rw-site-info">
+                  <small className="rw-site-kind">{kind}</small>
                   <h2>{project.data.name}</h2>
                   <p>
                     {project.data.locality || 'Commune à préciser'} ·{' '}
@@ -287,7 +311,8 @@ function ReworkSiteGallery({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Voir le site <ArrowUpRight size={15} />
+                    {kind === 'Site réalisé' ? 'Voir le site' : 'Voir le prototype'}
+                    <ArrowUpRight size={15} />
                   </a>
                 </div>
               </article>
@@ -295,7 +320,7 @@ function ReworkSiteGallery({
           })}
         </div>
       ) : (
-        <p className="rw-site-empty">Aucun site réalisé.</p>
+        <p className="rw-site-empty">Aucun site ni prototype consultable.</p>
       )}
     </section>
   );

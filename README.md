@@ -56,3 +56,9 @@ Sous Windows, Vite surveille les fichiers par polling pour éviter qu'un fichier
 Les appels réels sont facturés par le fournisseur connecté. Aucun achat ni rechargement automatique n’est activé par l’application. Un brief et deux images sont produits par dossier retenu, en séquence et avec des points de reprise ; un échec attend une reprise explicite. La file reprend au retour dans le bureau, sans service permanent quand il est fermé. Les références jointes sont utilisées, mais la recherche administrative n’inclut pas encore de capture ni d’audit visuel automatique.
 
 Après `npm run build:vercel`, `node tests/radar-rework-generation-smoke.mjs` vérifie le parcours serveur avec Supabase et le fournisseur simulés, sans données ni appels payants réels.
+
+### Avis Jev sur une fiche
+
+Dans le tri de `/radar/rework`, « Avis de Jev » demande une recommandation structurée pour le dossier affiché. Seuls le nom, le secteur, la commune, l’état du site, le type de piste et les observations enregistrées sont transmis à OpenRouter. Jev renvoie une option et ses probabilités ; il ne rédige pas d’explication, n’enregistre rien et ne modifie jamais le choix humain. Le bouton déclenche chaque appel, qui est facturé au compte OpenRouter.
+
+Pour l’activer en local, ajouter `OPENROUTER_API_KEY` à `.env.local`. Pour Vercel, ajouter la même variable, côté serveur, aux environnements Production et Preview du projet `romain-atelier-excel`, puis reconstruire. Ne jamais utiliser le préfixe `NEXT_PUBLIC_` ni committer la clé. L’intégration utilise `typesafe/jev-1.13` via la [Decisions API d’OpenRouter](https://openrouter.ai/docs/guides/community/jev).

@@ -103,7 +103,9 @@ function ReworkHome(props: {
   session: Session;
   onDirty: Props['onDirty'];
 }) {
-  const [archive, setArchive] = useState(false);
+  const [view, setView] = useState<'validation' | 'dossiers' | 'sites'>(
+    'validation',
+  );
   const [dirty, setDirty] = useState(false);
   const reportDirty = props.onDirty;
   const onDirty = useCallback(
@@ -113,34 +115,191 @@ function ReworkHome(props: {
     },
     [reportDirty],
   );
-  if (!archive)
-    return (
-      <ReworkValidation
-        supabase={props.supabase}
-        session={props.session}
-        onOpenDossiers={() => setArchive(true)}
-      />
-    );
+  function navigate(next: 'validation' | 'dossiers' | 'sites') {
+    if (next === view) return;
+    if (
+      view === 'dossiers' &&
+      dirty &&
+      !window.confirm('Quitter sans enregistrer les modifications ?')
+    )
+      return;
+    if (view === 'dossiers') {
+      setDirty(false);
+      reportDirty(false);
+    }
+    setView(next);
+  }
   return (
     <>
-      <button
-        className="rv-back"
-        onClick={() => {
-          if (
-            dirty &&
-            !window.confirm('Quitter sans enregistrer les modifications ?')
-          )
-            return;
-          setArchive(false);
-        }}
-      >
-        <ArrowLeft size={16} /> Retour aux validations
-      </button>
-      <ReworkDesk {...props} onDirty={onDirty} />
+      <nav className="rw-tabs rw-home-tabs" aria-label="Navigation du Radar Rework">
+        {(
+          [
+            ['validation', 'Validations'],
+            ['dossiers', 'Dossiers'],
+            ['sites', 'Sites réalisés'],
+          ] as const
+        ).map(([value, label]) => (
+          <button
+            key={value}
+            type="button"
+            aria-current={view === value ? 'page' : undefined}
+            onClick={() => navigate(value)}
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
+      {view === 'validation' ? (
+        <ReworkValidation
+          supabase={props.supabase}
+          session={props.session}
+          onOpenDossiers={() => navigate('dossiers')}
+        />
+      ) : view === 'dossiers' ? (
+        <>
+          <button className="rv-back" onClick={() => navigate('validation')}>
+            <ArrowLeft size={16} /> Retour aux validations
+          </button>
+          <ReworkDesk {...props} onDirty={onDirty} />
+        </>
+      ) : (
+        <ReworkSiteGallery
+          supabase={props.supabase}
+          session={props.session}
+        />
+      )}
     </>
   );
 }
 
+function ReworkSiteGallery({
+  supabase,
+  session,
+}: {
+  supabase: SupabaseClient;
+  session: Session;
+}) {
+  const [sites, setSites] = useState<ReworkProject[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [refresh, setRefresh] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    const controller = new AbortController();
+    async function loadSites() {
+      setLoading(true);
+      setError('');
+      try {
+        const rows: ReworkProject[] = [];
+        for (let offset = 0; ; offset += 200) {
+          const result = await supabase
+            .from('radar_rework_projects')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .order('updated_at', { ascending: false })
+            .order('id')
+            .range(offset, offset + 199)
+            .abortSignal(AbortSignal.any([controller.signal, timeout()]));
+          if (result.error)
+            throw new Error('Impossible de charger les sites réalisés.');
+          rows.push(
+            ...(result.data.map((row) => ({
+              ...row,
+              data: reworkDataSchema.parse(row.data),
+            })) as ReworkProject[]),
+          );
+          if (result.data.length < 200) break;
+        }
+        if (active)
+          setSites(rows.filter((project) => !!safeUrl(project.data.interactive_url)));
+      } catch {
+        if (active) setError('Impossible de charger les sites réalisés.');
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+    void loadSites();
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [refresh, session.user.id, supabase]);
+
+  return (
+    <section className="rw-site-gallery" aria-labelledby="rw-sites-title">
+      <header className="rw-sites-heading">
+        <div>
+          <h1 id="rw-sites-title">Sites réalisés</h1>
+          {!loading && !error && (
+            <p>
+              {sites.length} site{sites.length === 1 ? '' : 's'}
+            </p>
+          )}
+        </div>
+        <button
+          type="button"
+          disabled={loading}
+          aria-label="Actualiser les sites"
+          onClick={() => setRefresh((value) => value + 1)}
+        >
+          <RefreshCw size={16} />
+        </button>
+      </header>
+      {loading ? (
+        <output className="rl-empty">Chargement de vos sites…</output>
+      ) : error ? (
+        <div className="rl-empty" role="alert">
+          <p>{error}</p>
+          <button type="button" onClick={() => setRefresh((value) => value + 1)}>
+            Réessayer
+          </button>
+        </div>
+      ) : sites.length ? (
+        <div className="rw-site-grid">
+          {sites.map((project) => {
+            const url = safeUrl(project.data.interactive_url);
+            if (!url) return null;
+            return (
+              <article className="rw-site-card" key={project.id}>
+                <div className="rw-site-preview">
+                  {project.data.pages.a ? (
+                    <ReworkPage
+                      supabase={supabase}
+                      project={project}
+                      slot="a"
+                    />
+                  ) : (
+                    <div className="rw-site-preview-empty">
+                      Aperçu enregistré indisponible
+                    </div>
+                  )}
+                </div>
+                <div className="rw-site-info">
+                  <h2>{project.data.name}</h2>
+                  <p>
+                    {project.data.locality || 'Commune à préciser'} ·{' '}
+                    {projectTypes[project.data.project_type]}
+                  </p>
+                  <a
+                    className="rw-site-link"
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Voir le site <ArrowUpRight size={15} />
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="rw-site-empty">Aucun site réalisé.</p>
+      )}
+    </section>
+  );
+}
 function ReworkLogin({ supabase }: { supabase: SupabaseClient }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');

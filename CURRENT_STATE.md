@@ -1,5 +1,9 @@
 # État actuel
 
+## Sites réalisés — Radar Rework, 24 septembre 2026
+
+Radar Rework comporte désormais les onglets « Validations », « Dossiers » et « Sites réalisés ». Cette dernière vue lit uniquement les dossiers privés du compte connecté qui ont une adresse de site interactive enregistrée. Chaque carte affiche l’aperçu HTML isolé sauvegardé avec le dossier et ouvre le site public dans un nouvel onglet. Le changement d’onglet depuis un dossier prévient avant de perdre des modifications non enregistrées.
+
 ## Avis Jev dans Radar Rework — 23 septembre 2026
 
 Le tri peut demander un avis Jev sur le dossier affiché. L’appel est explicite et envoie à OpenRouter uniquement le nom, le secteur, la commune, l’état du site, le type de piste et les observations enregistrées. Jev renvoie une recommandation typée avec probabilités ; il ne rédige pas d’explication, n’écrit rien dans Supabase et ne prend jamais la décision à la place de Romain. Le coût retourné par OpenRouter est montré après chaque appel.
